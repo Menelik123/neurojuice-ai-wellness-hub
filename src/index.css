@@ -2,39 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* NeuroJuice Design System - Fruit-inspired colors and typography */
 
 @layer base {
   :root {
+    /* Core brand colors - fruit-inspired palette */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
+    --foreground: 215 25% 27%;
+    
+    /* Pineapple Yellow - Primary brand color */
+    --primary: 48 100% 67%;
+    --primary-foreground: 215 25% 27%;
+    --primary-glow: 48 100% 75%;
+    
+    /* Watermelon Pink - Secondary/accent */
+    --secondary: 345 83% 68%;
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Cucumber Green - Fresh accent */
+    --accent: 142 69% 58%;
+    --accent-foreground: 0 0% 100%;
+    
+    /* Additional colors */
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
+    
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 27%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 27%;
+    
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
+    
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 48 100% 67%;
+    
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(48 100% 67%), hsl(345 83% 68%));
+    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 98%));
+    --gradient-button: linear-gradient(135deg, hsl(48 100% 67%), hsl(48 100% 75%));
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px hsl(48 100% 67% / 0.15);
+    --shadow-card: 0 8px 30px hsl(215 25% 27% / 0.08);
+    --shadow-button: 0 4px 15px hsl(48 100% 67% / 0.25);
+    
+    /* Typography scale */
+    --font-heading: 'Montserrat', sans-serif;
+    --font-body: 'Open Sans', sans-serif;
 
     --radius: 0.5rem;
 
@@ -100,6 +118,53 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+
+  /* Smooth scrolling for navigation */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary));
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary-glow));
+  }
+}
+
+@layer utilities {
+  /* Flip animation for cards */
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  /* Custom animations */
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }
