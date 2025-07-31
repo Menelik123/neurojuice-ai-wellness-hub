@@ -195,10 +195,14 @@ const ChatBot = () => {
             <h2 className="font-heading font-bold text-4xl text-foreground">
               Meet Dr. Vital AI
             </h2>
-            <p className="font-body text-lg text-muted-foreground">
-              Your personal nutrition assistant is ready to help you discover the perfect juice blend 
-              for your unique needs. Click the chat button in the bottom right to get started!
-            </p>
+            <div className="space-y-4 font-body text-lg text-muted-foreground leading-relaxed">
+              <p>
+                Meet Dr. Vital, your on-site AI wellness guide. Dr. Vital engages you with simple questions about your current symptoms and health aspirations.
+              </p>
+              <p>
+                Leveraging real-time nutritional data, Dr. Vital instantly generates three personalized juice blends designed to meet your specific goals, then guides you on how to order them or even make them yourself.
+              </p>
+            </div>
             <Button
               onClick={() => setIsOpen(true)}
               variant="hero"

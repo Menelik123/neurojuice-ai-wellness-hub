@@ -9,12 +9,8 @@ const OrderBanner = () => {
 
   const features = [
     {
-      icon: <Clock className="w-5 h-5" />,
-      text: "Ready in 15 mins"
-    },
-    {
       icon: <Truck className="w-5 h-5" />,
-      text: "Free local delivery"
+      text: "Local delivery available"
     },
     {
       icon: <ShoppingCart className="w-5 h-5" />,

@@ -49,13 +49,13 @@ const Footer = () => {
             </p>
             <div className="space-y-2">
               <p className="font-body text-sm text-background/90">
-                📍 123 Wellness Street, Health City, HC 12345
+                📍 Atlanta, Georgia
               </p>
               <p className="font-body text-sm text-background/90">
-                ✉️ hello@neurojuice.com
+                ✉️ neurojuice@gmail.com
               </p>
               <p className="font-body text-sm text-background/90">
-                📞 (555) 123-JUICE
+                📞 321-367-2172
               </p>
             </div>
           </div>

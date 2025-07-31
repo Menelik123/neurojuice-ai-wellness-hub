@@ -48,21 +48,15 @@ const About = () => {
             
             <div className="space-y-4 font-body text-foreground leading-relaxed">
               <p>
-                At NeuroJuice, we believe that optimal health isn't one-size-fits-all. That's why we've 
-                developed Dr. Vital AI, our proprietary nutrition intelligence system that analyzes your 
-                unique goals, preferences, and dietary needs to create the perfect juice blend just for you.
+                NeuroJuice is the innovative fusion of AI-driven health diagnostics and the vibrant goodness of fresh juice blends, empowering your personal wellness journey.
               </p>
               
               <p>
-                Founded with the vision of making personalized nutrition accessible to everyone, we combine 
-                cutting-edge artificial intelligence with the timeless wisdom of whole food nutrition. 
-                Every sip is a step toward your optimal wellness.
+                Our proprietary AI, Dr. Vital, converses with you to understand your unique health goals and symptoms, crafting science-backed juice recommendations tailored precisely to your needs.
               </p>
               
               <p>
-                Our commitment goes beyond just great-tasting juices. We're building a community of 
-                health-conscious individuals who believe in the power of personalized nutrition to 
-                transform lives, one blend at a time.
+                We are committed to fostering community, sourcing the finest ingredients in Atlanta, and making holistic, personalized wellness accessible to everyone.
               </p>
             </div>
 
@@ -117,7 +111,7 @@ const About = () => {
         <div className="mt-20 text-center">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
             <div className="space-y-2">
-              <div className="font-heading font-bold text-4xl text-primary">2024</div>
+              <div className="font-heading font-bold text-4xl text-primary">2025</div>
               <div className="font-body text-muted-foreground">Founded</div>
             </div>
             <div className="space-y-2">

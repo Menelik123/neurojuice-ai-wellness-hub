@@ -186,16 +186,73 @@ const JuiceMenu = () => {
           ))}
         </div>
 
-        {/* Call to Action */}
-        <div className="text-center">
-          <Button 
-            variant="default" 
-            size="lg"
-            onClick={openFullMenu}
-            className="animate-pulse hover:animate-none"
-          >
-            See Full Menu
-          </Button>
+        {/* Full Menu & Bundles Section */}
+        <div className="mt-16 space-y-12">
+          <div className="text-center space-y-4">
+            <h3 className="font-heading font-bold text-3xl md:text-4xl text-foreground">
+              See the Full Menu & Bundles
+            </h3>
+            <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto">
+              Discover our complete collection of signature blends and convenient bundle options designed for your lifestyle.
+            </p>
+          </div>
+
+          {/* Bundle Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-8">
+            <Card className="overflow-hidden shadow-card hover:shadow-soft transition-all duration-300 hover:scale-105">
+              <CardContent className="p-0">
+                <div className="aspect-video bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 flex items-center justify-center">
+                  <div className="text-center space-y-2">
+                    <div className="w-16 h-16 mx-auto bg-gradient-hero rounded-full flex items-center justify-center text-white">
+                      <span className="font-heading font-bold text-lg">5</span>
+                    </div>
+                    <div className="font-heading font-bold text-xl text-foreground">5-Pack Weekly Bundle</div>
+                  </div>
+                </div>
+                <div className="p-6 space-y-4">
+                  <p className="font-body text-muted-foreground">
+                    One bottle per weekday, perfect for daily wellness
+                  </p>
+                  <Button variant="default" className="w-full">
+                    Order Now
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="overflow-hidden shadow-card hover:shadow-soft transition-all duration-300 hover:scale-105">
+              <CardContent className="p-0">
+                <div className="aspect-video bg-gradient-to-br from-accent/20 via-primary/20 to-secondary/20 flex items-center justify-center">
+                  <div className="text-center space-y-2">
+                    <div className="w-16 h-16 mx-auto bg-gradient-hero rounded-full flex items-center justify-center text-white">
+                      <span className="font-heading font-bold text-lg">3</span>
+                    </div>
+                    <div className="font-heading font-bold text-xl text-foreground">3-Pack Trio Bundle</div>
+                  </div>
+                </div>
+                <div className="p-6 space-y-4">
+                  <p className="font-body text-muted-foreground">
+                    Three signature blends, your midweek energy boost
+                  </p>
+                  <Button variant="default" className="w-full">
+                    Order Now
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Full Menu CTA */}
+          <div className="text-center">
+            <Button 
+              variant="default" 
+              size="lg"
+              onClick={openFullMenu}
+              className="animate-pulse hover:animate-none"
+            >
+              See Full Menu
+            </Button>
+          </div>
         </div>
       </div>
     </section>
