@@ -180,7 +180,11 @@ const JuiceMenu = () => {
                   <p className="font-body text-muted-foreground">
                     One bottle per weekday, perfect for daily wellness
                   </p>
-                  <Button variant="default" className="w-full">
+                  <Button 
+                    variant="default" 
+                    className="w-full"
+                    onClick={() => window.location.href = "/order-options"}
+                  >
                     Order Now
                   </Button>
                 </div>
@@ -201,7 +205,11 @@ const JuiceMenu = () => {
                   <p className="font-body text-muted-foreground">
                     Three signature blends, your midweek energy boost
                   </p>
-                  <Button variant="default" className="w-full">
+                  <Button 
+                    variant="default" 
+                    className="w-full"
+                    onClick={() => window.location.href = "/order-options"}
+                  >
                     Order Now
                   </Button>
                 </div>

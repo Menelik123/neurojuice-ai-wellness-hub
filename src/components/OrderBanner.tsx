@@ -3,8 +3,7 @@ import { ShoppingCart, Truck, Clock } from "lucide-react";
 
 const OrderBanner = () => {
   const handleOrderNow = () => {
-    // This would typically redirect to Shopify or your ordering system
-    window.open("https://your-shopify-store.myshopify.com", "_blank");
+    window.location.href = "/order-options";
   };
 
   const features = [
