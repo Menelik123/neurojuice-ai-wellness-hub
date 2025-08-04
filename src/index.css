@@ -167,4 +167,83 @@
   .animate-pulse-slow {
     animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
+
+  /* EXOTIC MENU START */
+  /* Dark neon theme styles for exotic menu */
+  .exotic-menu-bg {
+    background: #000000;
+    background-image: 
+      radial-gradient(circle at 20% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%);
+    min-height: 100vh;
+  }
+
+  .neon-glow-title {
+    text-shadow: 
+      0 0 5px #ff00ff,
+      0 0 10px #ff00ff,
+      0 0 20px #ff00ff,
+      0 0 40px #ff00ff;
+    color: #ffffff;
+  }
+
+  .neon-glow-subtitle {
+    text-shadow: 
+      0 0 5px #00ffff,
+      0 0 10px #00ffff,
+      0 0 20px #00ffff;
+    color: #ffffff;
+  }
+
+  .neon-pink {
+    color: #ff00ff;
+    text-shadow: 0 0 10px #ff00ff;
+  }
+
+  .neon-cyan {
+    color: #00ffff;
+    text-shadow: 0 0 10px #00ffff;
+  }
+
+  .exotic-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 0, 255, 0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: 
+      0 0 20px rgba(255, 0, 255, 0.2),
+      inset 0 0 20px rgba(0, 255, 255, 0.1);
+  }
+
+  .neon-button-pink {
+    background: linear-gradient(135deg, #ff00ff, #ff0080);
+    border: 1px solid #ff00ff;
+    box-shadow: 
+      0 0 20px rgba(255, 0, 255, 0.5),
+      inset 0 0 20px rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .neon-button-pink:hover {
+    box-shadow: 
+      0 0 30px rgba(255, 0, 255, 0.8),
+      inset 0 0 30px rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+  }
+
+  .neon-button-cyan {
+    background: linear-gradient(135deg, #00ffff, #0080ff);
+    border: 1px solid #00ffff;
+    box-shadow: 
+      0 0 20px rgba(0, 255, 255, 0.5),
+      inset 0 0 20px rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .neon-button-cyan:hover {
+    box-shadow: 
+      0 0 30px rgba(0, 255, 255, 0.8),
+      inset 0 0 30px rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+  }
+  /* EXOTIC MENU END */
 }

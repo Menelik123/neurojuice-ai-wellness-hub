@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, QrCode } from "lucide-react";
+import { Menu, X, QrCode, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import PasscodeModal from "./PasscodeModal";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPasscodeModalOpen, setIsPasscodeModalOpen] = useState(false);
+
+  // Check if user has exotic access
+  const hasExoticAccess = sessionStorage.getItem("exotic-access") === "granted";
 
   const navItems = [
     { label: "Home", href: "#home" },
@@ -47,6 +52,26 @@ const Header = () => {
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </button>
             ))}
+            
+            {/* Hidden Exotic Menu Link */}
+            {hasExoticAccess ? (
+              <a 
+                href="/exotic-menu"
+                className="font-body text-primary hover:text-primary-glow transition-colors duration-300 relative group flex items-center space-x-1"
+              >
+                <Lock className="w-4 h-4" />
+                <span>Exotic</span>
+                <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
+              </a>
+            ) : (
+              <button
+                onClick={() => setIsPasscodeModalOpen(true)}
+                className="font-body text-muted-foreground hover:text-foreground transition-colors duration-300 opacity-50 hover:opacity-100 text-xs"
+                title="Secret Menu"
+              >
+                🔒
+              </button>
+            )}
           </nav>
 
           {/* QR Code & Mobile Menu */}
@@ -82,9 +107,33 @@ const Header = () => {
                 {item.label}
               </button>
             ))}
+            
+            {/* Mobile Exotic Menu Link */}
+            {hasExoticAccess ? (
+              <a 
+                href="/exotic-menu"
+                className="font-body text-primary hover:text-primary-glow transition-colors duration-300 text-left flex items-center space-x-2"
+              >
+                <Lock className="w-4 h-4" />
+                <span>Exotic Menu</span>
+              </a>
+            ) : (
+              <button
+                onClick={() => setIsPasscodeModalOpen(true)}
+                className="font-body text-muted-foreground hover:text-foreground transition-colors duration-300 text-left opacity-50 hover:opacity-100 text-sm"
+              >
+                🔒 Secret Menu
+              </button>
+            )}
           </nav>
         </div>
       </div>
+
+      {/* Passcode Modal */}
+      <PasscodeModal 
+        isOpen={isPasscodeModalOpen} 
+        onClose={() => setIsPasscodeModalOpen(false)} 
+      />
     </header>
   );
 };
