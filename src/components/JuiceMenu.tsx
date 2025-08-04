@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Eye } from "lucide-react";
 
 // Import juice images
 import tropicalBoost from "@/assets/juice-tropical-boost.jpg";
@@ -86,16 +84,6 @@ const categoryColors = {
 };
 
 const JuiceMenu = () => {
-  const [flippedCard, setFlippedCard] = useState<string | null>(null);
-
-  const handleCardHover = (id: string) => {
-    setFlippedCard(id);
-  };
-
-  const handleCardLeave = () => {
-    setFlippedCard(null);
-  };
-
   const openFullMenu = () => {
     // This would typically open a modal or navigate to a full menu page
     console.log("Opening full menu...");
@@ -110,8 +98,7 @@ const JuiceMenu = () => {
             Signature Juice Blends
           </h2>
           <p className="font-body text-lg text-muted-foreground">
-            Each blend is carefully crafted with AI precision to target specific wellness goals. 
-            Hover over any card to discover the magic behind the mix.
+            Each blend is carefully crafted with AI precision to target specific wellness goals with complete ingredient transparency.
           </p>
         </div>
 
@@ -120,65 +107,45 @@ const JuiceMenu = () => {
           {juiceBlends.map((blend) => (
             <Card 
               key={blend.id}
-              className="group relative overflow-hidden cursor-pointer transform transition-all duration-500 hover:scale-105 shadow-card hover:shadow-soft"
-              onMouseEnter={() => handleCardHover(blend.id)}
-              onMouseLeave={handleCardLeave}
+              className="overflow-hidden transform transition-all duration-300 hover:scale-105 shadow-card hover:shadow-soft"
             >
-              <CardContent className="p-0 relative h-80">
-                {/* Front of card */}
-                <div className={`absolute inset-0 transition-transform duration-500 ${
-                  flippedCard === blend.id ? 'transform rotate-y-180' : ''
-                }`}>
+              <CardContent className="p-0">
+                {/* Juice Image */}
+                <div className="relative aspect-[4/3] overflow-hidden">
                   <img 
                     src={blend.image}
                     alt={blend.name}
                     className="w-full h-full object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                   
                   {/* Category Badge */}
                   <Badge className={`absolute top-4 right-4 ${categoryColors[blend.category]}`}>
                     {blend.category}
                   </Badge>
-                  
-                  {/* Content */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <h3 className="font-heading font-bold text-xl mb-2">{blend.name}</h3>
-                    <p className="font-body text-sm opacity-90">{blend.benefit}</p>
-                  </div>
                 </div>
-
-                {/* Back of card */}
-                <div className={`absolute inset-0 bg-background p-6 flex flex-col justify-center transition-transform duration-500 ${
-                  flippedCard === blend.id ? '' : 'transform rotate-y-180'
-                }`}>
-                  <h3 className="font-heading font-bold text-lg mb-4 text-foreground">{blend.name}</h3>
+                
+                {/* Always Visible Content */}
+                <div className="p-6 space-y-4">
+                  {/* Blend Name */}
+                  <h3 className="font-heading font-bold text-xl text-foreground">{blend.name}</h3>
                   
-                  <div className="space-y-3">
+                  {/* Benefit */}
+                  <p className="font-body text-sm text-muted-foreground">{blend.benefit}</p>
+                  
+                  {/* Ingredients and Proportions */}
+                  <div className="space-y-3 pt-2 border-t border-border">
                     <div>
-                      <h4 className="font-body font-semibold text-sm text-foreground mb-2">Ingredients:</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {blend.ingredients.map((ingredient, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
-                            {ingredient}
-                          </Badge>
-                        ))}
-                      </div>
+                      <p className="font-body text-sm text-foreground">
+                        <span className="font-semibold">Ingredients:</span> {blend.ingredients.join(", ")}
+                      </p>
                     </div>
                     
                     <div>
-                      <h4 className="font-body font-semibold text-sm text-foreground mb-2">Proportions:</h4>
-                      <p className="font-body text-xs text-muted-foreground leading-relaxed">
-                        {blend.proportions}
+                      <p className="font-body text-sm text-muted-foreground">
+                        <span className="font-semibold text-foreground">Proportions:</span> {blend.proportions}
                       </p>
                     </div>
-                  </div>
-                </div>
-
-                {/* Hover indicator */}
-                <div className="absolute top-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="bg-background/80 backdrop-blur-sm rounded-full p-2">
-                    <Eye className="w-4 h-4 text-foreground" />
                   </div>
                 </div>
               </CardContent>
