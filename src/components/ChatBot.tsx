@@ -10,27 +10,113 @@ interface Message {
   type: "user" | "bot";
   content: string;
   timestamp: Date;
+  isSystemMessage?: boolean;
+  hasButtons?: boolean;
+  buttons?: Array<{
+    text: string;
+    action: "order" | "subscribe" | "diy" | "quick-response";
+    value?: string;
+  }>;
 }
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [conversationStep, setConversationStep] = useState(0);
+  const [userResponses, setUserResponses] = useState<string[]>([]);
   const [messages, setMessages] = useState<Message[]>([
+    {
+      id: "system",
+      type: "bot",
+      content: "You are Dr. Vital, a certified holistic juice specialist and AI health coach. Speak warmly and professionally. Always ask clarifying questions before recommending blends. Include: 'Not medical advice; consult a healthcare professional.'",
+      timestamp: new Date(),
+      isSystemMessage: true
+    },
     {
       id: "1",
       type: "bot",
-      content: "Hi! I'm Dr. Vital, your AI nutrition expert. I'm ready to find your perfect juice blend based on your goals, preferences, and health needs. What would you like to achieve today?",
+      content: "Hello, I'm Dr. Vital. How are you feeling today? Tell me about your symptoms, energy levels, mood, or wellness goals.",
       timestamp: new Date()
     }
   ]);
   const [inputValue, setInputValue] = useState("");
 
-  const quickResponses = [
-    "I need more energy",
-    "Help with immune support", 
-    "Looking for detox",
-    "Improve my focus",
-    "Post-workout recovery"
+  const followUpQuestions = [
+    "Can you walk me through your typical morning routine and diet?",
+    "How are your sleep quality and stress levels lately?"
   ];
+
+  const juiceBlends = {
+    energy: {
+      name: "Energy Blast",
+      ingredients: "Carrot (1 cup), Orange (¾ cup), Ginger (1 tsp), Turmeric (½ tsp)",
+      why: "Vitamin A from carrots supports sustained energy, while vitamin C and ginger provide natural stimulation without caffeine crashes."
+    },
+    immune: {
+      name: "Immune Shield", 
+      ingredients: "Orange (1 cup), Lemon (½ cup), Elderberry (¼ cup), Zinc supplement",
+      why: "High vitamin C content boosts white blood cell production, elderberry provides antioxidants, and zinc supports immune function."
+    },
+    focus: {
+      name: "Brain Boost",
+      ingredients: "Blueberry (¾ cup), Grape (¾ cup), Walnut extract (1 tsp), Lion's Mane (optional)",
+      why: "Anthocyanins from berries improve cognitive function, while omega-3s from walnut extract support brain health and memory."
+    },
+    detox: {
+      name: "Green Vitality",
+      ingredients: "Cucumber (1 cup), Spinach (1 cup), Green Apple (½ cup), Lemon (¼ cup)",
+      why: "Chlorophyll aids liver detoxification, cucumber provides hydration, and apple adds natural sweetness while supporting digestion."
+    },
+    stress: {
+      name: "Calm & Restore",
+      ingredients: "Watermelon (1 cup), Mint (fresh), Magnesium powder (optional), Coconut water (½ cup)",
+      why: "Natural sugars provide gentle energy, mint has calming properties, and magnesium helps reduce cortisol levels."
+    }
+  };
+
+  const getPersonalizedBlends = (responses: string[]) => {
+    const combined = responses.join(" ").toLowerCase();
+    const selectedBlends = [];
+    
+    if (combined.includes("energy") || combined.includes("tired") || combined.includes("coffee")) {
+      selectedBlends.push(juiceBlends.energy);
+    }
+    if (combined.includes("immune") || combined.includes("sick") || combined.includes("cold")) {
+      selectedBlends.push(juiceBlends.immune);
+    }
+    if (combined.includes("focus") || combined.includes("concentration") || combined.includes("work")) {
+      selectedBlends.push(juiceBlends.focus);
+    }
+    if (combined.includes("detox") || combined.includes("cleanse") || combined.includes("bloat")) {
+      selectedBlends.push(juiceBlends.detox);
+    }
+    if (combined.includes("stress") || combined.includes("anxious") || combined.includes("overwhelm")) {
+      selectedBlends.push(juiceBlends.stress);
+    }
+    
+    // Default to energy, immune, and focus if no specific matches
+    if (selectedBlends.length === 0) {
+      selectedBlends.push(juiceBlends.energy, juiceBlends.immune, juiceBlends.focus);
+    }
+    
+    return selectedBlends.slice(0, 3);
+  };
+
+  const getHolisticTip = (responses: string[]) => {
+    const combined = responses.join(" ").toLowerCase();
+    
+    if (combined.includes("sleep") || combined.includes("tired")) {
+      return "Holistic tip: Try the 4-7-8 breathing technique before bed - inhale for 4, hold for 7, exhale for 8. This activates your parasympathetic nervous system for better sleep.";
+    }
+    if (combined.includes("stress") || combined.includes("work")) {
+      return "Holistic tip: Take a 2-minute hydration break every hour. Dehydration increases cortisol levels and can amplify stress responses.";
+    }
+    if (combined.includes("energy") || combined.includes("morning")) {
+      return "Holistic tip: Start your day with 10 minutes of sunlight exposure. This helps regulate your circadian rhythm and naturally boosts energy.";
+    }
+    
+    return "Holistic tip: Remember to drink at least 8 glasses of water daily. Proper hydration is the foundation of cellular energy and mental clarity.";
+  };
 
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
@@ -43,46 +129,96 @@ const ChatBot = () => {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    setUserResponses(prev => [...prev, inputValue]);
     setInputValue("");
 
-    // Simulate bot response
+    // Generate bot response based on conversation step
     setTimeout(() => {
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        type: "bot",
-        content: generateBotResponse(inputValue),
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, botMessage]);
+      generateBotResponse(inputValue, conversationStep);
+      setConversationStep(prev => prev + 1);
     }, 1000);
   };
 
-  const generateBotResponse = (userInput: string): string => {
-    const input = userInput.toLowerCase();
-    
-    if (input.includes("energy")) {
-      return "Perfect! For natural energy, I recommend our Tropical Boost or Energy Blast. The Tropical Boost combines pineapple and mango for quick energy, while Energy Blast has carrot and turmeric for sustained power. Which sounds better to you?";
+  const generateBotResponse = (userInput: string, step: number) => {
+    let botContent = "";
+    let hasButtons = false;
+    let buttons: Array<{text: string, action: "order" | "subscribe" | "diy" | "quick-response", value?: string}> = [];
+
+    if (step === 0) {
+      // First response - ask follow-up question
+      botContent = followUpQuestions[0];
+    } else if (step === 1) {
+      // Second response - ask second follow-up
+      botContent = followUpQuestions[1];
+    } else if (step === 2) {
+      // Third response - provide personalized recommendations
+      const blends = getPersonalizedBlends([...userResponses, userInput]);
+      const holisticTip = getHolisticTip([...userResponses, userInput]);
+      
+      botContent = `Based on your responses, here are three personalized NeuroJuice blends for you:\n\n`;
+      
+      blends.forEach((blend, index) => {
+        botContent += `**${index + 1}. ${blend.name}**\n`;
+        botContent += `Ingredients: ${blend.ingredients}\n`;
+        botContent += `Why it works: ${blend.why}\n\n`;
+      });
+      
+      botContent += `${holisticTip}\n\n`;
+      botContent += `Unlock NeuroJuice Pro: unlimited Dr. Vital access, 20% off bundles, monthly wellness check-ins. First two months are free; cancel anytime.\n\n`;
+      botContent += `*Not medical advice; consult a healthcare professional.*`;
+      
+      hasButtons = true;
+      buttons = [
+        { text: "Order Now", action: "order" },
+        { text: "Subscribe & Save", action: "subscribe" },
+        { text: "DIY at Home", action: "diy" }
+      ];
+    } else {
+      // Final response
+      const name = userName || "friend";
+      botContent = `I'm here anytime, ${name}. Drink well, feel well! 🧃✨`;
     }
+
+    const botMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      type: "bot",
+      content: botContent,
+      timestamp: new Date(),
+      hasButtons,
+      buttons
+    };
     
-    if (input.includes("immune")) {
-      return "Great choice! Our Immune Shield is packed with vitamin C from citrus fruits, plus elderberry and zinc for extra protection. Would you like me to customize the blend based on any specific health concerns?";
+    setMessages(prev => [...prev, botMessage]);
+  };
+
+  const handleButtonClick = (action: string) => {
+    if (action === "order") {
+      window.location.href = "/order-options";
+    } else if (action === "subscribe") {
+      // Add subscription logic here
+      console.log("Redirect to subscription checkout");
+    } else if (action === "diy") {
+      const finalMessage: Message = {
+        id: (Date.now() + 2).toString(),
+        type: "bot", 
+        content: "Perfect! Screenshot those recipes and enjoy making your personalized blends at home. Remember to use fresh, organic ingredients when possible. Cheers to your health journey! 🥤✨",
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, finalMessage]);
     }
-    
-    if (input.includes("detox")) {
-      return "Excellent! Green Vitality is our signature detox blend with cucumber, spinach, and green apple. It's alkalizing and helps flush toxins naturally. How familiar are you with green juices?";
-    }
-    
-    if (input.includes("focus")) {
-      return "Brain Boost is perfect for cognitive enhancement! It contains blueberries and grape for antioxidants, plus walnut extract for omega-3s. This blend supports memory and concentration. Would you like to add any adaptogens?";
-    }
-    
-    return "That's interesting! Based on your needs, I can create a personalized blend recommendation. Could you tell me more about your health goals, any dietary restrictions, or ingredients you particularly enjoy?";
   };
 
   const handleQuickResponse = (response: string) => {
     setInputValue(response);
-    handleSendMessage();
   };
+
+  const quickResponses = [
+    "I need more energy",
+    "Help with immune support", 
+    "Looking for detox",
+    "Improve my focus",
+    "Post-workout recovery"
+  ];
 
   return (
     <>
@@ -118,7 +254,7 @@ const ChatBot = () => {
           <CardContent className="p-0 h-full flex flex-col">
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-background">
-              {messages.map((message) => (
+              {messages.filter(m => !m.isSystemMessage).map((message) => (
                 <div
                   key={message.id}
                   className={cn(
@@ -136,7 +272,24 @@ const ChatBot = () => {
                   >
                     <div className="flex items-start space-x-2">
                       {message.type === "bot" && <Bot className="w-4 h-4 mt-0.5 flex-shrink-0" />}
-                      <p className="leading-relaxed">{message.content}</p>
+                      <div className="space-y-3">
+                        <p className="leading-relaxed whitespace-pre-line">{message.content}</p>
+                        {message.hasButtons && message.buttons && (
+                          <div className="flex flex-wrap gap-2">
+                            {message.buttons.map((button, index) => (
+                              <Button
+                                key={index}
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleButtonClick(button.action)}
+                                className="text-xs"
+                              >
+                                {button.text}
+                              </Button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                       {message.type === "user" && <User className="w-4 h-4 mt-0.5 flex-shrink-0" />}
                     </div>
                   </div>
@@ -145,7 +298,7 @@ const ChatBot = () => {
             </div>
 
             {/* Quick Responses */}
-            {messages.length === 1 && (
+            {messages.filter(m => !m.isSystemMessage).length === 1 && (
               <div className="p-4 bg-muted/50 border-t">
                 <p className="font-body text-xs text-muted-foreground mb-2">Quick options:</p>
                 <div className="flex flex-wrap gap-2">
