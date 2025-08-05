@@ -20,10 +20,10 @@ const Header = () => {
 
   const navItems = [
     { label: "Home", href: "#home", action: "scroll" },
-    { label: "Menu", href: "#menu", action: "scroll" },
+    { label: "Menu", href: "/menu", action: "navigate" },
+    { label: "Dr. Vital", href: "/dr-vital", action: "navigate" },
     { label: "Reviews", href: "#reviews", action: "scroll" },
     { label: "About", href: "#about", action: "scroll" },
-    { label: "Chat", href: "#chat", action: "chat" },
     { label: "Order", href: "/order-options", action: "navigate" },
   ];
 

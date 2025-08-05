@@ -85,8 +85,7 @@ const categoryColors = {
 
 const JuiceMenu = () => {
   const openFullMenu = () => {
-    // This would typically open a modal or navigate to a full menu page
-    console.log("Opening full menu...");
+    window.location.href = "/menu";
   };
 
   return (

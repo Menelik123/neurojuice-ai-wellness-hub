@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import OrderOptions from "./pages/OrderOptions";
 import ExoticMenu from "./pages/ExoticMenu";
+import DrVital from "./pages/DrVital";
+import Menu from "./pages/Menu";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -20,6 +22,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/order-options" element={<OrderOptions />} />
           <Route path="/exotic-menu" element={<ExoticMenu />} />
+          <Route path="/dr-vital" element={<DrVital />} />
+          <Route path="/menu" element={<Menu />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
