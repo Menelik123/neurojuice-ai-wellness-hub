@@ -3,27 +3,48 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, QrCode, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import PasscodeModal from "./PasscodeModal";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPasscodeModalOpen, setIsPasscodeModalOpen] = useState(false);
+  const [isQrModalOpen, setIsQrModalOpen] = useState(false);
 
   // Check if user has exotic access
   const hasExoticAccess = sessionStorage.getItem("exotic-access") === "granted";
 
   const navItems = [
-    { label: "Home", href: "#home" },
-    { label: "Menu", href: "#menu" },
-    { label: "Reviews", href: "#reviews" },
-    { label: "About", href: "#about" },
-    { label: "Chat", href: "#chat" },
-    { label: "Order", href: "#order" },
+    { label: "Home", href: "#home", action: "scroll" },
+    { label: "Menu", href: "#menu", action: "scroll" },
+    { label: "Reviews", href: "#reviews", action: "scroll" },
+    { label: "About", href: "#about", action: "scroll" },
+    { label: "Chat", href: "#chat", action: "chat" },
+    { label: "Order", href: "/order-options", action: "navigate" },
   ];
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+  const handleNavClick = (item: typeof navItems[0]) => {
+    if (item.action === "scroll") {
+      if (item.href === "#home") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        const element = document.querySelector(item.href);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    } else if (item.action === "chat") {
+      // Open chatbot widget - assuming there's a global chat function
+      const chatWidget = document.querySelector('#chat');
+      if (chatWidget) {
+        chatWidget.scrollIntoView({ behavior: "smooth" });
+      }
+    } else if (item.action === "navigate") {
+      window.location.href = item.href;
     }
     setIsMenuOpen(false);
   };
@@ -33,10 +54,12 @@ const Header = () => {
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-hero rounded-full flex items-center justify-center">
-              <span className="text-white font-heading font-bold text-lg">N</span>
-            </div>
+          <div className="flex items-center space-x-3">
+            <img 
+              src="/lovable-uploads/35b5767b-d341-4c7a-9b10-ec63941d1959.png" 
+              alt="NeuroJuice Logo" 
+              className="h-12 w-auto"
+            />
             <span className="font-heading font-bold text-xl text-foreground">NeuroJuice</span>
           </div>
 
@@ -45,7 +68,7 @@ const Header = () => {
             {navItems.map((item) => (
               <button
                 key={item.label}
-                onClick={() => scrollToSection(item.href)}
+                onClick={() => handleNavClick(item)}
                 className="font-body text-foreground hover:text-primary transition-colors duration-300 relative group"
               >
                 {item.label}
@@ -76,10 +99,13 @@ const Header = () => {
 
           {/* QR Code & Mobile Menu */}
           <div className="flex items-center space-x-4">
-            <div className="hidden sm:flex items-center space-x-2 text-sm text-muted-foreground">
+            <button 
+              onClick={() => setIsQrModalOpen(true)}
+              className="hidden sm:flex items-center space-x-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-300"
+            >
               <QrCode className="w-4 h-4" />
               <span>Scan for mobile menu</span>
-            </div>
+            </button>
             
             <Button
               variant="ghost"
@@ -101,7 +127,7 @@ const Header = () => {
             {navItems.map((item) => (
               <button
                 key={item.label}
-                onClick={() => scrollToSection(item.href)}
+                onClick={() => handleNavClick(item)}
                 className="font-body text-foreground hover:text-primary transition-colors duration-300 text-left"
               >
                 {item.label}
@@ -134,6 +160,27 @@ const Header = () => {
         isOpen={isPasscodeModalOpen} 
         onClose={() => setIsPasscodeModalOpen(false)} 
       />
+
+      {/* QR Code Modal */}
+      <Dialog open={isQrModalOpen} onOpenChange={setIsQrModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Mobile Menu QR Code</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center space-y-4 p-4">
+            <div className="w-48 h-48 bg-white p-4 rounded-lg border-2 border-border flex items-center justify-center">
+              <img 
+                src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://neurojuice.lovable.app" 
+                alt="QR Code for NeuroJuice mobile menu"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <p className="text-sm text-muted-foreground text-center">
+              Scan this QR code with your phone to access the NeuroJuice menu on mobile
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 };

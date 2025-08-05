@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Smooth scrolling for navigation */
+html {
+  scroll-behavior: smooth;
+}
+
 /* NeuroJuice Design System - Fruit-inspired colors and typography */
 
 @layer base {
