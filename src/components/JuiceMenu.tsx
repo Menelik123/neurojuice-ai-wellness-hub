@@ -24,7 +24,7 @@ const juiceBlends: JuiceBlend[] = [
   {
     id: "weight-loss",
     name: "Weight Loss Juice",
-    benefit: "Metabolism boost & natural cleanse",
+    benefit: "Supports metabolism and cleanses naturally.",
     image: greenVitality,
     ingredients: ["Celery (1 stalk)", "Spinach (1 cup)", "Apple (1)", "Cucumber (½ cup)", "Lime (½ fruit)"],
     proportions: "Celery (1 stalk), Spinach (1 cup), Apple (1), Cucumber (½ cup), Lime (½ fruit)",
@@ -33,7 +33,7 @@ const juiceBlends: JuiceBlend[] = [
   {
     id: "hydration",
     name: "Hydration Juice",
-    benefit: "Ultimate hydration & electrolyte balance",
+    benefit: "Replenishes fluids and electrolytes fast.",
     image: pinkPower,
     ingredients: ["Pineapple (¾ cup)", "Watermelon (¾ cup)"],
     proportions: "Pineapple (¾ cup), Watermelon (¾ cup)",
@@ -42,7 +42,7 @@ const juiceBlends: JuiceBlend[] = [
   {
     id: "lung-detox",
     name: "Lung Detox",
-    benefit: "Respiratory support & cleansing",
+    benefit: "Helps clear airways for easier breathing.",
     image: greenVitality,
     ingredients: ["Cucumber (1 cup)", "Pineapple (½ cup)", "Ginger (1 tsp)", "Apple (½ cup)"],
     proportions: "Cucumber (1 cup), Pineapple (½ cup), Ginger (1 tsp), Apple (½ cup)",
@@ -51,7 +51,7 @@ const juiceBlends: JuiceBlend[] = [
   {
     id: "glowing-skin",
     name: "Glowing Skin Juice",
-    benefit: "Radiant skin & anti-aging",
+    benefit: "Promotes clear, radiant complexion.",
     image: energyBlast,
     ingredients: ["Carrots (1 cup)", "Lemon (¼ fruit)", "Orange (½ fruit)", "Cucumber (½ cup)", "Ginger (1 tsp)", "Apple (½ cup)"],
     proportions: "Carrots (1 cup), Lemon (¼ fruit), Orange (½ fruit), Cucumber (½ cup), Ginger (1 tsp), Apple (½ cup)",
@@ -60,7 +60,7 @@ const juiceBlends: JuiceBlend[] = [
   {
     id: "cold-flu",
     name: "Cold & Flu Juice",
-    benefit: "Immune boost & recovery support",
+    benefit: "Boosts immunity and soothes seasonal sniffles.",
     image: immuneShield,
     ingredients: ["Apple (1)", "Lemon (½ fruit)", "Carrots (½ cup)", "Ginger (1 tsp)"],
     proportions: "Apple (1), Lemon (½ fruit), Carrots (½ cup), Ginger (1 tsp)",
@@ -69,7 +69,7 @@ const juiceBlends: JuiceBlend[] = [
   {
     id: "beet-cleanse",
     name: "Beet Cleanse",
-    benefit: "Liver detox & blood purification",
+    benefit: "Detoxes liver and purifies blood.",
     image: energyBlast,
     ingredients: ["Carrots (1 cup)", "Beets (½ cup)", "Lemon (½ fruit)", "Ginger (1 tsp)"],
     proportions: "Carrots (1 cup), Beets (½ cup), Lemon (½ fruit), Ginger (1 tsp)",
@@ -78,7 +78,7 @@ const juiceBlends: JuiceBlend[] = [
   {
     id: "natural-vigor",
     name: "Natural Vigara",
-    benefit: "Natural energy & vitality boost",
+    benefit: "Enhances circulation and lasting vitality.",
     image: greenVitality,
     ingredients: ["Celery (1 stalk)", "Cucumber (1 cup)", "Apple (½ cup)", "Ginger (1 tsp)"],
     proportions: "Celery (1 stalk), Cucumber (1 cup), Apple (½ cup), Ginger (1 tsp)",
@@ -87,7 +87,7 @@ const juiceBlends: JuiceBlend[] = [
   {
     id: "sunshine",
     name: "Sunshine Juice",
-    benefit: "Vitamin C powerhouse & mood boost",
+    benefit: "Uplifts mood with a vitamin C kick.",
     image: tropicalBoost,
     ingredients: ["Orange (1)", "Watermelon (½ cup)", "Pineapple (½ cup)"],
     proportions: "Orange (1), Watermelon (½ cup), Pineapple (½ cup)",
@@ -150,11 +150,14 @@ const JuiceMenu = () => {
                   {/* Benefit */}
                   <p className="font-body text-sm text-muted-foreground">{blend.benefit}</p>
                   
-                  {/* Ingredients and Price */}
+                  {/* Ingredients, Benefit and Price */}
                   <div className="space-y-3 pt-2 border-t border-border">
                     <div>
                       <p className="font-body text-sm text-foreground">
                         <span className="font-semibold">Ingredients:</span> {blend.proportions}
+                      </p>
+                      <p className="font-body text-sm text-muted-foreground mt-2">
+                        {blend.benefit}
                       </p>
                     </div>
                     
