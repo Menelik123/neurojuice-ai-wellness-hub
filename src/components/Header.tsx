@@ -30,7 +30,11 @@ const Header = () => {
   const handleNavClick = (item: typeof navItems[0]) => {
     if (item.action === "scroll") {
       if (item.href === "#home") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        if (window.location.pathname === '/') {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          window.location.href = '/';
+        }
       } else {
         const element = document.querySelector(item.href);
         if (element) {

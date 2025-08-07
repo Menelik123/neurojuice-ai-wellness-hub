@@ -22,58 +22,76 @@ interface JuiceBlend {
 
 const juiceBlends: JuiceBlend[] = [
   {
-    id: "tropical-boost",
-    name: "Tropical Boost",
-    benefit: "Natural energy & vitamin C power",
-    image: tropicalBoost,
-    ingredients: ["Fresh Pineapple", "Mango", "Coconut Water", "Lime", "Mint"],
-    proportions: "40% Pineapple, 30% Mango, 20% Coconut Water, 10% Citrus & Herbs",
-    category: "energy"
-  },
-  {
-    id: "pink-power",
-    name: "Pink Power",
-    benefit: "Antioxidant boost & heart health",
-    image: pinkPower,
-    ingredients: ["Watermelon", "Strawberry", "Pomegranate", "Rose Water"],
-    proportions: "50% Watermelon, 25% Strawberry, 20% Pomegranate, 5% Rose Water",
-    category: "wellness"
-  },
-  {
-    id: "green-vitality",
-    name: "Green Vitality",
-    benefit: "Detox & alkalizing minerals",
+    id: "weight-loss",
+    name: "Weight Loss Juice",
+    benefit: "Metabolism boost & natural cleanse",
     image: greenVitality,
-    ingredients: ["Cucumber", "Spinach", "Green Apple", "Lemon", "Ginger"],
-    proportions: "35% Cucumber, 25% Apple, 20% Spinach, 15% Citrus, 5% Ginger",
+    ingredients: ["Celery (1 stalk)", "Spinach (1 cup)", "Apple (1)", "Cucumber (½ cup)", "Lime (½ fruit)"],
+    proportions: "Celery (1 stalk), Spinach (1 cup), Apple (1), Cucumber (½ cup), Lime (½ fruit)",
     category: "wellness"
   },
   {
-    id: "energy-blast",
-    name: "Energy Blast",
-    benefit: "Sustained energy & beta-carotene",
+    id: "hydration",
+    name: "Hydration Juice",
+    benefit: "Ultimate hydration & electrolyte balance",
+    image: pinkPower,
+    ingredients: ["Pineapple (¾ cup)", "Watermelon (¾ cup)"],
+    proportions: "Pineapple (¾ cup), Watermelon (¾ cup)",
+    category: "wellness"
+  },
+  {
+    id: "lung-detox",
+    name: "Lung Detox",
+    benefit: "Respiratory support & cleansing",
+    image: greenVitality,
+    ingredients: ["Cucumber (1 cup)", "Pineapple (½ cup)", "Ginger (1 tsp)", "Apple (½ cup)"],
+    proportions: "Cucumber (1 cup), Pineapple (½ cup), Ginger (1 tsp), Apple (½ cup)",
+    category: "wellness"
+  },
+  {
+    id: "glowing-skin",
+    name: "Glowing Skin Juice",
+    benefit: "Radiant skin & anti-aging",
     image: energyBlast,
-    ingredients: ["Carrot", "Orange", "Turmeric", "Ginger", "Cayenne"],
-    proportions: "60% Carrot, 30% Orange, 8% Turmeric & Ginger, 2% Cayenne",
+    ingredients: ["Carrots (1 cup)", "Lemon (¼ fruit)", "Orange (½ fruit)", "Cucumber (½ cup)", "Ginger (1 tsp)", "Apple (½ cup)"],
+    proportions: "Carrots (1 cup), Lemon (¼ fruit), Orange (½ fruit), Cucumber (½ cup), Ginger (1 tsp), Apple (½ cup)",
+    category: "wellness"
+  },
+  {
+    id: "cold-flu",
+    name: "Cold & Flu Juice",
+    benefit: "Immune boost & recovery support",
+    image: immuneShield,
+    ingredients: ["Apple (1)", "Lemon (½ fruit)", "Carrots (½ cup)", "Ginger (1 tsp)"],
+    proportions: "Apple (1), Lemon (½ fruit), Carrots (½ cup), Ginger (1 tsp)",
+    category: "wellness"
+  },
+  {
+    id: "beet-cleanse",
+    name: "Beet Cleanse",
+    benefit: "Liver detox & blood purification",
+    image: energyBlast,
+    ingredients: ["Carrots (1 cup)", "Beets (½ cup)", "Lemon (½ fruit)", "Ginger (1 tsp)"],
+    proportions: "Carrots (1 cup), Beets (½ cup), Lemon (½ fruit), Ginger (1 tsp)",
+    category: "wellness"
+  },
+  {
+    id: "natural-vigor",
+    name: "Natural Vigara",
+    benefit: "Natural energy & vitality boost",
+    image: greenVitality,
+    ingredients: ["Celery (1 stalk)", "Cucumber (1 cup)", "Apple (½ cup)", "Ginger (1 tsp)"],
+    proportions: "Celery (1 stalk), Cucumber (1 cup), Apple (½ cup), Ginger (1 tsp)",
     category: "energy"
   },
   {
-    id: "brain-boost",
-    name: "Brain Boost",
-    benefit: "Cognitive enhancement & memory",
-    image: brainBoost,
-    ingredients: ["Blueberry", "Grape", "Acai", "Walnut Extract", "Sage"],
-    proportions: "40% Blueberry, 30% Grape, 20% Acai, 8% Walnut, 2% Sage",
-    category: "focus"
-  },
-  {
-    id: "immune-shield",
-    name: "Immune Shield",
-    benefit: "Immune system & vitamin powerhouse",
-    image: immuneShield,
-    ingredients: ["Orange", "Lemon", "Elderberry", "Zinc", "Echinacea"],
-    proportions: "50% Orange, 25% Lemon, 15% Elderberry, 8% Zinc, 2% Echinacea",
-    category: "wellness"
+    id: "sunshine",
+    name: "Sunshine Juice",
+    benefit: "Vitamin C powerhouse & mood boost",
+    image: tropicalBoost,
+    ingredients: ["Orange (1)", "Watermelon (½ cup)", "Pineapple (½ cup)"],
+    proportions: "Orange (1), Watermelon (½ cup), Pineapple (½ cup)",
+    category: "energy"
   }
 ];
 
@@ -132,18 +150,25 @@ const JuiceMenu = () => {
                   {/* Benefit */}
                   <p className="font-body text-sm text-muted-foreground">{blend.benefit}</p>
                   
-                  {/* Ingredients and Proportions */}
+                  {/* Ingredients and Price */}
                   <div className="space-y-3 pt-2 border-t border-border">
                     <div>
                       <p className="font-body text-sm text-foreground">
-                        <span className="font-semibold">Ingredients:</span> {blend.ingredients.join(", ")}
+                        <span className="font-semibold">Ingredients:</span> {blend.proportions}
                       </p>
                     </div>
                     
-                    <div>
-                      <p className="font-body text-sm text-muted-foreground">
-                        <span className="font-semibold text-foreground">Proportions:</span> {blend.proportions}
-                      </p>
+                    <div className="flex justify-between items-center">
+                      <Badge className="bg-primary text-primary-foreground font-bold">
+                        $X.XX
+                      </Badge>
+                      <Button 
+                        variant="default" 
+                        size="sm"
+                        onClick={() => window.location.href = "/order-options"}
+                      >
+                        Order Now
+                      </Button>
                     </div>
                   </div>
                 </div>
