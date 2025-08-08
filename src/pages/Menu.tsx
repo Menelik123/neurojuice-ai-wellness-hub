@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Users, Gift } from "lucide-react";
+import { STANDARD_JUICE_PRICE } from "@/lib/pricing";
 
 import brainBoostImg from "@/assets/juice-brain-boost.jpg";
 import energyBlastImg from "@/assets/juice-energy-blast.jpg";
@@ -15,52 +16,68 @@ import tropicalBoostImg from "@/assets/juice-tropical-boost.jpg";
 const Menu = () => {
   const juices = [
     {
-      name: "Brain Boost",
-      image: brainBoostImg,
-      ingredients: "Blueberry (¾ cup), Grape (¾ cup)",
-      description: "Cognitive enhancement with antioxidant-rich berries for memory and focus.",
-      price: "$8.99",
-      benefits: ["Focus", "Memory", "Antioxidants"]
+      name: "Weight Loss Juice",
+      image: greenVitalityImg,
+      ingredients: "Celery (1 stalk), Spinach (1 cup), Apple (1), Cucumber (½ cup), Lime (½ fruit)",
+      description: "Supports metabolism and cleanses naturally.",
+      price: STANDARD_JUICE_PRICE,
+      benefits: ["Metabolism", "Cleanse", "Natural"]
     },
     {
-      name: "Energy Blast", 
-      image: energyBlastImg,
-      ingredients: "Carrot (1 cup), Orange (¾ cup)",
-      description: "Natural energy boost with vitamin A and C for sustained vitality.",
-      price: "$7.99",
-      benefits: ["Energy", "Vitamin C", "Natural"]
-    },
-    {
-      name: "Green Vitality",
-      image: greenVitalityImg, 
-      ingredients: "Spinach (1 cup), Cucumber (1 cup), Green Apple (½ cup)",
-      description: "Alkalizing detox blend that cleanses and energizes your system.",
-      price: "$9.99",
-      benefits: ["Detox", "Alkalizing", "Cleanse"]
-    },
-    {
-      name: "Immune Shield",
-      image: immuneShieldImg,
-      ingredients: "Orange (1 cup), Lemon (½ cup), Elderberry (¼ cup)",
-      description: "Vitamin C powerhouse with elderberry for immune system support.",
-      price: "$8.49",
-      benefits: ["Immunity", "Vitamin C", "Protection"]
-    },
-    {
-      name: "Pink Power",
+      name: "Hydration Juice", 
       image: pinkPowerImg,
-      ingredients: "Watermelon (1 cup), Strawberry (¾ cup)",
-      description: "Hydrating blend packed with lycopene and natural electrolytes.",
-      price: "$7.49",
-      benefits: ["Hydration", "Lycopene", "Recovery"]
+      ingredients: "Pineapple (¾ cup), Watermelon (¾ cup)",
+      description: "Replenishes fluids and electrolytes fast.",
+      price: STANDARD_JUICE_PRICE,
+      benefits: ["Hydration", "Electrolytes", "Fast"]
     },
     {
-      name: "Tropical Boost",
+      name: "Lung Detox",
+      image: greenVitalityImg, 
+      ingredients: "Cucumber (1 cup), Pineapple (½ cup), Ginger (1 tsp), Apple (½ cup)",
+      description: "Helps clear airways for easier breathing.",
+      price: STANDARD_JUICE_PRICE,
+      benefits: ["Respiratory", "Cleansing", "Airways"]
+    },
+    {
+      name: "Glowing Skin Juice",
+      image: energyBlastImg,
+      ingredients: "Carrots (1 cup), Lemon (¼ fruit), Orange (½ fruit), Cucumber (½ cup), Ginger (1 tsp), Apple (½ cup)",
+      description: "Promotes clear, radiant complexion.",
+      price: STANDARD_JUICE_PRICE,
+      benefits: ["Skin Health", "Radiant", "Clear"]
+    },
+    {
+      name: "Cold & Flu Juice",
+      image: immuneShieldImg,
+      ingredients: "Apple (1), Lemon (½ fruit), Carrots (½ cup), Ginger (1 tsp)",
+      description: "Boosts immunity and soothes seasonal sniffles.",
+      price: STANDARD_JUICE_PRICE,
+      benefits: ["Immunity", "Recovery", "Soothing"]
+    },
+    {
+      name: "Beet Cleanse",
+      image: energyBlastImg,
+      ingredients: "Carrots (1 cup), Beets (½ cup), Lemon (½ fruit), Ginger (1 tsp)",
+      description: "Detoxes liver and purifies blood.",
+      price: STANDARD_JUICE_PRICE,
+      benefits: ["Detox", "Liver", "Purify"]
+    },
+    {
+      name: "Natural Vigara",
+      image: greenVitalityImg,
+      ingredients: "Celery (1 stalk), Cucumber (1 cup), Apple (½ cup), Ginger (1 tsp)",
+      description: "Enhances circulation and lasting vitality.",
+      price: STANDARD_JUICE_PRICE,
+      benefits: ["Circulation", "Vitality", "Energy"]
+    },
+    {
+      name: "Sunshine Juice",
       image: tropicalBoostImg,
-      ingredients: "Pineapple (¾ cup), Mango (¾ cup)",
-      description: "Tropical paradise in a glass with digestive enzymes and vitamin C.",
-      price: "$8.99",
-      benefits: ["Digestive", "Tropical", "Enzymes"]
+      ingredients: "Orange (1), Watermelon (½ cup), Pineapple (½ cup)",
+      description: "Uplifts mood with a vitamin C kick.",
+      price: STANDARD_JUICE_PRICE,
+      benefits: ["Mood", "Vitamin C", "Uplifting"]
     }
   ];
 

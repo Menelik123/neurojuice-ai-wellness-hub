@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { STANDARD_JUICE_PRICE } from "@/lib/pricing";
 
 // Import juice images
 import tropicalBoost from "@/assets/juice-tropical-boost.jpg";
@@ -163,7 +164,7 @@ const JuiceMenu = () => {
                     
                     <div className="flex justify-between items-center">
                       <Badge className="bg-primary text-primary-foreground font-bold">
-                        $X.XX
+                        {STANDARD_JUICE_PRICE}
                       </Badge>
                       <Button 
                         variant="default" 
