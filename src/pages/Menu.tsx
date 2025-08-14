@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Users, Gift } from "lucide-react";
 import { STANDARD_JUICE_PRICE } from "@/lib/pricing";
+import { juices } from "@/data/juices";
 
 import brainBoostImg from "@/assets/juice-brain-boost.jpg";
 import energyBlastImg from "@/assets/juice-energy-blast.jpg";
@@ -14,72 +15,31 @@ import pinkPowerImg from "@/assets/juice-pink-power.jpg";
 import tropicalBoostImg from "@/assets/juice-tropical-boost.jpg";
 
 const Menu = () => {
-  const juices = [
-    {
-      name: "Weight Loss Juice",
-      image: greenVitalityImg,
-      ingredients: "Celery (1 stalk), Spinach (1 cup), Apple (1), Cucumber (½ cup), Lime (½ fruit)",
-      description: "Supports metabolism and cleanses naturally.",
-      price: STANDARD_JUICE_PRICE,
-      benefits: ["Metabolism", "Cleanse", "Natural"]
-    },
-    {
-      name: "Hydration Juice", 
-      image: pinkPowerImg,
-      ingredients: "Pineapple (¾ cup), Watermelon (¾ cup)",
-      description: "Replenishes fluids and electrolytes fast.",
-      price: STANDARD_JUICE_PRICE,
-      benefits: ["Hydration", "Electrolytes", "Fast"]
-    },
-    {
-      name: "Lung Detox",
-      image: greenVitalityImg, 
-      ingredients: "Cucumber (1 cup), Pineapple (½ cup), Ginger (1 tsp), Apple (½ cup)",
-      description: "Helps clear airways for easier breathing.",
-      price: STANDARD_JUICE_PRICE,
-      benefits: ["Respiratory", "Cleansing", "Airways"]
-    },
-    {
-      name: "Glowing Skin Juice",
-      image: energyBlastImg,
-      ingredients: "Carrots (1 cup), Lemon (¼ fruit), Orange (½ fruit), Cucumber (½ cup), Ginger (1 tsp), Apple (½ cup)",
-      description: "Promotes clear, radiant complexion.",
-      price: STANDARD_JUICE_PRICE,
-      benefits: ["Skin Health", "Radiant", "Clear"]
-    },
-    {
-      name: "Cold & Flu Juice",
-      image: immuneShieldImg,
-      ingredients: "Apple (1), Lemon (½ fruit), Carrots (½ cup), Ginger (1 tsp)",
-      description: "Boosts immunity and soothes seasonal sniffles.",
-      price: STANDARD_JUICE_PRICE,
-      benefits: ["Immunity", "Recovery", "Soothing"]
-    },
-    {
-      name: "Beet Cleanse",
-      image: energyBlastImg,
-      ingredients: "Carrots (1 cup), Beets (½ cup), Lemon (½ fruit), Ginger (1 tsp)",
-      description: "Detoxes liver and purifies blood.",
-      price: STANDARD_JUICE_PRICE,
-      benefits: ["Detox", "Liver", "Purify"]
-    },
-    {
-      name: "Natural Vigara",
-      image: greenVitalityImg,
-      ingredients: "Celery (1 stalk), Cucumber (1 cup), Apple (½ cup), Ginger (1 tsp)",
-      description: "Enhances circulation and lasting vitality.",
-      price: STANDARD_JUICE_PRICE,
-      benefits: ["Circulation", "Vitality", "Energy"]
-    },
-    {
-      name: "Sunshine Juice",
-      image: tropicalBoostImg,
-      ingredients: "Orange (1), Watermelon (½ cup), Pineapple (½ cup)",
-      description: "Uplifts mood with a vitamin C kick.",
-      price: STANDARD_JUICE_PRICE,
-      benefits: ["Mood", "Vitamin C", "Uplifting"]
-    }
-  ];
+  // Mapping for fallback images
+  const imageMap: Record<string, string> = {
+    "weight-loss-juice": greenVitalityImg,
+    "hydration-juice": pinkPowerImg,
+    "lung-detox": greenVitalityImg,
+    "glowing-skin-juice": energyBlastImg,
+    "cold-flu-juice": immuneShieldImg,
+    "beet-cleanse": energyBlastImg,
+    "natural-vigara": greenVitalityImg,
+    "sunshine-juice": tropicalBoostImg,
+  };
+
+  const getBenefits = (slug: string): string[] => {
+    const benefitMap: Record<string, string[]> = {
+      "weight-loss-juice": ["Metabolism", "Cleanse", "Natural"],
+      "hydration-juice": ["Hydration", "Electrolytes", "Fast"],
+      "lung-detox": ["Respiratory", "Cleansing", "Airways"],
+      "glowing-skin-juice": ["Skin Health", "Radiant", "Clear"],
+      "cold-flu-juice": ["Immunity", "Recovery", "Soothing"],
+      "beet-cleanse": ["Detox", "Liver", "Purify"],
+      "natural-vigara": ["Circulation", "Vitality", "Energy"],
+      "sunshine-juice": ["Mood", "Vitamin C", "Uplifting"]
+    };
+    return benefitMap[slug] || [];
+  };
 
   const bundles = [
     {
@@ -102,8 +62,12 @@ const Menu = () => {
     }
   ];
 
-  const handleOrderNow = (item: string) => {
-    window.location.href = `/order-options?item=${encodeURIComponent(item)}`;
+  const handleOrderNow = (slug: string) => {
+    window.location.href = `/order/${slug}`;
+  };
+
+  const handleBundleOrder = (bundleName: string) => {
+    window.location.href = `/order-options?item=${encodeURIComponent(bundleName)}`;
   };
 
   return (
@@ -140,17 +104,17 @@ const Menu = () => {
             </div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {juices.map((juice, index) => (
-                <Card key={index} className="group hover:shadow-soft transition-all duration-300 overflow-hidden">
+              {juices.map((juice) => (
+                <Card key={juice.slug} className="group hover:shadow-soft transition-all duration-300 overflow-hidden">
                   <div className="relative overflow-hidden">
                     <img 
-                      src={juice.image} 
+                      src={imageMap[juice.slug]} 
                       alt={juice.name}
                       className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute top-4 right-4">
                       <Badge className="bg-primary text-primary-foreground font-bold">
-                        {juice.price}
+                        {STANDARD_JUICE_PRICE}
                       </Badge>
                     </div>
                   </div>
@@ -165,12 +129,12 @@ const Menu = () => {
                           <strong>Ingredients:</strong> {juice.ingredients}
                         </p>
                         <p className="font-body text-sm text-foreground leading-relaxed">
-                          {juice.description}
+                          {juice.benefit}
                         </p>
                       </div>
                       
                       <div className="flex flex-wrap gap-2">
-                        {juice.benefits.map((benefit, i) => (
+                        {getBenefits(juice.slug).map((benefit, i) => (
                           <Badge key={i} variant="secondary" className="text-xs">
                             {benefit}
                           </Badge>
@@ -178,7 +142,7 @@ const Menu = () => {
                       </div>
                       
                       <Button 
-                        onClick={() => handleOrderNow(juice.name)}
+                        onClick={() => handleOrderNow(juice.slug)}
                         variant="hero" 
                         className="w-full"
                       >
@@ -246,7 +210,7 @@ const Menu = () => {
                       </div>
                       
                       <Button 
-                        onClick={() => handleOrderNow(bundle.name)}
+                        onClick={() => handleBundleOrder(bundle.name)}
                         variant="hero" 
                         size="lg"
                         className="w-full"

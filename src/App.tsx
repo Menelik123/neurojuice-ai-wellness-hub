@@ -8,6 +8,7 @@ import OrderOptions from "./pages/OrderOptions";
 import ExoticMenu from "./pages/ExoticMenu";
 import DrVital from "./pages/DrVital";
 import Menu from "./pages/Menu";
+import OrderPage from "./pages/OrderPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/exotic-menu" element={<ExoticMenu />} />
           <Route path="/dr-vital" element={<DrVital />} />
           <Route path="/menu" element={<Menu />} />
+          <Route path="/order/:slug" element={<OrderPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -2,8 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { STANDARD_JUICE_PRICE } from "@/lib/pricing";
+import { juices } from "@/data/juices";
 
-// Import juice images
+// Import juice images (fallbacks)
 import tropicalBoost from "@/assets/juice-tropical-boost.jpg";
 import pinkPower from "@/assets/juice-pink-power.jpg";
 import greenVitality from "@/assets/juice-green-vitality.jpg";
@@ -11,95 +12,27 @@ import energyBlast from "@/assets/juice-energy-blast.jpg";
 import brainBoost from "@/assets/juice-brain-boost.jpg";
 import immuneShield from "@/assets/juice-immune-shield.jpg";
 
-interface JuiceBlend {
-  id: string;
-  name: string;
-  benefit: string;
-  image: string;
-  ingredients: string[];
-  proportions: string;
-  category: "energy" | "wellness" | "focus";
-}
-
-const juiceBlends: JuiceBlend[] = [
-  {
-    id: "weight-loss",
-    name: "Weight Loss Juice",
-    benefit: "Supports metabolism and cleanses naturally.",
-    image: greenVitality,
-    ingredients: ["Celery (1 stalk)", "Spinach (1 cup)", "Apple (1)", "Cucumber (½ cup)", "Lime (½ fruit)"],
-    proportions: "Celery (1 stalk), Spinach (1 cup), Apple (1), Cucumber (½ cup), Lime (½ fruit)",
-    category: "wellness"
-  },
-  {
-    id: "hydration",
-    name: "Hydration Juice",
-    benefit: "Replenishes fluids and electrolytes fast.",
-    image: pinkPower,
-    ingredients: ["Pineapple (¾ cup)", "Watermelon (¾ cup)"],
-    proportions: "Pineapple (¾ cup), Watermelon (¾ cup)",
-    category: "wellness"
-  },
-  {
-    id: "lung-detox",
-    name: "Lung Detox",
-    benefit: "Helps clear airways for easier breathing.",
-    image: greenVitality,
-    ingredients: ["Cucumber (1 cup)", "Pineapple (½ cup)", "Ginger (1 tsp)", "Apple (½ cup)"],
-    proportions: "Cucumber (1 cup), Pineapple (½ cup), Ginger (1 tsp), Apple (½ cup)",
-    category: "wellness"
-  },
-  {
-    id: "glowing-skin",
-    name: "Glowing Skin Juice",
-    benefit: "Promotes clear, radiant complexion.",
-    image: energyBlast,
-    ingredients: ["Carrots (1 cup)", "Lemon (¼ fruit)", "Orange (½ fruit)", "Cucumber (½ cup)", "Ginger (1 tsp)", "Apple (½ cup)"],
-    proportions: "Carrots (1 cup), Lemon (¼ fruit), Orange (½ fruit), Cucumber (½ cup), Ginger (1 tsp), Apple (½ cup)",
-    category: "wellness"
-  },
-  {
-    id: "cold-flu",
-    name: "Cold & Flu Juice",
-    benefit: "Boosts immunity and soothes seasonal sniffles.",
-    image: immuneShield,
-    ingredients: ["Apple (1)", "Lemon (½ fruit)", "Carrots (½ cup)", "Ginger (1 tsp)"],
-    proportions: "Apple (1), Lemon (½ fruit), Carrots (½ cup), Ginger (1 tsp)",
-    category: "wellness"
-  },
-  {
-    id: "beet-cleanse",
-    name: "Beet Cleanse",
-    benefit: "Detoxes liver and purifies blood.",
-    image: energyBlast,
-    ingredients: ["Carrots (1 cup)", "Beets (½ cup)", "Lemon (½ fruit)", "Ginger (1 tsp)"],
-    proportions: "Carrots (1 cup), Beets (½ cup), Lemon (½ fruit), Ginger (1 tsp)",
-    category: "wellness"
-  },
-  {
-    id: "natural-vigor",
-    name: "Natural Vigara",
-    benefit: "Enhances circulation and lasting vitality.",
-    image: greenVitality,
-    ingredients: ["Celery (1 stalk)", "Cucumber (1 cup)", "Apple (½ cup)", "Ginger (1 tsp)"],
-    proportions: "Celery (1 stalk), Cucumber (1 cup), Apple (½ cup), Ginger (1 tsp)",
-    category: "energy"
-  },
-  {
-    id: "sunshine",
-    name: "Sunshine Juice",
-    benefit: "Uplifts mood with a vitamin C kick.",
-    image: tropicalBoost,
-    ingredients: ["Orange (1)", "Watermelon (½ cup)", "Pineapple (½ cup)"],
-    proportions: "Orange (1), Watermelon (½ cup), Pineapple (½ cup)",
-    category: "energy"
-  }
-];
+// Mapping for fallback images
+const imageMap: Record<string, string> = {
+  "weight-loss-juice": greenVitality,
+  "hydration-juice": pinkPower,
+  "lung-detox": greenVitality,
+  "glowing-skin-juice": energyBlast,
+  "cold-flu-juice": immuneShield,
+  "beet-cleanse": energyBlast,
+  "natural-vigara": greenVitality,
+  "sunshine-juice": tropicalBoost,
+};
 
 const categoryColors = {
   energy: "bg-primary text-primary-foreground",
   wellness: "bg-accent text-accent-foreground", 
   focus: "bg-secondary text-secondary-foreground"
+};
+
+const getCategoryFromSlug = (slug: string): "energy" | "wellness" | "focus" => {
+  if (slug === "natural-vigara" || slug === "sunshine-juice") return "energy";
+  return "wellness";
 };
 
 const JuiceMenu = () => {
@@ -122,43 +55,43 @@ const JuiceMenu = () => {
 
         {/* Juice Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {juiceBlends.map((blend) => (
+          {juices.map((juice) => (
             <Card 
-              key={blend.id}
+              key={juice.slug}
               className="overflow-hidden transform transition-all duration-300 hover:scale-105 shadow-card hover:shadow-soft"
             >
               <CardContent className="p-0">
                 {/* Juice Image */}
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <img 
-                    src={blend.image}
-                    alt={blend.name}
+                    src={imageMap[juice.slug]}
+                    alt={juice.name}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                   
                   {/* Category Badge */}
-                  <Badge className={`absolute top-4 right-4 ${categoryColors[blend.category]}`}>
-                    {blend.category}
+                  <Badge className={`absolute top-4 right-4 ${categoryColors[getCategoryFromSlug(juice.slug)]}`}>
+                    {getCategoryFromSlug(juice.slug)}
                   </Badge>
                 </div>
                 
                 {/* Always Visible Content */}
                 <div className="p-6 space-y-4">
-                  {/* Blend Name */}
-                  <h3 className="font-heading font-bold text-xl text-foreground">{blend.name}</h3>
+                  {/* Juice Name */}
+                  <h3 className="font-heading font-bold text-xl text-foreground">{juice.name}</h3>
                   
                   {/* Benefit */}
-                  <p className="font-body text-sm text-muted-foreground">{blend.benefit}</p>
+                  <p className="font-body text-sm text-muted-foreground">{juice.benefit}</p>
                   
                   {/* Ingredients, Benefit and Price */}
                   <div className="space-y-3 pt-2 border-t border-border">
                     <div>
                       <p className="font-body text-sm text-foreground">
-                        <span className="font-semibold">Ingredients:</span> {blend.proportions}
+                        <span className="font-semibold">Ingredients:</span> {juice.ingredients}
                       </p>
                       <p className="font-body text-sm text-muted-foreground mt-2">
-                        {blend.benefit}
+                        {juice.benefit}
                       </p>
                     </div>
                     
@@ -169,7 +102,7 @@ const JuiceMenu = () => {
                       <Button 
                         variant="default" 
                         size="sm"
-                        onClick={() => window.location.href = "/order-options"}
+                        onClick={() => window.location.href = `/order/${juice.slug}`}
                       >
                         Order Now
                       </Button>
