@@ -144,24 +144,18 @@ const OrderPage = () => {
             <Card className="overflow-hidden shadow-card">
               <CardContent className="p-0">
                 {/* Product Image */}
-                <div className="aspect-[4/3] overflow-hidden">
+                <div className="aspect-[4/3] overflow-hidden rounded-2xl shadow-lg">
                   <img 
                     src={juice.img}
                     alt={juice.name}
+                    loading="eager"
                     className="w-full h-full object-cover"
                     onError={(e) => {
-                      // Fallback to existing images if new ones aren't available
-                      const fallbackMap: Record<string, string> = {
-                        "weight-loss-juice": "/src/assets/juice-green-vitality.jpg",
-                        "hydration-juice": "/src/assets/juice-pink-power.jpg",
-                        "lung-detox": "/src/assets/juice-green-vitality.jpg",
-                        "glowing-skin-juice": "/src/assets/juice-energy-blast.jpg",
-                        "cold-flu-juice": "/src/assets/juice-immune-shield.jpg",
-                        "beet-cleanse": "/src/assets/juice-energy-blast.jpg",
-                        "natural-vigara": "/src/assets/juice-green-vitality.jpg",
-                        "sunshine-juice": "/src/assets/juice-tropical-boost.jpg"
-                      };
-                      e.currentTarget.src = fallbackMap[juice.slug] || "/src/assets/juice-green-vitality.jpg";
+                      // Show branded placeholder if image fails to load
+                      const placeholder = document.createElement('div');
+                      placeholder.className = "w-full h-full bg-gradient-to-br from-yellow-100 to-pink-100 flex items-center justify-center text-muted-foreground";
+                      placeholder.innerHTML = "Image coming soon";
+                      e.currentTarget.parentNode?.replaceChild(placeholder, e.currentTarget);
                     }}
                   />
                 </div>

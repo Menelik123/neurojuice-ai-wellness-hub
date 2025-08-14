@@ -16,7 +16,7 @@ export const juices: Juice[] = [
     price: 7.99,
     benefit: "Supports metabolism and cleanses naturally.",
     ingredients: "Celery (1 stalk), Spinach (1 cup), Apple (1), Cucumber (½ cup), Lime (½ fruit)",
-    img: "/images/weight_loss.jpg",
+    img: "/images/juices/weight-loss-juice.jpg",
     shopifyHandle: "weight-loss-juice",
     variantId: "REPLACE_ME"
   },
@@ -26,7 +26,7 @@ export const juices: Juice[] = [
     price: 7.99,
     benefit: "Replenishes fluids and electrolytes fast.",
     ingredients: "Pineapple (¾ cup), Watermelon (¾ cup)",
-    img: "/images/hydration.jpg",
+    img: "/images/juices/hydration-juice.jpg",
     shopifyHandle: "hydration-juice",
     variantId: "REPLACE_ME"
   },
@@ -36,7 +36,7 @@ export const juices: Juice[] = [
     price: 7.99,
     benefit: "Helps clear airways for easier breathing.",
     ingredients: "Cucumber (1 cup), Pineapple (½ cup), Ginger (1 tsp), Apple (½ cup)",
-    img: "/images/lung_detox.jpg",
+    img: "/images/juices/lung-detox.jpg",
     shopifyHandle: "lung-detox",
     variantId: "REPLACE_ME"
   },
@@ -46,7 +46,7 @@ export const juices: Juice[] = [
     price: 7.99,
     benefit: "Promotes clear, radiant complexion.",
     ingredients: "Carrots (1 cup), Lemon (¼ fruit), Orange (½ fruit), Cucumber (½ cup), Ginger (1 tsp), Apple (½ cup)",
-    img: "/images/glow_skin.jpg",
+    img: "/images/juices/glowing-skin-juice.jpg",
     shopifyHandle: "glowing-skin-juice",
     variantId: "REPLACE_ME"
   },
@@ -56,7 +56,7 @@ export const juices: Juice[] = [
     price: 7.99,
     benefit: "Boosts immunity and soothes seasonal sniffles.",
     ingredients: "Apple (1), Lemon (½ fruit), Carrots (½ cup), Ginger (1 tsp)",
-    img: "/images/cold_flu.jpg",
+    img: "/images/juices/cold-flu-juice.jpg",
     shopifyHandle: "cold-flu-juice",
     variantId: "REPLACE_ME"
   },
@@ -66,7 +66,7 @@ export const juices: Juice[] = [
     price: 7.99,
     benefit: "Detoxes liver and purifies blood.",
     ingredients: "Carrots (1 cup), Beets (½ cup), Lemon (½ fruit), Ginger (1 tsp)",
-    img: "/images/beet_cleanse.jpg",
+    img: "/images/juices/beet-cleanse.jpg",
     shopifyHandle: "beet-cleanse",
     variantId: "REPLACE_ME"
   },
@@ -76,7 +76,7 @@ export const juices: Juice[] = [
     price: 7.99,
     benefit: "Enhances circulation and lasting vitality.",
     ingredients: "Celery (1 stalk), Cucumber (1 cup), Apple (½ cup), Ginger (1 tsp)",
-    img: "/images/natural_vigara.jpg",
+    img: "/images/juices/natural-vigara.jpg",
     shopifyHandle: "natural-vigara",
     variantId: "REPLACE_ME"
   },
@@ -86,7 +86,7 @@ export const juices: Juice[] = [
     price: 7.99,
     benefit: "Uplifts mood with a vitamin C kick.",
     ingredients: "Orange (1), Watermelon (½ cup), Pineapple (½ cup)",
-    img: "/images/sunshine.jpg",
+    img: "/images/juices/sunshine-juice.jpg",
     shopifyHandle: "sunshine-juice",
     variantId: "REPLACE_ME"
   }
