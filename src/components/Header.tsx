@@ -22,6 +22,7 @@ const Header = () => {
     { label: "Home", href: "#home", action: "scroll" },
     { label: "Menu", href: "/menu", action: "navigate" },
     { label: "Dr. Vital", href: "/dr-vital", action: "navigate" },
+    { label: "VitalPass", href: "/vitalpass", action: "navigate" },
     { label: "Reviews", href: "#reviews", action: "scroll" },
     { label: "About", href: "#about", action: "scroll" },
     { label: "Order", href: "/order-options", action: "navigate" },

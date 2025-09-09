@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import EmailCaptureModal from "@/components/EmailCaptureModal";
 import Hero from "@/components/Hero";
 import JuiceMenu from "@/components/JuiceMenu";
 import ChatBot from "@/components/ChatBot";
@@ -15,6 +16,9 @@ const Index = () => {
     <div className="min-h-screen bg-background text-foreground font-body">
       {/* Header */}
       <Header />
+      
+      {/* Email Capture Modal */}
+      <EmailCaptureModal />
       
       {/* Main Content */}
       <main>

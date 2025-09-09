@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import MemberPricing from "@/components/MemberPricing";
 import { STANDARD_JUICE_PRICE } from "@/lib/pricing";
 import { juices } from "@/data/juices";
 
@@ -96,9 +97,9 @@ const JuiceMenu = () => {
                     </div>
                     
                     <div className="flex justify-between items-center">
-                      <Badge className="bg-primary text-primary-foreground font-bold">
-                        {STANDARD_JUICE_PRICE}
-                      </Badge>
+                      <div className="space-y-1">
+                        <MemberPricing regularPrice={7.99} showJoinLink={false} size="sm" />
+                      </div>
                       <Button 
                         variant="default" 
                         size="sm"

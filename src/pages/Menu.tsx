@@ -1,5 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MemberBundles from "@/components/MemberBundles";
+import MemberPricing from "@/components/MemberPricing";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -90,6 +92,9 @@ const Menu = () => {
           </div>
         </section>
 
+        {/* Member Bundles */}
+        <MemberBundles />
+
         {/* Individual Juices */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4">
@@ -112,10 +117,15 @@ const Menu = () => {
                       alt={juice.name}
                       className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute top-4 right-4">
-                      <Badge className="bg-primary text-primary-foreground font-bold">
+                    <div className="absolute top-4 right-4 space-y-2">
+                      <Badge className="bg-primary text-primary-foreground font-bold block">
                         {STANDARD_JUICE_PRICE}
                       </Badge>
+                      {!window.NJ?.isMember && (
+                        <Badge variant="secondary" className="text-xs block">
+                          ${((parseFloat(STANDARD_JUICE_PRICE.replace('$', '')) * 0.8).toFixed(2))} w/ VitalPass
+                        </Badge>
+                      )}
                     </div>
                   </div>
                   
@@ -157,6 +167,9 @@ const Menu = () => {
           </div>
         </section>
 
+        {/* Member Bundles */}
+        <MemberBundles />
+        
         {/* Bundle Packs */}
         <section className="py-16 bg-secondary/20">
           <div className="container mx-auto px-4">
@@ -195,18 +208,25 @@ const Menu = () => {
                         ))}
                       </div>
                       
-                      <div className="space-y-2">
-                        <div className="flex justify-center items-center space-x-2">
-                          <span className="text-lg line-through text-muted-foreground">
-                            {bundle.originalPrice}
-                          </span>
-                          <span className="font-heading font-bold text-3xl text-primary">
-                            {bundle.bundlePrice}
-                          </span>
+                      <div className="space-y-4">
+                        <MemberPricing 
+                          regularPrice={parseFloat(bundle.originalPrice.replace('$', ''))}
+                          showJoinLink={false}
+                          size="lg"
+                        />
+                        <div className="space-y-2">
+                          <div className="flex justify-center items-center space-x-2">
+                            <span className="text-lg line-through text-muted-foreground">
+                              {bundle.originalPrice}
+                            </span>
+                            <span className="font-heading font-bold text-3xl text-primary">
+                              {bundle.bundlePrice}
+                            </span>
+                          </div>
+                          <p className="text-sm text-success font-medium">
+                            Save {bundle.savings}!
+                          </p>
                         </div>
-                        <p className="text-sm text-success font-medium">
-                          Save {bundle.savings}!
-                        </p>
                       </div>
                       
                       <Button 

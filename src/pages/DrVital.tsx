@@ -6,6 +6,8 @@ import { Send, Bot, User, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import VitalPaywall from "@/components/VitalPaywall";
+import { Badge } from "@/components/ui/badge";
 
 interface Message {
   id: string;
@@ -26,6 +28,7 @@ const DrVital = () => {
   const [conversationStep, setConversationStep] = useState(0);
   const [userResponses, setUserResponses] = useState<string[]>([]);
   const [chatStarted, setChatStarted] = useState(false);
+  const [showPaywall, setShowPaywall] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "system",
@@ -42,6 +45,37 @@ const DrVital = () => {
     }
   ]);
   const [inputValue, setInputValue] = useState("");
+
+  // Check access permissions
+  const checkAccess = () => {
+    const config = window.NJ_CONFIG;
+    const state = window.NJ;
+
+    // Free mode - everyone has access
+    if (config?.VITAL_PAYWALL_MODE === "free") {
+      return true;
+    }
+
+    // Member access
+    if (state?.isMember) {
+      return true;
+    }
+
+    // Trial access - check if trial is active and not expired
+    if (state?.hasVitalTrial && state?.trialEndsAt) {
+      return new Date() < state.trialEndsAt;
+    }
+
+    return false;
+  };
+
+  const hasAccess = checkAccess();
+  const trialEndsAt = window.NJ?.trialEndsAt;
+  const isTrialActive = window.NJ?.hasVitalTrial && trialEndsAt && new Date() < trialEndsAt;
+
+  const handleTrialStart = () => {
+    setShowPaywall(false);
+  };
 
   const quickResponses = [
     "I need more energy",
@@ -242,6 +276,11 @@ const DrVital = () => {
     <div className="min-h-screen bg-background text-foreground font-body">
       <Header />
       
+      {/* Paywall Check */}
+      {!hasAccess && showPaywall && (
+        <VitalPaywall onTrialStart={handleTrialStart} />
+      )}
+      
       <main className="pt-20">
         {/* Hero Section */}
         <section className="py-20 bg-gradient-to-br from-background to-secondary/20">
@@ -254,6 +293,11 @@ const DrVital = () => {
                 <h1 className="font-heading font-bold text-5xl text-foreground">
                   Dr. Vital AI
                 </h1>
+                {isTrialActive && trialEndsAt && (
+                  <Badge variant="outline" className="ml-4">
+                    Trial ends {trialEndsAt.toLocaleDateString()}
+                  </Badge>
+                )}
               </div>
               
               <p className="font-body text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">

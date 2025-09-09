@@ -23,6 +23,38 @@
 
   <body>
     <div id="root"></div>
+    <script>
+      // Global NeuroJuice Configuration
+      window.NJ_CONFIG = {
+        VITAL_PAYWALL_MODE: "trial",   // "paid" | "trial" | "free"
+        TRIAL_LENGTH_DAYS: 14,
+        MEMBER_DISCOUNT_PCT: 0.20,
+        REGULAR_PRICE: 7.99
+      };
+
+      // Global NeuroJuice State
+      window.NJ = {
+        isMember: false,
+        hasVitalTrial: false,
+        trialEndsAt: null,
+        memberEmail: null
+      };
+
+      // Initialize state from localStorage
+      try {
+        const savedEmail = localStorage.getItem('nj_memberEmail');
+        const savedMember = localStorage.getItem('nj_isMember');
+        const savedTrial = localStorage.getItem('nj_hasVitalTrial');
+        const savedTrialEnd = localStorage.getItem('nj_trialEndsAt');
+        
+        if (savedEmail) window.NJ.memberEmail = savedEmail;
+        if (savedMember === 'true') window.NJ.isMember = true;
+        if (savedTrial === 'true') window.NJ.hasVitalTrial = true;
+        if (savedTrialEnd) window.NJ.trialEndsAt = new Date(savedTrialEnd);
+      } catch (e) {
+        console.warn('Failed to load NJ state from localStorage:', e);
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
