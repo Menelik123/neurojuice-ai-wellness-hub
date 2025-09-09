@@ -177,7 +177,7 @@ const OrderPage = () => {
                       Ingredients
                     </h3>
                     <p className="font-body text-muted-foreground">
-                      {juice.ingredients}
+                      {juice.ingredients.join(", ")}
                     </p>
                   </div>
 

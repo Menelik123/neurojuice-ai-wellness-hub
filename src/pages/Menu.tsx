@@ -126,7 +126,7 @@ const Menu = () => {
                           {juice.name}
                         </h3>
                         <p className="font-body text-sm text-muted-foreground mb-3">
-                          <strong>Ingredients:</strong> {juice.ingredients}
+                          <strong>Ingredients:</strong> {juice.ingredients.join(", ")}
                         </p>
                         <p className="font-body text-sm text-foreground leading-relaxed">
                           {juice.benefit}

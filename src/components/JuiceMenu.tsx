@@ -88,7 +88,7 @@ const JuiceMenu = () => {
                   <div className="space-y-3 pt-2 border-t border-border">
                     <div>
                       <p className="font-body text-sm text-foreground">
-                        <span className="font-semibold">Ingredients:</span> {juice.ingredients}
+                        <span className="font-semibold">Ingredients:</span> {juice.ingredients.join(", ")}
                       </p>
                       <p className="font-body text-sm text-muted-foreground mt-2">
                         {juice.benefit}

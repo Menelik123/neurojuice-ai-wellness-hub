@@ -3,7 +3,7 @@ export interface Juice {
   name: string;
   price: number;
   benefit: string;
-  ingredients: string;
+  ingredients: string[];
   img: string;
   shopifyHandle: string;
   variantId: string;
@@ -15,7 +15,7 @@ export const juices: Juice[] = [
     name: "Weight Loss Juice",
     price: 7.99,
     benefit: "Supports metabolism and cleanses naturally.",
-    ingredients: "Celery (1 stalk), Spinach (1 cup), Apple (1), Cucumber (½ cup), Lime (½ fruit)",
+    ingredients: ["Celery", "Spinach", "Apple", "Cucumber", "Lime"],
     img: "/images/juices/weight-loss-juice.jpg",
     shopifyHandle: "weight-loss-juice",
     variantId: "REPLACE_ME"
@@ -25,7 +25,7 @@ export const juices: Juice[] = [
     name: "Hydration Juice",
     price: 7.99,
     benefit: "Replenishes fluids and electrolytes fast.",
-    ingredients: "Pineapple (¾ cup), Watermelon (¾ cup)",
+    ingredients: ["Pineapple", "Watermelon"],
     img: "/images/juices/hydration-juice.jpg",
     shopifyHandle: "hydration-juice",
     variantId: "REPLACE_ME"
@@ -35,7 +35,7 @@ export const juices: Juice[] = [
     name: "Lung Detox",
     price: 7.99,
     benefit: "Helps clear airways for easier breathing.",
-    ingredients: "Cucumber (1 cup), Pineapple (½ cup), Ginger (1 tsp), Apple (½ cup)",
+    ingredients: ["Cucumber", "Pineapple", "Ginger", "Apple"],
     img: "/images/juices/lung-detox.jpg",
     shopifyHandle: "lung-detox",
     variantId: "REPLACE_ME"
@@ -45,7 +45,7 @@ export const juices: Juice[] = [
     name: "Glowing Skin Juice",
     price: 7.99,
     benefit: "Promotes clear, radiant complexion.",
-    ingredients: "Carrots (1 cup), Lemon (¼ fruit), Orange (½ fruit), Cucumber (½ cup), Ginger (1 tsp), Apple (½ cup)",
+    ingredients: ["Carrots", "Lemon", "Orange", "Cucumber", "Ginger", "Apple"],
     img: "/images/juices/glowing-skin-juice.jpg",
     shopifyHandle: "glowing-skin-juice",
     variantId: "REPLACE_ME"
@@ -55,7 +55,7 @@ export const juices: Juice[] = [
     name: "Cold & Flu Juice",
     price: 7.99,
     benefit: "Boosts immunity and soothes seasonal sniffles.",
-    ingredients: "Apple (1), Lemon (½ fruit), Carrots (½ cup), Ginger (1 tsp)",
+    ingredients: ["Apple", "Lemon", "Carrots", "Ginger"],
     img: "/images/juices/cold-flu-juice.jpg",
     shopifyHandle: "cold-flu-juice",
     variantId: "REPLACE_ME"
@@ -65,7 +65,7 @@ export const juices: Juice[] = [
     name: "Beet Cleanse",
     price: 7.99,
     benefit: "Detoxes liver and purifies blood.",
-    ingredients: "Carrots (1 cup), Beets (½ cup), Lemon (½ fruit), Ginger (1 tsp)",
+    ingredients: ["Carrots", "Beets", "Lemon", "Ginger"],
     img: "/images/juices/beet-cleanse.jpg",
     shopifyHandle: "beet-cleanse",
     variantId: "REPLACE_ME"
@@ -75,7 +75,7 @@ export const juices: Juice[] = [
     name: "Natural Vigara",
     price: 7.99,
     benefit: "Enhances circulation and lasting vitality.",
-    ingredients: "Celery (1 stalk), Cucumber (1 cup), Apple (½ cup), Ginger (1 tsp)",
+    ingredients: ["Celery", "Cucumber", "Apple", "Ginger"],
     img: "/images/juices/natural-vigara.jpg",
     shopifyHandle: "natural-vigara",
     variantId: "REPLACE_ME"
@@ -85,7 +85,7 @@ export const juices: Juice[] = [
     name: "Sunshine Juice",
     price: 7.99,
     benefit: "Uplifts mood with a vitamin C kick.",
-    ingredients: "Orange (1), Watermelon (½ cup), Pineapple (½ cup)",
+    ingredients: ["Orange", "Watermelon", "Pineapple"],
     img: "/images/juices/sunshine-juice.jpg",
     shopifyHandle: "sunshine-juice",
     variantId: "REPLACE_ME"

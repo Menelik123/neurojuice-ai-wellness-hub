@@ -191,7 +191,7 @@ const Reviews = () => {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16 max-w-3xl mx-auto">
           <div className="text-center space-y-2">
-            <div className="font-heading font-bold text-3xl text-primary">10,000+</div>
+            <div className="font-heading font-bold text-3xl text-primary">250+</div>
             <div className="font-body text-muted-foreground">Happy Customers</div>
           </div>
           <div className="text-center space-y-2">
@@ -199,7 +199,7 @@ const Reviews = () => {
             <div className="font-body text-muted-foreground">Average Rating</div>
           </div>
           <div className="text-center space-y-2">
-            <div className="font-heading font-bold text-3xl text-primary">50K+</div>
+            <div className="font-heading font-bold text-3xl text-primary">10+</div>
             <div className="font-body text-muted-foreground">Custom Blends Created</div>
           </div>
         </div>
