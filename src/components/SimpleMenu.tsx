@@ -15,21 +15,21 @@ const products: Product[] = [
     ingredients: "Pineapple, Lemon, Apple, Ginger",
     benefit: "Natural refreshment + clean energy",
     price: "$7.99",
-    stripeLink: "", // Leave empty for now
+    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
   },
   {
     name: "Green Vitality",
     ingredients: "Cucumber, Lime, Apple",
     benefit: "Crisp + hydrating",
     price: "$7.99",
-    stripeLink: "",
+    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
   },
   {
     name: "Ginger Shot",
     ingredients: "Ginger, Lemon, Apple",
     benefit: "Strong, warm, uplifting",
     price: "$7.99",
-    stripeLink: "",
+    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
   },
 ];
 
@@ -67,10 +67,16 @@ const SimpleMenu = () => {
                     {product.price}
                   </span>
                   <Button 
+                    asChild
                     className="bg-primary hover:bg-primary-glow text-primary-foreground"
-                    disabled={!product.stripeLink}
                   >
-                    Order Now
+                    <a 
+                      href={product.stripeLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      Order Now
+                    </a>
                   </Button>
                 </div>
               </CardContent>
