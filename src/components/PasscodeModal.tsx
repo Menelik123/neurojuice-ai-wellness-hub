@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PasscodeModalProps {
   isOpen: boolean;
@@ -17,14 +18,18 @@ const PasscodeModal = ({ isOpen, onClose }: PasscodeModalProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate a brief loading state for UX
-    setTimeout(() => {
-      if (passcode === "EXOTICJUICE") {
-        // Store access in session storage
+    try {
+      const { data, error } = await supabase.functions.invoke('validate-exotic-code', {
+        body: { code: passcode }
+      });
+
+      if (error) throw error;
+
+      if (data.valid) {
         sessionStorage.setItem("exotic-access", "granted");
         toast({
           title: "Access Granted",
@@ -39,9 +44,17 @@ const PasscodeModal = ({ isOpen, onClose }: PasscodeModalProps) => {
           variant: "destructive",
         });
       }
+    } catch (error) {
+      console.error('Error validating passcode:', error);
+      toast({
+        title: "Error",
+        description: "Failed to validate passcode. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsLoading(false);
       setPasscode("");
-    }, 800);
+    }
   };
 
   return (

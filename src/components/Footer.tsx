@@ -25,7 +25,7 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: <Instagram className="w-5 h-5" />, href: "https://instagram.com/neurojuice", label: "Instagram" },
+    { icon: <Instagram className="w-5 h-5" />, href: "https://instagram.com/neurojuicehq", label: "Instagram" },
     { icon: <Hash className="w-5 h-5" />, href: "https://tiktok.com/@neurojuice", label: "TikTok" },
     { icon: <Youtube className="w-5 h-5" />, href: "https://youtube.com/@neurojuice", label: "YouTube" },
     { icon: <Twitter className="w-5 h-5" />, href: "https://twitter.com/neurojuice", label: "X (Twitter)" }

@@ -1,1 +1,10 @@
 project_id = "reqsbdaljmrmjfgxuymq"
+
+[functions.validate-exotic-code]
+verify_jwt = false
+
+[functions.check-vital-access]
+verify_jwt = false
+
+[functions.start-vital-trial]
+verify_jwt = false
