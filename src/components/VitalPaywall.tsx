@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Lock, CheckCircle, Calendar } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface VitalPaywallProps {
   onTrialStart: () => void;
@@ -36,27 +37,34 @@ const VitalPaywall = ({ onTrialStart }: VitalPaywallProps) => {
     setIsLoading(true);
 
     try {
-      // Set trial state
-      const trialEndDate = new Date();
-      trialEndDate.setDate(trialEndDate.getDate() + (window.NJ_CONFIG?.TRIAL_LENGTH_DAYS || 14));
-      
-      // Update global state
-      window.NJ.hasVitalTrial = true;
-      window.NJ.trialEndsAt = trialEndDate;
-      window.NJ.memberEmail = email;
-      
-      // Save to localStorage
-      localStorage.setItem('nj_hasVitalTrial', 'true');
-      localStorage.setItem('nj_trialEndsAt', trialEndDate.toISOString());
-      localStorage.setItem('nj_memberEmail', email);
-      
-      toast({
-        title: "Trial Started!",
-        description: "Welcome to your 14-day Dr. Vital trial.",
+      const { data, error } = await supabase.functions.invoke('start-vital-trial', {
+        body: { email }
       });
-      
-      onTrialStart();
+
+      if (error) throw error;
+
+      if (data.success) {
+        window.NJ.hasVitalTrial = true;
+        window.NJ.trialEndsAt = new Date(data.expiresAt);
+        window.NJ.memberEmail = email;
+        
+        localStorage.setItem('nj_memberEmail', email);
+        
+        toast({
+          title: "Trial Started!",
+          description: "Welcome to your 14-day Dr. Vital trial.",
+        });
+        
+        onTrialStart();
+      } else {
+        toast({
+          title: data.error || "Failed to start trial",
+          description: "Please try again or contact support.",
+          variant: "destructive",
+        });
+      }
     } catch (error) {
+      console.error('Error starting trial:', error);
       toast({
         title: "Something went wrong",
         description: "Please try again later.",

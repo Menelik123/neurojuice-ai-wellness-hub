@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import VitalPaywall from "@/components/VitalPaywall";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
   id: string;
@@ -29,6 +30,8 @@ const DrVital = () => {
   const [userResponses, setUserResponses] = useState<string[]>([]);
   const [chatStarted, setChatStarted] = useState(false);
   const [showPaywall, setShowPaywall] = useState(true);
+  const [hasAccess, setHasAccess] = useState(false);
+  const [isLoadingAccess, setIsLoadingAccess] = useState(true);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "system",
@@ -46,35 +49,71 @@ const DrVital = () => {
   ]);
   const [inputValue, setInputValue] = useState("");
 
-  // Check access permissions
-  const checkAccess = () => {
+  // Check access on component mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('nj_memberEmail');
+    if (savedEmail) {
+      window.NJ.memberEmail = savedEmail;
+    }
+    checkAccess();
+  }, []);
+
+  const checkAccess = async () => {
     const config = window.NJ_CONFIG;
-    const state = window.NJ;
-
-    // Free mode - everyone has access
+    
     if (config?.VITAL_PAYWALL_MODE === "free") {
-      return true;
+      setHasAccess(true);
+      setIsLoadingAccess(false);
+      setShowPaywall(false);
+      return;
     }
 
-    // Member access
-    if (state?.isMember) {
-      return true;
+    const email = window.NJ?.memberEmail || localStorage.getItem('nj_memberEmail');
+    
+    if (!email) {
+      setHasAccess(false);
+      setIsLoadingAccess(false);
+      return;
     }
 
-    // Trial access - check if trial is active and not expired
-    if (state?.hasVitalTrial && state?.trialEndsAt) {
-      return new Date() < state.trialEndsAt;
-    }
+    try {
+      const { data, error } = await supabase.functions.invoke('check-vital-access', {
+        body: { email }
+      });
 
-    return false;
+      if (error) throw error;
+
+      if (data.hasAccess) {
+        setHasAccess(true);
+        setShowPaywall(false);
+        window.NJ.isMember = data.type === 'member';
+        
+        if (data.type === 'trial' && data.expiresAt) {
+          window.NJ.hasVitalTrial = true;
+          window.NJ.trialEndsAt = new Date(data.expiresAt);
+        }
+      } else {
+        setHasAccess(false);
+      }
+    } catch (error) {
+      console.error('Error checking access:', error);
+      setHasAccess(false);
+    } finally {
+      setIsLoadingAccess(false);
+    }
   };
 
-  const hasAccess = checkAccess();
+  // Check access permissions (legacy function kept for consistency)
+  const hasAccessCheck = () => {
+    return hasAccess;
+  };
+
   const trialEndsAt = window.NJ?.trialEndsAt;
   const isTrialActive = window.NJ?.hasVitalTrial && trialEndsAt && new Date() < trialEndsAt;
 
   const handleTrialStart = () => {
-    setShowPaywall(false);
+    // Recheck access after trial starts
+    checkAccess();
   };
 
   const quickResponses = [

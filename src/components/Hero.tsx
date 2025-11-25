@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { MessageCircle, Menu as MenuIcon } from "lucide-react";
+import { MessageCircle, Menu as MenuIcon, Instagram } from "lucide-react";
 import heroImage from "@/assets/hero-juice-pour.jpg";
 
 const Hero = () => {
@@ -75,7 +75,7 @@ const Hero = () => {
           </div>
 
           {/* QR Code Call-to-Action */}
-          <div className="pt-8 animate-float">
+          <div className="pt-8 space-y-4">
             <div className="inline-flex items-center space-x-2 px-4 py-2 bg-background/80 backdrop-blur-sm rounded-full border border-border shadow-soft">
               <div className="w-8 h-8 bg-gradient-hero rounded-sm flex items-center justify-center">
                 <div className="w-6 h-6 bg-white rounded-sm opacity-80"></div>
@@ -83,6 +83,29 @@ const Hero = () => {
               <span className="font-body text-sm text-muted-foreground">
                 Scan QR for menu & ordering on the go
               </span>
+            </div>
+            
+            {/* Instagram CTA */}
+            <div className="animate-float" style={{ animationDelay: '0.5s' }}>
+              <Button
+                variant="outline"
+                size="lg"
+                asChild
+                className="bg-background/90 backdrop-blur-sm border-2 border-primary/30 hover:bg-primary/10 hover:border-primary transition-all duration-300 shadow-soft"
+              >
+                <a
+                  href="https://instagram.com/neurojuicehq"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-3"
+                >
+                  <Instagram className="w-5 h-5 text-primary" />
+                  <div className="text-left">
+                    <div className="font-heading font-semibold text-foreground">Follow @neurojuicehq</div>
+                    <div className="text-xs text-muted-foreground">Shop link in bio</div>
+                  </div>
+                </a>
+              </Button>
             </div>
           </div>
         </div>
