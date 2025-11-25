@@ -11,53 +11,47 @@ html {
 
 @layer base {
   :root {
-    /* Core brand colors - fruit-inspired palette */
+    /* Clean minimal design - white, black, lime green */
     --background: 0 0% 100%;
-    --foreground: 215 25% 27%;
+    --foreground: 0 0% 0%;
     
-    /* Pineapple Yellow - Primary brand color */
-    --primary: 48 100% 67%;
-    --primary-foreground: 215 25% 27%;
-    --primary-glow: 48 100% 75%;
+    /* Lime Green - Primary brand color (#7FD645) */
+    --primary: 88 71% 57%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 88 71% 67%;
     
-    /* Watermelon Pink - Secondary/accent */
-    --secondary: 345 83% 68%;
-    --secondary-foreground: 0 0% 100%;
+    /* Light accents */
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 0%;
     
-    /* Cucumber Green - Fresh accent */
-    --accent: 142 69% 58%;
+    /* Subtle green accent */
+    --accent: 88 71% 57%;
     --accent-foreground: 0 0% 100%;
     
-    /* Additional colors */
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Neutral grays */
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
     
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 27%;
+    --card-foreground: 0 0% 0%;
     
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 27%;
+    --popover-foreground: 0 0% 0%;
     
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
     
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 48 100% 67%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 88 71% 57%;
     
-    /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(48 100% 67%), hsl(345 83% 68%));
-    --gradient-card: linear-gradient(180deg, hsl(0 0% 100%), hsl(210 40% 98%));
-    --gradient-button: linear-gradient(135deg, hsl(48 100% 67%), hsl(48 100% 75%));
+    /* Simple shadows */
+    --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.1);
     
-    /* Shadows */
-    --shadow-soft: 0 4px 20px hsl(48 100% 67% / 0.15);
-    --shadow-card: 0 8px 30px hsl(215 25% 27% / 0.08);
-    --shadow-button: 0 4px 15px hsl(48 100% 67% / 0.25);
-    
-    /* Typography scale */
-    --font-heading: 'Montserrat', sans-serif;
-    --font-body: 'Open Sans', sans-serif;
+    /* Typography */
+    --font-heading: 'Inter', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
 
     --radius: 0.5rem;
 
