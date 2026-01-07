@@ -3,7 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, Lock } from "lucide-react";
 
-import bundleStarter from "@/assets/bundle-starter.png";
+import bundleStarterReset from "@/assets/bundle-starter-reset.png";
+import bundleHydrationFlow from "@/assets/bundle-hydration-flow.png";
+import bundleLungSupport from "@/assets/bundle-lung-support.png";
 import bundleVariety from "@/assets/bundle-variety.png";
 
 interface Bundle {
@@ -21,28 +23,28 @@ const bundles: Bundle[] = [
   {
     name: "Starter Reset Pack",
     description: "Perfect for first-timers looking to reset their routine",
-    bottleCount: 3,
-    includes: "Tropical Breeze, Lung Detox, Ginger Shot",
-    price: "$17.99",
-    image: bundleStarter,
+    bottleCount: 4,
+    includes: "Lung Detox, 2x Tropical Breeze, Ginger Shot",
+    price: "$23.99",
+    image: bundleStarterReset,
     stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
   },
   {
     name: "Lung Support Pack",
     description: "Breathe easier with our respiratory-focused blends",
-    bottleCount: 3,
-    includes: "2x Lung Detox, 1x Ginger Shot",
-    price: "$17.99",
-    image: bundleVariety,
+    bottleCount: 5,
+    includes: "2x Lung Detox, 2x Tropical Breeze, Ginger Shot",
+    price: "$29.99",
+    image: bundleLungSupport,
     stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
   },
   {
     name: "Hydration Flow Pack",
     description: "Stay refreshed and energized all day",
-    bottleCount: 4,
-    includes: "2x Tropical Breeze, 1x Lung Detox, 1x Ginger Shot",
-    price: "$23.99",
-    image: bundleStarter,
+    bottleCount: 6,
+    includes: "2x Sunshine Starter, 2x Tropical Breeze, 2x Sunshine Starter",
+    price: "$35.99",
+    image: bundleHydrationFlow,
     stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
   },
   {
