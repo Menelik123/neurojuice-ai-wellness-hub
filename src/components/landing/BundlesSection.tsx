@@ -1,7 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Lock } from "lucide-react";
+import { ShoppingCart, Lock, MessageSquare } from "lucide-react";
+import SMSInlineCapture from "./SMSInlineCapture";
 
 import bundleStarterReset from "@/assets/bundle-starter-reset.png";
 import bundleHydrationFlow from "@/assets/bundle-hydration-flow.png";
@@ -12,7 +13,8 @@ interface Bundle {
   name: string;
   description: string;
   bottleCount: number;
-  includes: string;
+  includes: string[];
+  savings: string;
   price: string;
   image: string;
   isVitalPassExclusive?: boolean;
@@ -24,7 +26,8 @@ const bundles: Bundle[] = [
     name: "Starter Reset Pack",
     description: "Perfect for first-timers looking to reset their routine",
     bottleCount: 4,
-    includes: "Lung Detox, 2x Tropical Breeze, Ginger Shot",
+    includes: ["1x Lung Detox", "2x Tropical Breeze", "1x Ginger Shot"],
+    savings: "Save $5",
     price: "$23.99",
     image: bundleStarterReset,
     stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
@@ -33,7 +36,8 @@ const bundles: Bundle[] = [
     name: "Lung Support Pack",
     description: "Breathe easier with our respiratory-focused blends",
     bottleCount: 5,
-    includes: "2x Lung Detox, 2x Tropical Breeze, Ginger Shot",
+    includes: ["2x Lung Detox", "2x Tropical Breeze", "1x Ginger Shot"],
+    savings: "Save $8",
     price: "$29.99",
     image: bundleLungSupport,
     stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
@@ -42,7 +46,8 @@ const bundles: Bundle[] = [
     name: "Hydration Flow Pack",
     description: "Stay refreshed and energized all day",
     bottleCount: 6,
-    includes: "2x Sunshine Starter, 2x Tropical Breeze, 2x Sunshine Starter",
+    includes: ["3x Tropical Breeze", "2x Lung Detox", "1x Ginger Shot"],
+    savings: "Save $10",
     price: "$35.99",
     image: bundleHydrationFlow,
     stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
@@ -51,7 +56,8 @@ const bundles: Bundle[] = [
     name: "Vital Pass Exclusive Pack",
     description: "Members-only bundle with our best sellers",
     bottleCount: 6,
-    includes: "2x each: Tropical Breeze, Lung Detox, Ginger Shot",
+    includes: ["2x Tropical Breeze", "2x Lung Detox", "2x Ginger Shot"],
+    savings: "Save $15",
     price: "$29.99",
     image: bundleVariety,
     isVitalPassExclusive: true,
@@ -96,15 +102,27 @@ const BundlesSection = () => {
                 </div>
                 <CardContent className="md:w-3/5 p-5 flex flex-col justify-between">
                   <div className="space-y-3">
-                    <h3 className="font-heading font-bold text-xl text-foreground">
-                      {bundle.name}
-                    </h3>
+                    <div className="flex items-start justify-between">
+                      <h3 className="font-heading font-bold text-xl text-foreground">
+                        {bundle.name}
+                      </h3>
+                      <Badge variant="secondary" className="text-xs">
+                        {bundle.savings}
+                      </Badge>
+                    </div>
                     <p className="text-sm text-muted-foreground">
                       {bundle.description}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      <span className="font-medium text-foreground">{bundle.bottleCount} bottles:</span> {bundle.includes}
-                    </p>
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-foreground">
+                        {bundle.bottleCount} bottles included:
+                      </p>
+                      <ul className="text-sm text-muted-foreground">
+                        {bundle.includes.map((item, index) => (
+                          <li key={index}>• {item}</li>
+                        ))}
+                      </ul>
+                    </div>
                     <p className="font-heading font-bold text-2xl text-foreground">
                       {bundle.price}
                     </p>
@@ -131,6 +149,11 @@ const BundlesSection = () => {
               </div>
             </Card>
           ))}
+        </div>
+
+        {/* SMS Capture Point */}
+        <div className="mt-12 max-w-xl mx-auto">
+          <SMSInlineCapture message="Bundles sell out fast — get drop alerts by text." />
         </div>
       </div>
     </section>
