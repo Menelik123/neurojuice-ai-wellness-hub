@@ -48,24 +48,15 @@ const VitalPassSection = () => {
                   <span className="text-background/60">/month</span>
                 </div>
                 
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <div className="flex justify-center">
                   <Button 
                     asChild
                     size="lg"
-                    className="bg-primary hover:bg-primary-glow text-primary-foreground"
+                    className="bg-background hover:bg-background/90 text-foreground font-semibold rounded-lg px-8 py-6 text-lg transition-all hover:scale-105 active:scale-100"
                   >
                     <Link to="/vital-pass">
-                      Join Vital Pass
-                    </Link>
-                  </Button>
-                  <Button 
-                    asChild
-                    variant="outline"
-                    size="lg"
-                    className="border-background/30 text-background hover:bg-background/10"
-                  >
-                    <Link to="/vital-pass">
-                      See Member Benefits
+                      <Crown className="w-5 h-5 mr-2" />
+                      Join Vital Pass — Save on Every Drop
                     </Link>
                   </Button>
                 </div>
