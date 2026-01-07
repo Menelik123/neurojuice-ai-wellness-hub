@@ -5,14 +5,15 @@ import { Link } from "react-router-dom";
 
 const VitalPassSection = () => {
   const benefits = [
-    { icon: Zap, text: "Lower bottle prices (~20% off)" },
-    { icon: Sparkles, text: "Early access to drops" },
+    { icon: Zap, text: "$5 bottles (reg. $6.99)" },
+    { icon: Check, text: "$3 ginger shots (reg. $4.99)" },
+    { icon: Sparkles, text: "Early drop access" },
     { icon: Crown, text: "Exclusive bundles" },
     { icon: MessageCircle, text: "Access to Dr. Vital AI" },
   ];
 
   return (
-    <section className="py-16 px-4 bg-muted/30">
+    <section id="vital-pass" className="py-16 px-4 bg-muted/30">
       <div className="max-w-4xl mx-auto">
         <Card className="border-0 bg-foreground text-background overflow-hidden">
           <CardContent className="p-8 md:p-12">

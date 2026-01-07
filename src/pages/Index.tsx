@@ -1,3 +1,4 @@
+import StickyNav from "@/components/landing/StickyNav";
 import HeroSection from "@/components/landing/HeroSection";
 import HowItWorks from "@/components/landing/HowItWorks";
 import AvailableNow from "@/components/landing/AvailableNow";
@@ -12,6 +13,7 @@ import LandingFooter from "@/components/landing/LandingFooter";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
+      <StickyNav />
       <main>
         <HeroSection />
         <HowItWorks />

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const DrVitalTeaser = () => {
   return (
-    <section className="py-16 px-4 bg-background">
+    <section id="dr-vital" className="py-16 px-4 bg-background">
       <div className="max-w-4xl mx-auto">
         <Card className="border border-primary/20 bg-gradient-to-br from-primary/5 to-transparent overflow-hidden">
           <CardContent className="p-8 md:p-12">
