@@ -3,28 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
     <title>NeuroJuice – AI Personalized Juice Blends</title>
-    <meta name="description" content="Discover NeuroJuice: AI-driven personalized juice blends tailored for your wellness goals. Fresh, nutritious, and designed just for you.">
+    <meta
+      name="description"
+      content="Discover NeuroJuice: AI-driven personalized juice blends tailored for your wellness goals. Fresh, nutritious, and designed just for you."
+    />
     <meta name="author" content="NeuroJuice" />
-    <meta name="keywords" content="personalized juice, AI nutrition, healthy drinks, fresh juice, wellness, custom blends">
+    <meta
+      name="keywords"
+      content="personalized juice, AI nutrition, healthy drinks, fresh juice, wellness, custom blends"
+    />
 
-    
-    
+    <meta property="og:title" content="NeuroJuice – AI Personalized Juice Blends" />
+    <meta
+      property="og:description"
+      content="AI-driven juice blends tailored for your goals. Personalized wellness in every sip."
+    />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@lovable_dev" />
     <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    <meta property="og:title" content="NeuroJuice – AI Personalized Juice Blends">
-  <meta name="twitter:title" content="NeuroJuice – AI Personalized Juice Blends">
-  <meta property="og:description" content="Discover NeuroJuice: AI-driven personalized juice blends tailored for your wellness goals. Fresh, nutritious, and designed just for you.">
-  <meta name="twitter:description" content="Discover NeuroJuice: AI-driven personalized juice blends tailored for your wellness goals. Fresh, nutritious, and designed just for you.">
-  <link rel="icon" type="image/png" href="https://storage.googleapis.com/gpt-engineer-file-uploads/sQq7rS8Jc7YfRMDP708rRg8ok7e2/uploads/1767808678805-logo.PNG">
-</head>
+    <head>
+      <!-- Klaviyo -->
+      <script
+        async
+        type="text/javascript"
+        src="https://static.klaviyo.com/onsite/js/VTyW6w/klaviyo.js?company_id=VTyW6w"
+      ></script>
+      <script type="text/javascript">
+        !function(){if(!window.klaviyo){window._klOnsite=window._klOnsite||[];try{window.klaviyo=new Proxy({},{get:function(n,i){return"push"===i?function(){var n;(n=window._klOnsite).push.apply(n,arguments)}:function(){for(var n=arguments.length,o=new Array(n),w=0;w<n;w++)o[w]=arguments[w];var t="function"==typeof o[o.length-1]?o.pop():void 0,e=new Promise((function(n){window._klOnsite.push([i].concat(o,[function(i){t&&t(i),n(i)}]))}));return e}}})}catch(n){window.klaviyo=window.klaviyo||[],window.klaviyo.push=function(){var n;(n=window._klOnsite).push.apply(n,arguments)}}}}();
+      </script>
+    </head>
+  </head>
 
   <body>
     <div id="root"></div>
@@ -51,7 +69,7 @@
         const savedMember = localStorage.getItem('nj_isMember');
         const savedTrial = localStorage.getItem('nj_hasVitalTrial');
         const savedTrialEnd = localStorage.getItem('nj_trialEndsAt');
-        
+
         if (savedEmail) window.NJ.memberEmail = savedEmail;
         if (savedMember === 'true') window.NJ.isMember = true;
         if (savedTrial === 'true') window.NJ.hasVitalTrial = true;
