@@ -11,6 +11,7 @@ import Menu from "./pages/Menu";
 import OrderPage from "./pages/OrderPage";
 import VitalPass from "./pages/VitalPass";
 import JuiceDetail from "./pages/JuiceDetail";
+import BundleDetail from "./pages/BundleDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/vitalpass" element={<VitalPass />} />
           <Route path="/order/:slug" element={<OrderPage />} />
           <Route path="/juice/:slug" element={<JuiceDetail />} />
+          <Route path="/bundle/:slug" element={<BundleDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
