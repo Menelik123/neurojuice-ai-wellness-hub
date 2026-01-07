@@ -9,6 +9,7 @@ import bundleVariety from "@/assets/bundle-variety.png";
 interface Bundle {
   name: string;
   description: string;
+  bottleCount: number;
   includes: string;
   price: string;
   image: string;
@@ -20,32 +21,36 @@ const bundles: Bundle[] = [
   {
     name: "Starter Reset Pack",
     description: "Perfect for first-timers looking to reset their routine",
-    includes: "3 bottles: Sunshine Starter, Glow Up, Ginger Shot",
-    price: "$19.99",
+    bottleCount: 3,
+    includes: "Tropical Breeze, Lung Detox, Ginger Shot",
+    price: "$17.99",
     image: bundleStarter,
     stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
   },
   {
     name: "Lung Support Pack",
     description: "Breathe easier with our respiratory-focused blends",
-    includes: "3 bottles: Mucus Cleanse, Cold & Flu Defense, Ginger Shot",
-    price: "$19.99",
+    bottleCount: 3,
+    includes: "2x Lung Detox, 1x Ginger Shot",
+    price: "$17.99",
     image: bundleVariety,
     stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
   },
   {
     name: "Hydration Flow Pack",
     description: "Stay refreshed and energized all day",
-    includes: "4 bottles: Vital Flow, Sunshine Starter, Glow Up, Beet Flow",
-    price: "$27.99",
+    bottleCount: 4,
+    includes: "2x Tropical Breeze, 1x Lung Detox, 1x Ginger Shot",
+    price: "$23.99",
     image: bundleStarter,
     stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
   },
   {
     name: "Vital Pass Exclusive Pack",
     description: "Members-only bundle with our best sellers",
-    includes: "6 bottles: Full variety pack with all flavors",
-    price: "$39.99",
+    bottleCount: 6,
+    includes: "2x each: Tropical Breeze, Lung Detox, Ginger Shot",
+    price: "$29.99",
     image: bundleVariety,
     isVitalPassExclusive: true,
     stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
@@ -54,7 +59,7 @@ const bundles: Bundle[] = [
 
 const BundlesSection = () => {
   return (
-    <section className="py-16 px-4 bg-muted/30">
+    <section id="bundles" className="py-16 px-4 bg-muted/30">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="font-heading font-bold text-2xl md:text-4xl text-foreground mb-4">
@@ -95,8 +100,8 @@ const BundlesSection = () => {
                     <p className="text-sm text-muted-foreground">
                       {bundle.description}
                     </p>
-                    <p className="text-sm text-foreground/80">
-                      <span className="font-medium">Includes:</span> {bundle.includes}
+                    <p className="text-sm text-muted-foreground">
+                      <span className="font-medium text-foreground">{bundle.bottleCount} bottles:</span> {bundle.includes}
                     </p>
                     <p className="font-heading font-bold text-2xl text-foreground">
                       {bundle.price}

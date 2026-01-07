@@ -3,13 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, MessageSquare } from "lucide-react";
 
-import gingerShot from "@/assets/juice-ginger-shot.png";
-import mucusCleanse from "@/assets/juice-mucus-cleanse.png";
-import sunshineStarter from "@/assets/juice-sunshine-starter.png";
-import glowUp from "@/assets/juice-glow-up.png";
-import coldFlu from "@/assets/juice-cold-flu.png";
-import beetFlow from "@/assets/juice-beet-flow.png";
-import vitalFlow from "@/assets/juice-vital-flow.png";
+import tropicalBreeze from "@/assets/juice-tropical-breeze.png";
+import lungDetox from "@/assets/juice-lung-detox.png";
+import gingerShot from "@/assets/juice-ginger-shot-new.png";
 
 interface Product {
   name: string;
@@ -19,62 +15,37 @@ interface Product {
   memberPrice: string;
   image: string;
   stripeLink: string;
+  isGingerShot?: boolean;
 }
 
 const products: Product[] = [
   {
+    name: "Tropical Breeze",
+    purpose: "Refresh & Recharge",
+    ingredients: "Pineapple, Watermelon",
+    regularPrice: "$6.99",
+    memberPrice: "$5.00",
+    image: tropicalBreeze,
+    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
+  },
+  {
+    name: "Lung Detox",
+    purpose: "Respiratory Support",
+    ingredients: "Cucumber, Apple, Pineapple, Ginger",
+    regularPrice: "$6.99",
+    memberPrice: "$5.00",
+    image: lungDetox,
+    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
+  },
+  {
     name: "Ginger Shot",
     purpose: "Immunity & Digestion",
     ingredients: "Ginger, Lemon",
-    regularPrice: "$7.99",
-    memberPrice: "$6.39",
+    regularPrice: "$4.99",
+    memberPrice: "$3.00",
     image: gingerShot,
     stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
-  },
-  {
-    name: "Mucus Cleanse",
-    purpose: "Sinus & Chest Support",
-    ingredients: "Pineapple, Cucumber, Apple, Lime, Ginger",
-    regularPrice: "$7.99",
-    memberPrice: "$6.39",
-    image: mucusCleanse,
-    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
-  },
-  {
-    name: "Sunshine Starter",
-    purpose: "Morning Energy",
-    ingredients: "Orange, Watermelon, Pineapple",
-    regularPrice: "$7.99",
-    memberPrice: "$6.39",
-    image: sunshineStarter,
-    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
-  },
-  {
-    name: "Glow Up",
-    purpose: "Skin & Balance",
-    ingredients: "Carrot, Orange, Cucumber, Apple, Ginger, Lemon",
-    regularPrice: "$7.99",
-    memberPrice: "$6.39",
-    image: glowUp,
-    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
-  },
-  {
-    name: "Cold & Flu Defense",
-    purpose: "Immune Support",
-    ingredients: "Apple, Lemon, Carrot, Ginger",
-    regularPrice: "$7.99",
-    memberPrice: "$6.39",
-    image: coldFlu,
-    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
-  },
-  {
-    name: "Beet Flow",
-    purpose: "Circulation Support",
-    ingredients: "Beet, Carrot, Lemon, Ginger",
-    regularPrice: "$7.99",
-    memberPrice: "$6.39",
-    image: beetFlow,
-    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
+    isGingerShot: true,
   },
 ];
 

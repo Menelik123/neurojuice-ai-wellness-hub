@@ -8,7 +8,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="min-h-[90vh] flex flex-col items-center justify-center px-4 py-12 md:py-20">
+    <section className="min-h-[90vh] flex flex-col items-center justify-center px-4 py-12 md:py-20 pt-24">
       <div className="max-w-6xl mx-auto w-full">
         {/* Hero Image */}
         <div className="w-full max-w-2xl mx-auto mb-8">
@@ -26,7 +26,7 @@ const HeroSection = () => {
           </h1>
           
           <p className="text-lg md:text-xl text-muted-foreground">
-            We juice fresh in limited batches. You get notified when it's ready.
+            Fresh juice every Wednesday & Friday. Special blends on request.
           </p>
 
           {/* SMS Opt-in Form */}
@@ -40,7 +40,7 @@ const HeroSection = () => {
             onClick={scrollToProducts}
             className="mt-4"
           >
-            See What's Available Now
+            Shop Available Now
           </Button>
         </div>
       </div>

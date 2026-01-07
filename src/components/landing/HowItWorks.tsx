@@ -10,22 +10,22 @@ const HowItWorks = () => {
     {
       icon: Package,
       title: "We juice fresh in small batches",
-      description: "Every bottle is made to order with real ingredients",
+      description: "Every bottle is made with real ingredients",
     },
     {
       icon: MessageSquare,
-      title: "We announce drops by text",
-      description: "Be the first to know when new batches are ready",
+      title: "Drops happen Wednesdays & Fridays",
+      description: "You get notified when new batches are ready",
     },
     {
       icon: Truck,
-      title: "You order for pickup or delivery",
-      description: "Get your juice while it's fresh",
+      title: "Order for delivery or pickup",
+      description: "Special requests handled via SMS",
     },
   ];
 
   return (
-    <section className="py-16 px-4 bg-muted/30">
+    <section id="how-it-works" className="py-16 px-4 bg-muted/30">
       <div className="max-w-4xl mx-auto">
         <h2 className="font-heading font-bold text-2xl md:text-4xl text-foreground text-center mb-12">
           How It Works
