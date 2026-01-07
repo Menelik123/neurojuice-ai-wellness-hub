@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import SMSOptInForm from "./SMSOptInForm";
-import heroBottles from "@/assets/hero-bottles.png";
 
 const HeroSection = () => {
   const scrollToProducts = () => {
@@ -10,15 +9,6 @@ const HeroSection = () => {
   return (
     <section className="min-h-[90vh] flex flex-col items-center justify-center px-4 py-12 md:py-20 pt-24">
       <div className="max-w-6xl mx-auto w-full">
-        {/* Hero Image */}
-        <div className="w-full max-w-2xl mx-auto mb-8">
-          <img 
-            src={heroBottles} 
-            alt="NeuroJuice cold-pressed juice bottles" 
-            className="w-full h-auto rounded-2xl shadow-lg"
-          />
-        </div>
-
         {/* Text Content */}
         <div className="text-center space-y-6 max-w-2xl mx-auto">
           <h1 className="font-heading font-bold text-3xl md:text-5xl lg:text-6xl text-foreground leading-tight">
