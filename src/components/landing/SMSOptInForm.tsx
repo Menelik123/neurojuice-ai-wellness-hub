@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface SMSOptInFormProps {
   variant?: "hero" | "inline" | "compact";
@@ -29,17 +30,40 @@ const SMSOptInForm = ({ variant = "inline", showEmail = true }: SMSOptInFormProp
 
     setIsSubmitting(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    toast({
-      title: "You're on the list!",
-      description: "We'll text you when the next drop is ready.",
-    });
-    
-    setPhone("");
-    setEmail("");
-    setIsSubmitting(false);
+    try {
+      const { data, error } = await supabase.functions.invoke("klaviyo-subscribe", {
+        body: { 
+          phone: phone.trim(), 
+          email: email.trim() || undefined,
+          source: "sms_optin_form"
+        },
+      });
+
+      if (error) {
+        throw new Error(error.message || "Subscription failed");
+      }
+
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      toast({
+        title: "You're on the list!",
+        description: data?.message || "We'll text you when the next drop is ready.",
+      });
+      
+      setPhone("");
+      setEmail("");
+    } catch (error) {
+      console.error("SMS subscription error:", error);
+      toast({
+        title: "Subscription failed",
+        description: error instanceof Error ? error.message : "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (variant === "compact") {

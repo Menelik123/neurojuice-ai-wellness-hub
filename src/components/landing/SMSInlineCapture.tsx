@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MessageSquare, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface SMSInlineCaptureProps {
   variant?: "light" | "dark";
@@ -30,15 +31,37 @@ const SMSInlineCapture = ({ variant = "light", message = "Don't miss the next dr
 
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setSubmitted(true);
-    setIsLoading(false);
-    toast({
-      title: "You're on the list!",
-      description: "You'll get a text when the next batch drops.",
-    });
+    try {
+      const { data, error } = await supabase.functions.invoke("klaviyo-subscribe", {
+        body: { 
+          phone: phone.trim(),
+          source: "inline_capture"
+        },
+      });
+
+      if (error) {
+        throw new Error(error.message || "Subscription failed");
+      }
+
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      setSubmitted(true);
+      toast({
+        title: "You're on the list!",
+        description: "You'll get a text when the next batch drops.",
+      });
+    } catch (error) {
+      console.error("SMS subscription error:", error);
+      toast({
+        variant: "destructive",
+        title: "Subscription failed",
+        description: error instanceof Error ? error.message : "Please try again later.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const isDark = variant === "dark";
