@@ -42,14 +42,39 @@ const products: Record<string, JuiceProduct> = {
     ],
     ingredients: [
       { name: "Pineapple", benefit: "Traditionally used to support digestion and provide natural enzymes." },
-      { name: "Watermelon", benefit: "Known for its hydrating properties and natural electrolyte content." }
+      { name: "Lemon", benefit: "Rich in vitamin C, traditionally used to support immune function." },
+      { name: "Apple", benefit: "Provides natural sweetness and antioxidants." },
+      { name: "Ginger", benefit: "Traditionally used to support circulation and warming comfort." }
     ],
     howToUse: "Best enjoyed chilled. Shake well before drinking.",
     timing: "Morning, post-workout, or whenever you need a refreshing boost.",
     image: tropicalBreeze,
     regularPrice: "$6.99",
     memberPrice: "$5.00",
-    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600"
+    stripeLink: "" // Empty - to be added manually after publish
+  },
+  "green-vitality": {
+    slug: "green-vitality",
+    name: "Green Vitality",
+    purpose: "Clean Hydration",
+    description: "A crisp, clean blend designed to hydrate and refresh with natural ingredients.",
+    whyChoose: [
+      "Light and refreshing for daily hydration",
+      "Naturally alkalizing ingredients",
+      "Clean taste profile for any time of day",
+      "Perfect for those seeking simple wellness"
+    ],
+    ingredients: [
+      { name: "Cucumber", benefit: "Hydrating and cooling, traditionally used for its soothing properties." },
+      { name: "Lime", benefit: "Rich in vitamin C, adds a zesty freshness." },
+      { name: "Apple", benefit: "Provides natural sweetness and antioxidants." }
+    ],
+    howToUse: "Best enjoyed chilled. Shake well before drinking.",
+    timing: "Anytime you need refreshing hydration.",
+    image: lungDetox, // Using lung detox image as placeholder for green vitality
+    regularPrice: "$6.99",
+    memberPrice: "$5.00",
+    stripeLink: "" // Empty - to be added manually after publish
   },
   "lung-detox": {
     slug: "lung-detox",
@@ -73,7 +98,7 @@ const products: Record<string, JuiceProduct> = {
     image: lungDetox,
     regularPrice: "$6.99",
     memberPrice: "$5.00",
-    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600"
+    stripeLink: "" // Empty - to be added manually after publish
   },
   "ginger-shot": {
     slug: "ginger-shot",
@@ -88,14 +113,15 @@ const products: Record<string, JuiceProduct> = {
     ],
     ingredients: [
       { name: "Ginger", benefit: "Traditionally used to support digestion, circulation, and immune response." },
-      { name: "Lemon", benefit: "Rich in vitamin C, traditionally used to support immune function." }
+      { name: "Lemon", benefit: "Rich in vitamin C, traditionally used to support immune function." },
+      { name: "Apple", benefit: "Provides natural sweetness and balance." }
     ],
     howToUse: "Take as a shot. Can be followed with water if desired.",
     timing: "First thing in the morning on an empty stomach for best results.",
     image: gingerShot,
     regularPrice: "$4.99",
     memberPrice: "$3.00",
-    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
+    stripeLink: "", // Empty - to be added manually after publish
     isGingerShot: true
   }
 };
@@ -230,16 +256,27 @@ const JuiceDetail = () => {
                   </div>
 
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <Button
-                      asChild
-                      size="lg"
-                      className="flex-1 bg-primary hover:bg-primary-glow text-primary-foreground"
-                    >
-                      <a href={juice.stripeLink} target="_blank" rel="noopener noreferrer">
+                    {juice.stripeLink ? (
+                      <Button
+                        asChild
+                        size="lg"
+                        className="flex-1 bg-[#7FD645] hover:bg-[#6BC535] text-black font-semibold"
+                      >
+                        <a href={juice.stripeLink} target="_blank" rel="noopener noreferrer">
+                          <ShoppingCart className="w-4 h-4 mr-2" />
+                          Order Now
+                        </a>
+                      </Button>
+                    ) : (
+                      <Button
+                        disabled
+                        size="lg"
+                        className="flex-1 bg-gray-300 text-gray-500 font-semibold cursor-not-allowed"
+                      >
                         <ShoppingCart className="w-4 h-4 mr-2" />
-                        Add to Cart
-                      </a>
-                    </Button>
+                        Coming Soon
+                      </Button>
+                    )}
                     <Button
                       asChild
                       variant="outline"

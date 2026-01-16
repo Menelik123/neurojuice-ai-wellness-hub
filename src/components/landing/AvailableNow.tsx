@@ -17,6 +17,7 @@ interface Product {
   regularPrice: string;
   memberPrice: string;
   image: string;
+  stripeLink: string;
   isGingerShot?: boolean;
 }
 
@@ -25,28 +26,31 @@ const products: Product[] = [
     slug: "tropical-breeze",
     name: "Tropical Breeze",
     purpose: "Refresh & Recharge",
-    ingredients: "Pineapple, Watermelon",
+    ingredients: "Pineapple, Lemon, Apple, Ginger",
     regularPrice: "$6.99",
     memberPrice: "$5.00",
     image: tropicalBreeze,
+    stripeLink: "", // Empty - to be added manually after publish
   },
   {
-    slug: "lung-detox",
-    name: "Lung Detox",
-    purpose: "Respiratory Support",
-    ingredients: "Cucumber, Apple, Pineapple, Ginger",
+    slug: "green-vitality",
+    name: "Green Vitality",
+    purpose: "Clean Hydration",
+    ingredients: "Cucumber, Lime, Apple",
     regularPrice: "$6.99",
     memberPrice: "$5.00",
-    image: lungDetox,
+    image: lungDetox, // Using lung detox image as placeholder
+    stripeLink: "", // Empty - to be added manually after publish
   },
   {
     slug: "ginger-shot",
     name: "Ginger Shot",
     purpose: "Immunity & Digestion",
-    ingredients: "Ginger, Lemon",
+    ingredients: "Ginger, Lemon, Apple",
     regularPrice: "$4.99",
     memberPrice: "$3.00",
     image: gingerShot,
+    stripeLink: "", // Empty - to be added manually after publish
     isGingerShot: true,
   },
 ];
@@ -108,12 +112,24 @@ const AvailableNow = () => {
                     </Badge>
                   </div>
                   
-                  <Button 
-                    className="w-full bg-primary hover:bg-primary-glow text-primary-foreground group-hover:bg-primary-glow"
-                  >
-                    View Juice Details
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
+                  {product.stripeLink ? (
+                    <Button 
+                      asChild
+                      className="w-full bg-[#7FD645] hover:bg-[#6BC535] text-black font-semibold"
+                    >
+                      <a href={product.stripeLink} target="_blank" rel="noopener noreferrer">
+                        Order Now
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button 
+                      className="w-full bg-primary hover:bg-primary-glow text-primary-foreground"
+                    >
+                      View Details
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             </Link>
