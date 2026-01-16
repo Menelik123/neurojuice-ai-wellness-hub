@@ -15,21 +15,21 @@ const products: Product[] = [
     ingredients: "Pineapple, Lemon, Apple, Ginger",
     benefit: "Refreshing, naturally energizing",
     price: "$6.99",
-    stripeLink: "", // Empty - to be added manually after publish
+    stripeLink: "https://buy.stripe.com/9B67sK1N33xcgVG6zU1B60b",
   },
   {
-    name: "Green Vitality",
-    ingredients: "Cucumber, Lime, Apple",
-    benefit: "Clean, crisp hydration",
+    name: "Lung Detox",
+    ingredients: "Cucumber, Pineapple, Ginger, Apple",
+    benefit: "Helps clear airways for easier breathing",
     price: "$6.99",
-    stripeLink: "", // Empty - to be added manually after publish
+    stripeLink: "https://buy.stripe.com/9B6bJ00IZgjY0WI9M61B60a",
   },
   {
     name: "Ginger Shot",
     ingredients: "Ginger, Lemon, Apple",
     benefit: "Bold, warming wellness support",
     price: "$4.99",
-    stripeLink: "", // Empty - to be added manually after publish
+    stripeLink: "https://buy.stripe.com/7sY28q2R7d7M48U9M61B609",
   },
 ];
 

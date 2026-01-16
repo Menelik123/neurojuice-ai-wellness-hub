@@ -30,17 +30,17 @@ const products: Product[] = [
     regularPrice: "$6.99",
     memberPrice: "$5.00",
     image: tropicalBreeze,
-    stripeLink: "", // Empty - to be added manually after publish
+    stripeLink: "https://buy.stripe.com/9B67sK1N33xcgVG6zU1B60b",
   },
   {
-    slug: "green-vitality",
-    name: "Green Vitality",
-    purpose: "Clean Hydration",
-    ingredients: "Cucumber, Lime, Apple",
+    slug: "lung-detox",
+    name: "Lung Detox",
+    purpose: "Clear Airways",
+    ingredients: "Cucumber, Pineapple, Ginger, Apple",
     regularPrice: "$6.99",
     memberPrice: "$5.00",
-    image: lungDetox, // Using lung detox image as placeholder
-    stripeLink: "", // Empty - to be added manually after publish
+    image: lungDetox,
+    stripeLink: "https://buy.stripe.com/9B6bJ00IZgjY0WI9M61B60a",
   },
   {
     slug: "ginger-shot",
@@ -50,7 +50,7 @@ const products: Product[] = [
     regularPrice: "$4.99",
     memberPrice: "$3.00",
     image: gingerShot,
-    stripeLink: "", // Empty - to be added manually after publish
+    stripeLink: "https://buy.stripe.com/7sY28q2R7d7M48U9M61B609",
     isGingerShot: true,
   },
 ];

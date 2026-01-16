@@ -51,30 +51,7 @@ const products: Record<string, JuiceProduct> = {
     image: tropicalBreeze,
     regularPrice: "$6.99",
     memberPrice: "$5.00",
-    stripeLink: "" // Empty - to be added manually after publish
-  },
-  "green-vitality": {
-    slug: "green-vitality",
-    name: "Green Vitality",
-    purpose: "Clean Hydration",
-    description: "A crisp, clean blend designed to hydrate and refresh with natural ingredients.",
-    whyChoose: [
-      "Light and refreshing for daily hydration",
-      "Naturally alkalizing ingredients",
-      "Clean taste profile for any time of day",
-      "Perfect for those seeking simple wellness"
-    ],
-    ingredients: [
-      { name: "Cucumber", benefit: "Hydrating and cooling, traditionally used for its soothing properties." },
-      { name: "Lime", benefit: "Rich in vitamin C, adds a zesty freshness." },
-      { name: "Apple", benefit: "Provides natural sweetness and antioxidants." }
-    ],
-    howToUse: "Best enjoyed chilled. Shake well before drinking.",
-    timing: "Anytime you need refreshing hydration.",
-    image: lungDetox, // Using lung detox image as placeholder for green vitality
-    regularPrice: "$6.99",
-    memberPrice: "$5.00",
-    stripeLink: "" // Empty - to be added manually after publish
+    stripeLink: "https://buy.stripe.com/9B67sK1N33xcgVG6zU1B60b"
   },
   "lung-detox": {
     slug: "lung-detox",
@@ -98,7 +75,7 @@ const products: Record<string, JuiceProduct> = {
     image: lungDetox,
     regularPrice: "$6.99",
     memberPrice: "$5.00",
-    stripeLink: "" // Empty - to be added manually after publish
+    stripeLink: "https://buy.stripe.com/9B6bJ00IZgjY0WI9M61B60a"
   },
   "ginger-shot": {
     slug: "ginger-shot",
@@ -121,7 +98,7 @@ const products: Record<string, JuiceProduct> = {
     image: gingerShot,
     regularPrice: "$4.99",
     memberPrice: "$3.00",
-    stripeLink: "", // Empty - to be added manually after publish
+    stripeLink: "https://buy.stripe.com/7sY28q2R7d7M48U9M61B609",
     isGingerShot: true
   }
 };
