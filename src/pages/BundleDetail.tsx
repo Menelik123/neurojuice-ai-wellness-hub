@@ -50,7 +50,7 @@ const bundles: Record<string, BundleProduct> = {
     vitalPassPrice: "$23.99",
     savings: "Save $5",
     image: bundleStarterReset,
-    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600"
+    stripeLink: "" // Empty - to be added manually after publish
   },
   "lung-support-pack": {
     slug: "lung-support-pack",
@@ -73,7 +73,7 @@ const bundles: Record<string, BundleProduct> = {
     vitalPassPrice: "$29.99",
     savings: "Save $8",
     image: bundleLungSupport,
-    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600"
+    stripeLink: "" // Empty - to be added manually after publish
   },
   "hydration-flow-pack": {
     slug: "hydration-flow-pack",
@@ -96,7 +96,7 @@ const bundles: Record<string, BundleProduct> = {
     vitalPassPrice: "$35.99",
     savings: "Save $10",
     image: bundleHydrationFlow,
-    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600"
+    stripeLink: "" // Empty - to be added manually after publish
   },
   "vital-pass-exclusive-pack": {
     slug: "vital-pass-exclusive-pack",
@@ -119,7 +119,7 @@ const bundles: Record<string, BundleProduct> = {
     vitalPassPrice: "$29.99",
     savings: "Save $15",
     image: bundleVariety,
-    stripeLink: "https://buy.stripe.com/00w8wOdvL0l07l6bUe1B600",
+    stripeLink: "", // Empty - to be added manually after publish
     isVitalPassExclusive: true
   }
 };
@@ -252,16 +252,27 @@ const BundleDetail = () => {
                     </div>
                   </div>
 
-                  <Button
-                    asChild
-                    size="lg"
-                    className="w-full bg-foreground hover:bg-foreground/90 text-background font-medium rounded-lg"
-                  >
-                    <a href={bundle.stripeLink} target="_blank" rel="noopener noreferrer">
+                  {bundle.stripeLink ? (
+                    <Button
+                      asChild
+                      size="lg"
+                      className="w-full bg-[#7FD645] hover:bg-[#6BC535] text-black font-semibold rounded-lg"
+                    >
+                      <a href={bundle.stripeLink} target="_blank" rel="noopener noreferrer">
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Order Now
+                      </a>
+                    </Button>
+                  ) : (
+                    <Button
+                      disabled
+                      size="lg"
+                      className="w-full bg-gray-300 text-gray-500 font-semibold cursor-not-allowed rounded-lg"
+                    >
                       <ShoppingCart className="w-4 h-4 mr-2" />
-                      Add Bundle to Cart
-                    </a>
-                  </Button>
+                      Coming Soon
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
 
