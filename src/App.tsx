@@ -12,6 +12,7 @@ import OrderPage from "./pages/OrderPage";
 import VitalPass from "./pages/VitalPass";
 import JuiceDetail from "./pages/JuiceDetail";
 import BundleDetail from "./pages/BundleDetail";
+import Fuel from "./pages/Fuel";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/order/:slug" element={<OrderPage />} />
           <Route path="/juice/:slug" element={<JuiceDetail />} />
           <Route path="/bundle/:slug" element={<BundleDetail />} />
+          <Route path="/fuel" element={<Fuel />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
