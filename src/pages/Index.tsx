@@ -1,31 +1,25 @@
-import StickyNav from "@/components/landing/StickyNav";
-import HeroSection from "@/components/landing/HeroSection";
-import HowItWorks from "@/components/landing/HowItWorks";
-import AvailableNow from "@/components/landing/AvailableNow";
-import BundlesSection from "@/components/landing/BundlesSection";
-import MadeToOrder from "@/components/landing/MadeToOrder";
-import VitalPassSection from "@/components/landing/VitalPassSection";
-import DrVitalTeaser from "@/components/landing/DrVitalTeaser";
-import EmailIncentive from "@/components/landing/EmailIncentive";
-import FinalSMSPush from "@/components/landing/FinalSMSPush";
-import LandingFooter from "@/components/landing/LandingFooter";
+import MobileNav from "@/components/landing/MobileNav";
+import PremiumHero from "@/components/landing/PremiumHero";
+import MenuSection from "@/components/landing/MenuSection";
+import VitalPassCard from "@/components/landing/VitalPassCard";
+import DrVitalCard from "@/components/landing/DrVitalCard";
+import WaitlistForm from "@/components/landing/WaitlistForm";
+import ComplianceFooter from "@/components/landing/ComplianceFooter";
+import StickyMobileCTA from "@/components/landing/StickyMobileCTA";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
-      <StickyNav />
-      <main>
-        <HeroSection />
-        <HowItWorks />
-        <AvailableNow />
-        <BundlesSection />
-        <MadeToOrder />
-        <VitalPassSection />
-        <DrVitalTeaser />
-        <EmailIncentive />
-        <FinalSMSPush />
+      <MobileNav />
+      <main className="pb-20 md:pb-0">
+        <PremiumHero />
+        <MenuSection />
+        <VitalPassCard />
+        <DrVitalCard />
+        <WaitlistForm />
       </main>
-      <LandingFooter />
+      <ComplianceFooter />
+      <StickyMobileCTA />
     </div>
   );
 };
