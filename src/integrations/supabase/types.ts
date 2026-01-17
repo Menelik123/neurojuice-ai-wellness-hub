@@ -35,6 +35,48 @@ export type Database = {
         }
         Relationships: []
       }
+      fuel_orders: {
+        Row: {
+          created_at: string
+          customer_email: string | null
+          customer_name: string
+          customer_phone: string
+          id: string
+          notes: string | null
+          pickup_date: string
+          pickup_time: string
+          products: Json
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          customer_email?: string | null
+          customer_name: string
+          customer_phone: string
+          id?: string
+          notes?: string | null
+          pickup_date: string
+          pickup_time: string
+          products: Json
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string
+          customer_phone?: string
+          id?: string
+          notes?: string | null
+          pickup_date?: string
+          pickup_time?: string
+          products?: Json
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       vital_trials: {
         Row: {
           created_at: string | null

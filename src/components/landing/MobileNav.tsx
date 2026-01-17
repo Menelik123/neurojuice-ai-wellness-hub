@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 const navLinks = [
   { label: "Menu", href: "#menu" },
+  { label: "Fuel", href: "/fuel", isRoute: true },
   { label: "Vital Pass", href: "#vital-pass" },
   { label: "Dr. Vital", href: "#dr-vital" },
   { label: "Waitlist", href: "#waitlist" },
@@ -33,13 +34,23 @@ const MobileNav = () => {
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              <button
-                key={link.href}
-                onClick={() => handleNavClick(link.href)}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                {link.label}
-              </button>
+              link.isRoute ? (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <button
+                  key={link.href}
+                  onClick={() => handleNavClick(link.href)}
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {link.label}
+                </button>
+              )
             ))}
           </nav>
 
@@ -65,13 +76,24 @@ const MobileNav = () => {
           <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col gap-2">
               {navLinks.map((link) => (
-                <button
-                  key={link.href}
-                  onClick={() => handleNavClick(link.href)}
-                  className="py-3 px-4 text-left text-foreground font-medium hover:bg-muted rounded-lg transition-colors"
-                >
-                  {link.label}
-                </button>
+                link.isRoute ? (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    onClick={() => setIsOpen(false)}
+                    className="py-3 px-4 text-left text-foreground font-medium hover:bg-muted rounded-lg transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <button
+                    key={link.href}
+                    onClick={() => handleNavClick(link.href)}
+                    className="py-3 px-4 text-left text-foreground font-medium hover:bg-muted rounded-lg transition-colors"
+                  >
+                    {link.label}
+                  </button>
+                )
               ))}
             </nav>
           </div>
