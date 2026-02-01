@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const SimpleFooter = () => {
   return (
     <footer className="py-8 px-4 bg-foreground text-background">
@@ -8,9 +10,15 @@ const SimpleFooter = () => {
           </div>
           <span className="font-heading font-bold text-lg">NeuroJuice</span>
         </div>
-        <p className="text-sm text-background/80">
+        <p className="text-sm text-background/80 mb-2">
           © {new Date().getFullYear()} NeuroJuice LLC. All rights reserved.
         </p>
+        <Link 
+          to="/privacy-policy" 
+          className="text-sm text-background/60 hover:text-background transition-colors underline"
+        >
+          Privacy Policy
+        </Link>
       </div>
     </footer>
   );

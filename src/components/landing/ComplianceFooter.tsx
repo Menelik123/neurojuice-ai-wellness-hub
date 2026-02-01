@@ -1,4 +1,5 @@
 import { Mail } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const ComplianceFooter = () => {
   return (
@@ -47,9 +48,15 @@ const ComplianceFooter = () => {
           </p>
         </div>
 
-        {/* Copyright */}
-        <div className="text-center text-xs text-muted-foreground pt-4 border-t border-border">
+        {/* Copyright & Links */}
+        <div className="text-center text-xs text-muted-foreground pt-4 border-t border-border space-y-2">
           <p>© {new Date().getFullYear()} NeuroJuice. All rights reserved.</p>
+          <Link 
+            to="/privacy-policy" 
+            className="text-muted-foreground hover:text-foreground transition-colors underline"
+          >
+            Privacy Policy
+          </Link>
         </div>
       </div>
     </footer>
