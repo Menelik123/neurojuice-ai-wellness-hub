@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Instagram, Youtube, Twitter, Hash } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const scrollToSection = (href: string) => {
@@ -19,7 +20,7 @@ const Footer = () => {
 
   const legalLinks = [
     { label: "FAQ", href: "#faq" },
-    { label: "Privacy Policy", href: "#privacy" },
+    { label: "Privacy Policy", href: "/privacy-policy", isRoute: true },
     { label: "Terms of Service", href: "#terms" },
     { label: "Refund Policy", href: "#refunds" }
   ];
@@ -83,12 +84,21 @@ const Footer = () => {
             <ul className="space-y-2">
               {legalLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="font-body text-background/80 hover:text-background transition-colors duration-300"
-                  >
-                    {link.label}
-                  </a>
+                  {link.isRoute ? (
+                    <Link
+                      to={link.href}
+                      className="font-body text-background/80 hover:text-background transition-colors duration-300"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="font-body text-background/80 hover:text-background transition-colors duration-300"
+                    >
+                      {link.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -148,9 +158,9 @@ const Footer = () => {
             </div>
             
             <div className="flex items-center space-x-6 text-sm">
-              <a href="#privacy" className="font-body text-background/60 hover:text-background transition-colors">
+              <Link to="/privacy-policy" className="font-body text-background/60 hover:text-background transition-colors">
                 Privacy
-              </a>
+              </Link>
               <a href="#terms" className="font-body text-background/60 hover:text-background transition-colors">
                 Terms
               </a>

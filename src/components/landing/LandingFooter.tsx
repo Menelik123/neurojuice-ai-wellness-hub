@@ -1,5 +1,6 @@
 import { Instagram, Mail, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const LandingFooter = () => {
   const scrollToSMS = () => {
@@ -70,6 +71,16 @@ const LandingFooter = () => {
             NeuroJuice products are not intended to diagnose, treat, cure, or prevent any disease. 
             These statements have not been evaluated by the Food and Drug Administration.
           </p>
+        </div>
+
+        {/* Privacy Link */}
+        <div className="mt-4 text-center">
+          <Link 
+            to="/privacy-policy" 
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors underline"
+          >
+            Privacy Policy
+          </Link>
         </div>
       </div>
     </footer>
