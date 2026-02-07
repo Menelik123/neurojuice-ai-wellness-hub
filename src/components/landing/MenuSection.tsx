@@ -4,13 +4,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingBag, Clock, Bell } from "lucide-react";
 
-// Product images
-import tropicalBreeze from "@/assets/juice-tropical-breeze.png";
-import lungDetox from "@/assets/juice-lung-detox.png";
-import gingerShot from "@/assets/juice-ginger-shot-new.png";
-import glowUp from "@/assets/juice-glow-up.png";
+// Product images - Updated
+import tropicalBreeze from "@/assets/product-tropical-breeze.png";
+import lungDetox from "@/assets/product-lung-detox.png";
+import gingerShot from "@/assets/product-ginger-shot.png";
+import glowUp from "@/assets/product-glow-up.png";
+import hydrationReset from "@/assets/product-hydration-reset.png";
+import beetFlow from "@/assets/product-beet-flow.png";
+import greenVitality from "@/assets/product-green-vitality.png";
 import mucusCleanse from "@/assets/juice-mucus-cleanse.png";
-import beetFlow from "@/assets/juice-beet-flow.png";
 import vitalFlow from "@/assets/juice-vital-flow.png";
 import sunshineStarter from "@/assets/juice-sunshine-starter.png";
 import coldFlu from "@/assets/juice-cold-flu.png";
@@ -31,7 +33,7 @@ const availableNow: Product[] = [
     slug: "tropical-breeze",
     name: "Tropical Breeze",
     purpose: "Hydration • Energy • Mood",
-    ingredients: "Pineapple, Watermelon",
+    ingredients: "Pineapple, Apple, Lemon, Ginger",
     image: tropicalBreeze,
     stripeLink: "https://buy.stripe.com/9B67sK1N33xcgVG6zU1B60b",
   },
@@ -42,6 +44,14 @@ const availableNow: Product[] = [
     ingredients: "Cucumber, Pineapple, Apple, Ginger",
     image: lungDetox,
     stripeLink: "https://buy.stripe.com/9B6bJ00IZgjY0WI9M61B60a",
+  },
+  {
+    slug: "green-vitality",
+    name: "Green Vitality",
+    purpose: "Energy • Detox • Wellness",
+    ingredients: "Cucumber, Apple, Lime",
+    image: greenVitality,
+    stripeLink: "",
   },
 ];
 
@@ -63,17 +73,25 @@ const madeToOrder: Product[] = [
   {
     slug: "hydration-reset",
     name: "Hydration Reset",
-    purpose: "Low energy • Dehydration • Recovery",
+    purpose: "Refresh • Revitalize • Recovery",
     ingredients: "Pineapple, Watermelon",
-    image: tropicalBreeze, // Similar to Tropical Breeze
+    image: hydrationReset,
     stripeLink: "",
   },
   {
     slug: "glow-up",
     name: "Glow Up",
-    purpose: "Clear skin • Inner balance",
+    purpose: "Clear skin • Boost • Energize",
     ingredients: "Carrot, Orange, Cucumber, Apple, Ginger, Lemon",
     image: glowUp,
+    stripeLink: "",
+  },
+  {
+    slug: "beet-flow",
+    name: "Beet Flow",
+    purpose: "Circulation • Heart health",
+    ingredients: "Beet, Carrot, Lemon, Ginger",
+    image: beetFlow,
     stripeLink: "",
   },
   {
@@ -90,14 +108,6 @@ const madeToOrder: Product[] = [
     purpose: "Immune support",
     ingredients: "Apple, Lemon, Carrot, Ginger",
     image: coldFlu,
-    stripeLink: "",
-  },
-  {
-    slug: "beet-flow",
-    name: "Beet Flow",
-    purpose: "Circulation • Kidney support",
-    ingredients: "Beet, Carrot, Lemon, Ginger",
-    image: beetFlow,
     stripeLink: "",
   },
   {
@@ -133,26 +143,26 @@ const ProductCard = ({ product, status }: ProductCardProps) => {
   const memberPrice = product.isGingerShot ? "$3" : "$5";
 
   return (
-    <Card className="overflow-hidden border border-border hover:border-primary/30 transition-all duration-200 bg-card">
-      <CardContent className="p-0">
+    <Card className="overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 bg-card shadow-sm hover:shadow-lg group h-full flex flex-col">
+      <CardContent className="p-0 flex flex-col h-full">
         {/* Image */}
-        <div className="aspect-square bg-muted/30 p-4 flex items-center justify-center">
+        <div className="aspect-[4/5] bg-muted/20 flex items-center justify-center overflow-hidden">
           <img 
             src={product.image} 
             alt={product.name}
-            className="w-full h-full object-contain max-h-40"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-lg"
             loading="lazy"
           />
         </div>
 
         {/* Content */}
-        <div className="p-4 space-y-3">
+        <div className="p-5 space-y-3 flex flex-col flex-1">
           {/* Status Badge */}
           <Badge 
             variant={isInStock ? "default" : "secondary"}
             className={isInStock 
-              ? "bg-primary text-primary-foreground" 
-              : "bg-muted text-muted-foreground"
+              ? "bg-primary text-primary-foreground w-fit" 
+              : "bg-muted text-muted-foreground w-fit"
             }
           >
             {isInStock ? "In Stock" : "Preorder"}
@@ -160,7 +170,7 @@ const ProductCard = ({ product, status }: ProductCardProps) => {
 
           {/* Name & Purpose */}
           <div>
-            <h3 className="font-heading font-semibold text-lg text-foreground">
+            <h3 className="font-heading font-bold text-xl text-foreground">
               {product.name}
             </h3>
             <p className="text-sm text-primary font-medium mt-1">
@@ -180,8 +190,8 @@ const ProductCard = ({ product, status }: ProductCardProps) => {
             <span className="font-semibold text-primary">{memberPrice} Vital Pass</span>
           </div>
 
-          {/* CTA */}
-          <div className="pt-2 space-y-2">
+          {/* CTA - Push to bottom */}
+          <div className="pt-3 space-y-2 mt-auto">
             {isInStock && product.stripeLink ? (
               <Button 
                 asChild
@@ -232,10 +242,10 @@ const MenuSection = () => {
   const [activeTab, setActiveTab] = useState<"available" | "made-to-order">("available");
 
   return (
-    <section id="menu" className="py-16 px-4 bg-background">
-      <div className="max-w-6xl mx-auto">
+    <section id="menu" className="py-20 px-4 bg-background">
+      <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mb-12">
           <h2 className="font-heading font-bold text-3xl md:text-4xl text-foreground mb-3">
             Our Menu
           </h2>
@@ -245,7 +255,7 @@ const MenuSection = () => {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex justify-center mb-10">
+        <div className="flex justify-center mb-12">
           <div className="inline-flex bg-muted rounded-lg p-1 gap-1">
             <button
               onClick={() => setActiveTab("available")}
@@ -272,13 +282,13 @@ const MenuSection = () => {
 
         {/* Available Now Tab */}
         {activeTab === "available" && (
-          <div className="space-y-12">
+          <div className="space-y-16">
             {/* Ready to Go Juices */}
             <div>
-              <h3 className="font-heading font-semibold text-xl text-foreground mb-6 text-center">
+              <h3 className="font-heading font-semibold text-xl text-foreground mb-8 text-center">
                 Ready to Go
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
                 {availableNow.map((product) => (
                   <ProductCard key={product.slug} product={product} status="in-stock" />
                 ))}
@@ -287,10 +297,10 @@ const MenuSection = () => {
 
             {/* Ginger Shots */}
             <div>
-              <h3 className="font-heading font-semibold text-xl text-foreground mb-6 text-center">
+              <h3 className="font-heading font-semibold text-xl text-foreground mb-8 text-center">
                 Ginger Shots
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-md mx-auto lg:max-w-none">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8 max-w-sm mx-auto sm:max-w-none">
                 {gingerShots.map((product) => (
                   <ProductCard key={product.slug} product={product} status="in-stock" />
                 ))}
@@ -302,13 +312,13 @@ const MenuSection = () => {
         {/* Made-to-Order Tab */}
         {activeTab === "made-to-order" && (
           <div>
-            <div className="text-center mb-8">
+            <div className="text-center mb-10">
               <p className="text-muted-foreground flex items-center justify-center gap-2">
                 <Clock className="w-4 h-4" />
                 2–3 Day Prep Time
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
               {madeToOrder.map((product) => (
                 <ProductCard key={product.slug} product={product} status="preorder" />
               ))}
