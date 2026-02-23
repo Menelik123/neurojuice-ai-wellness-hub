@@ -134,10 +134,10 @@ const WaitlistForm = () => {
                 <Bell className="w-7 h-7 text-primary" />
               </div>
               <h2 className="font-heading font-bold text-2xl text-foreground">
-                Join the Waitlist
+                Get Early Drops + AI Juice Recommendations
               </h2>
               <p className="text-muted-foreground">
-                Get notified when your favorite juice drops
+                Sign up for first access to new drops, personalized stack recommendations, and 10% off your first order.
               </p>
             </div>
 
