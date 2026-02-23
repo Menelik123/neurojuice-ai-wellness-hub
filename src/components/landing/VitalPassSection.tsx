@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 
 const VitalPassSection = () => {
   const benefits = [
-    { icon: Zap, text: "$5 bottles (reg. $6.99)" },
-    { icon: Check, text: "$3 ginger shots (reg. $4.99)" },
+    { icon: Zap, text: "$5 bottles (reg. $6)" },
+    { icon: Check, text: "$3 ginger shots (reg. $4)" },
     { icon: Sparkles, text: "Early drop access" },
     { icon: Crown, text: "Exclusive bundles" },
     { icon: MessageCircle, text: "Access to Dr. Vital AI" },
@@ -24,7 +24,7 @@ const VitalPassSection = () => {
               
               <div className="space-y-3">
                 <h2 className="font-heading font-bold text-2xl md:text-4xl">
-                  Vital Pass Membership
+                  NeuroRoutine Membership
                 </h2>
                 <p className="text-background/80 text-lg max-w-xl mx-auto">
                   Get more juice for less. Join our membership for exclusive perks.
@@ -54,9 +54,9 @@ const VitalPassSection = () => {
                     size="lg"
                     className="bg-background hover:bg-background/90 text-foreground font-semibold rounded-lg px-8 py-6 text-lg transition-all hover:scale-105 active:scale-100"
                   >
-                    <Link to="/vital-pass">
+                    <Link to="/vitalpass">
                       <Crown className="w-5 h-5 mr-2" />
-                      Join Vital Pass — Save on Every Drop
+                      Join NeuroRoutine — Save on Every Drop
                     </Link>
                   </Button>
                 </div>

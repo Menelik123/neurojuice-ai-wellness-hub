@@ -53,7 +53,7 @@ const Footer = () => {
                 📍 Atlanta, Georgia
               </p>
               <p className="font-body text-sm text-background/90">
-                ✉️ neurojuice@gmail.com
+                ✉️ hello@neurojuice.com
               </p>
               <p className="font-body text-sm text-background/90">
                 📞 321-367-2172
@@ -67,12 +67,12 @@ const Footer = () => {
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.label}>
-                  <button
-                    onClick={() => scrollToSection(link.href)}
-                    className="font-body text-background/80 hover:text-background transition-colors duration-300 text-left"
+                  <a
+                    href={link.href}
+                    className="font-body text-background/80 hover:text-background transition-colors duration-300"
                   >
                     {link.label}
-                  </button>
+                  </a>
                 </li>
               ))}
             </ul>

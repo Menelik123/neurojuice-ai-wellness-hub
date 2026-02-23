@@ -98,7 +98,7 @@ const JuiceMenu = () => {
                     
                     <div className="flex justify-between items-center">
                       <div className="space-y-1">
-                        <MemberPricing regularPrice={7.99} showJoinLink={false} size="sm" />
+                        <MemberPricing regularPrice={6} showJoinLink={false} size="sm" />
                       </div>
                       <Button 
                         variant="default" 

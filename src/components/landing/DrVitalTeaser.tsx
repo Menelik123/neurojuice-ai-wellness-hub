@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Bot, Lock, Sparkles } from "lucide-react";
+import { Bot, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const DrVitalTeaser = () => {
@@ -34,9 +34,9 @@ const DrVitalTeaser = () => {
                   asChild
                   className="bg-primary hover:bg-primary-glow text-primary-foreground"
                 >
-                  <Link to="/vital-pass">
-                    <Lock className="w-4 h-4 mr-2" />
-                    Unlock with Vital Pass
+                  <Link to="/dr-vital">
+                    <Bot className="w-4 h-4 mr-2" />
+                    Ask Dr. Vital
                   </Link>
                 </Button>
               </div>

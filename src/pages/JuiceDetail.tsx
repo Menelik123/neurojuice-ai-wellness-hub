@@ -49,8 +49,8 @@ const products: Record<string, JuiceProduct> = {
     howToUse: "Best enjoyed chilled. Shake well before drinking.",
     timing: "Morning, post-workout, or whenever you need a refreshing boost.",
     image: tropicalBreeze,
-    regularPrice: "$6.99",
-    memberPrice: "$5.00",
+    regularPrice: "$6",
+    memberPrice: "$5",
     stripeLink: "https://buy.stripe.com/9B67sK1N33xcgVG6zU1B60b"
   },
   "lung-detox": {
@@ -73,8 +73,8 @@ const products: Record<string, JuiceProduct> = {
     howToUse: "Best enjoyed chilled. Shake well before drinking.",
     timing: "Morning or evening. Especially helpful during seasonal changes.",
     image: lungDetox,
-    regularPrice: "$6.99",
-    memberPrice: "$5.00",
+    regularPrice: "$6",
+    memberPrice: "$5",
     stripeLink: "https://buy.stripe.com/9B6bJ00IZgjY0WI9M61B60a"
   },
   "ginger-shot": {
@@ -96,8 +96,8 @@ const products: Record<string, JuiceProduct> = {
     howToUse: "Take as a shot. Can be followed with water if desired.",
     timing: "First thing in the morning on an empty stomach for best results.",
     image: gingerShot,
-    regularPrice: "$4.99",
-    memberPrice: "$3.00",
+    regularPrice: "$4",
+    memberPrice: "$3",
     stripeLink: "https://buy.stripe.com/7sY28q2R7d7M48U9M61B609",
     isGingerShot: true
   }
@@ -260,7 +260,7 @@ const JuiceDetail = () => {
                       size="lg"
                       className="flex-1"
                     >
-                      <Link to="/vital-pass">
+                      <Link to="/vitalpass">
                         <Crown className="w-4 h-4 mr-2" />
                         Join & Save
                       </Link>
