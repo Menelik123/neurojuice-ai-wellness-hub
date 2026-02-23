@@ -1,102 +1,154 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Star, Zap } from "lucide-react";
+import { Plus, Star, Flame, Zap } from "lucide-react";
 
 interface FuelProductsProps {
   onAddToOrder: () => void;
 }
 
+const bundles = [
+  {
+    name: "Starter Stack",
+    bottles: 3,
+    price: 15,
+    perBottle: "$5.00/bottle",
+    savings: "Save $6",
+    badge: "Most Popular",
+    badgeIcon: Star,
+  },
+  {
+    name: "Performance Stack",
+    bottles: 5,
+    price: 24,
+    perBottle: "$4.80/bottle",
+    savings: "Save $11",
+    badge: "Best Value",
+    badgeIcon: Flame,
+    featured: true,
+  },
+  {
+    name: "Weekly NeuroStack",
+    bottles: 10,
+    price: 45,
+    perBottle: "$4.50/bottle",
+    savings: "Save $25",
+  },
+];
+
 const singleBottles = [
   {
     name: "Tropical Breeze",
     supports: "Hydration • Energy • Mood",
-    price: 6.99,
-    vitalPrice: 5.0,
+    price: 6,
+  },
+  {
+    name: "Mango Mansa",
+    supports: "Solar Energy • Mood • Vitality",
+    price: 6,
+  },
+  {
+    name: "Beet Flow",
+    supports: "Circulation • Heart health",
+    price: 6,
   },
   {
     name: "Lung Detox",
-    supports: "Breathing • Chest clarity • Circulation",
-    price: 6.99,
-    vitalPrice: 5.0,
-  },
-  {
-    name: "Hydration Reset",
-    supports: "Low energy • Dehydration • Recovery",
-    price: 6.99,
-    vitalPrice: 5.0,
+    supports: "Breathing • Chest clarity",
+    price: 6,
   },
   {
     name: "Glow Up",
     supports: "Clear skin • Inner balance",
-    price: 6.99,
-    vitalPrice: 5.0,
+    price: 6,
   },
   {
     name: "Cold & Flu Defense",
     supports: "Immune support",
-    price: 6.99,
-    vitalPrice: 5.0,
-  },
-  {
-    name: "Beet Flow",
-    supports: "Circulation • Kidney support",
-    price: 6.99,
-    vitalPrice: 5.0,
+    price: 6,
   },
 ];
-
-const bundles = [
-  {
-    name: "4-Bottle Bundle",
-    bottles: 4,
-    whoFor: "New to juicing or building a habit",
-    whenToUse: "Daily morning boost or post-workout recovery",
-    price: 24.99,
-    vitalPrice: 18.0,
-    savings: "Save $3",
-  },
-  {
-    name: "6-Bottle Bundle",
-    bottles: 6,
-    whoFor: "Committed to a weekly routine",
-    whenToUse: "6-day reset or sharing with a partner",
-    price: 35.99,
-    vitalPrice: 27.0,
-    savings: "Save $6",
-    featured: true,
-  },
-  {
-    name: "8-Bottle Bundle",
-    bottles: 8,
-    whoFor: "Athletes, families, or meal preppers",
-    whenToUse: "Full week coverage or event prep",
-    price: 45.99,
-    vitalPrice: 36.0,
-    savings: "Save $10",
-  },
-];
-
-const gallonPack = {
-  name: "Gallon Equivalent Pack",
-  bottles: 8,
-  volume: "8 × 16oz = 128oz (1 Gallon)",
-  note: "Same volume as a gallon, bottled fresh to preserve quality",
-  price: 45.99,
-  vitalPrice: 36.0,
-};
 
 const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
   return (
     <section className="py-16 px-6">
       <div className="max-w-6xl mx-auto">
-        {/* Single Bottles */}
+        {/* Bundles First */}
         <div className="mb-16">
           <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-              Single Bottles (16oz)
+              Build Your Stack
             </h2>
             <p className="text-muted-foreground">
-              Choose your fuel. One bottle, one purpose.
+              Bundle more, save more. Choose your weekly routine.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {bundles.map((bundle, index) => (
+              <div
+                key={index}
+                className={`relative bg-background rounded-2xl border p-6 transition-all text-center ${
+                  bundle.featured
+                    ? "border-primary shadow-lg ring-2 ring-primary/20"
+                    : "border-border/50 hover:border-primary/30"
+                }`}
+              >
+                {bundle.badge && (
+                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground">
+                    {bundle.badgeIcon && <bundle.badgeIcon className="w-3 h-3 mr-1" />}
+                    {bundle.badge}
+                  </Badge>
+                )}
+
+                <h3 className="text-xl font-bold text-foreground mb-1 mt-2">
+                  {bundle.name}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {bundle.bottles} bottles
+                </p>
+
+                <div className="space-y-1 mb-4">
+                  <p className="font-heading font-bold text-4xl text-foreground">
+                    ${bundle.price}
+                  </p>
+                  <p className="text-sm text-muted-foreground">{bundle.perBottle}</p>
+                  <p className="text-sm font-semibold text-primary">{bundle.savings}</p>
+                </div>
+
+                <p className="text-xs text-muted-foreground mb-4">
+                  vs. ${(bundle.bottles * 6).toFixed(2)} buying singles
+                </p>
+
+                <Button onClick={onAddToOrder} className="w-full h-12" size="lg">
+                  Shop Bundle
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Ginger Shot Add-On */}
+        <div className="mb-16 bg-primary/5 border border-primary/20 rounded-2xl p-6 text-center">
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <Zap className="w-5 h-5 text-primary" />
+            <h3 className="text-lg font-bold text-foreground">Ginger Shot Add-On</h3>
+          </div>
+          <p className="text-muted-foreground mb-4">
+            Add 2 Ginger Shots for $5 when you build a stack.
+          </p>
+          <Button variant="outline" onClick={onAddToOrder}>
+            Add Ginger Shots
+          </Button>
+        </div>
+
+        {/* Singles - De-emphasized */}
+        <div>
+          <div className="text-center mb-8">
+            <h2 className="text-xl md:text-2xl font-semibold text-muted-foreground mb-2">
+              Single Bottles
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              $6 each · Add 2 more to unlock bundle pricing.
             </p>
           </div>
 
@@ -104,7 +156,7 @@ const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
             {singleBottles.map((bottle, index) => (
               <div
                 key={index}
-                className="bg-background rounded-2xl border border-border/50 p-5 hover:border-primary/30 transition-colors"
+                className="bg-background rounded-2xl border border-border/40 p-5 hover:border-primary/30 transition-colors"
               >
                 <h3 className="font-semibold text-foreground mb-1">
                   {bottle.name}
@@ -113,15 +165,9 @@ const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
                   {bottle.supports}
                 </p>
                 <div className="flex items-center justify-between">
-                  <div className="text-sm">
-                    <span className="font-semibold text-foreground">
-                      ${bottle.price.toFixed(2)}
-                    </span>
-                    <span className="text-muted-foreground mx-1">|</span>
-                    <span className="text-primary font-medium">
-                      ${bottle.vitalPrice.toFixed(2)} Vital Pass
-                    </span>
-                  </div>
+                  <span className="font-semibold text-foreground text-sm">
+                    ${bottle.price.toFixed(2)}
+                  </span>
                   <Button
                     size="sm"
                     variant="ghost"
@@ -131,119 +177,11 @@ const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
                     <Plus className="w-4 h-4" />
                   </Button>
                 </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Add 2 more to unlock bundle pricing.
+                </p>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Bundles */}
-        <div className="mb-16">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-              Bundles
-            </h2>
-            <p className="text-muted-foreground">
-              Build your routine. Save more.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {bundles.map((bundle, index) => (
-              <div
-                key={index}
-                className={`relative bg-background rounded-2xl border p-6 transition-all ${
-                  bundle.featured
-                    ? "border-primary shadow-lg scale-[1.02]"
-                    : "border-border/50 hover:border-primary/30"
-                }`}
-              >
-                {bundle.featured && (
-                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground">
-                    <Star className="w-3 h-3 mr-1" />
-                    Most Popular
-                  </Badge>
-                )}
-
-                <h3 className="text-xl font-bold text-foreground mb-4">
-                  {bundle.name}
-                </h3>
-
-                <div className="space-y-3 mb-6">
-                  <div>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                      Who it's for
-                    </p>
-                    <p className="text-sm text-foreground">{bundle.whoFor}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                      When to use
-                    </p>
-                    <p className="text-sm text-foreground">
-                      {bundle.whenToUse}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="border-t border-border/50 pt-4 mb-4">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-bold text-foreground">
-                      ${bundle.price.toFixed(2)}
-                    </span>
-                    <span className="text-sm text-muted-foreground">
-                      regular
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-lg font-semibold text-primary">
-                      ${bundle.vitalPrice.toFixed(2)}
-                    </span>
-                    <span className="text-sm text-primary">Vital Pass</span>
-                    <Badge variant="secondary" className="text-xs">
-                      {bundle.savings}
-                    </Badge>
-                  </div>
-                </div>
-
-                <Button onClick={onAddToOrder} className="w-full" size="lg">
-                  Add to Order
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Gallon Equivalent Pack */}
-        <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-3xl border border-primary/20 p-8">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            <div className="w-20 h-20 rounded-2xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-              <Zap className="w-10 h-10 text-primary" />
-            </div>
-
-            <div className="flex-1 text-center md:text-left">
-              <Badge className="mb-2 bg-primary/20 text-primary border-0">
-                Same Volume as a Gallon
-              </Badge>
-              <h3 className="text-2xl font-bold text-foreground mb-2">
-                {gallonPack.name}
-              </h3>
-              <p className="text-muted-foreground mb-1">{gallonPack.volume}</p>
-              <p className="text-sm text-primary font-medium">
-                {gallonPack.note}
-              </p>
-            </div>
-
-            <div className="text-center md:text-right">
-              <div className="text-3xl font-bold text-foreground">
-                ${gallonPack.price.toFixed(2)}
-              </div>
-              <div className="text-lg text-primary font-semibold">
-                ${gallonPack.vitalPrice.toFixed(2)} Vital Pass
-              </div>
-              <Button onClick={onAddToOrder} className="mt-4" size="lg">
-                Add to Order
-              </Button>
-            </div>
           </div>
         </div>
       </div>
