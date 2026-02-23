@@ -16,6 +16,7 @@ import mucusCleanse from "@/assets/juice-mucus-cleanse.png";
 import vitalFlow from "@/assets/juice-vital-flow.png";
 import sunshineStarter from "@/assets/juice-sunshine-starter.png";
 import coldFlu from "@/assets/juice-cold-flu.png";
+import mangoMansa from "@/assets/product-mango-mansa.png";
 
 interface Product {
   slug: string;
@@ -25,6 +26,7 @@ interface Product {
   image: string;
   stripeLink: string;
   isGingerShot?: boolean;
+  badge?: string;
 }
 
 // AVAILABLE NOW products
@@ -38,20 +40,30 @@ const availableNow: Product[] = [
     stripeLink: "https://buy.stripe.com/9B67sK1N33xcgVG6zU1B60b",
   },
   {
-    slug: "lung-detox",
-    name: "Lung Detox",
-    purpose: "Breathing • Chest clarity • Circulation",
-    ingredients: "Cucumber, Pineapple, Apple, Ginger",
-    image: lungDetox,
-    stripeLink: "https://buy.stripe.com/9B6bJ00IZgjY0WI9M61B60a",
+    slug: "mango-mansa",
+    name: "Mango Mansa",
+    purpose: "Solar Energy • Mood • Vitality",
+    ingredients: "Mango, Strawberry, Lemon, Ginger",
+    image: mangoMansa,
+    stripeLink: "",
+    badge: "Limited Drop",
   },
   {
-    slug: "green-vitality",
-    name: "Green Vitality",
-    purpose: "Energy • Detox • Wellness",
-    ingredients: "Cucumber, Apple, Lime",
-    image: greenVitality,
+    slug: "beet-flow",
+    name: "Beet Flow",
+    purpose: "Circulation • Heart health",
+    ingredients: "Beet, Carrot, Lemon, Ginger",
+    image: beetFlow,
     stripeLink: "",
+  },
+  {
+    slug: "island-mystery",
+    name: "Island Mystery",
+    purpose: "Tropical • Refreshing • Bold",
+    ingredients: "Seasonal Tropical Blend",
+    image: tropicalBreeze,
+    stripeLink: "",
+    badge: "Limited Batch",
   },
 ];
 
@@ -68,8 +80,16 @@ const gingerShots: Product[] = [
   },
 ];
 
-// MADE-TO-ORDER products (2-3 Day Prep)
+// MADE-TO-ORDER products
 const madeToOrder: Product[] = [
+  {
+    slug: "lung-detox",
+    name: "Lung Detox",
+    purpose: "Breathing • Chest clarity • Circulation",
+    ingredients: "Cucumber, Pineapple, Apple, Ginger",
+    image: lungDetox,
+    stripeLink: "",
+  },
   {
     slug: "hydration-reset",
     name: "Hydration Reset",
@@ -87,14 +107,6 @@ const madeToOrder: Product[] = [
     stripeLink: "",
   },
   {
-    slug: "beet-flow",
-    name: "Beet Flow",
-    purpose: "Circulation • Heart health",
-    ingredients: "Beet, Carrot, Lemon, Ginger",
-    image: beetFlow,
-    stripeLink: "",
-  },
-  {
     slug: "mucus-cleanse",
     name: "Mucus Cleanse",
     purpose: "Chest congestion • Sinus support",
@@ -106,7 +118,7 @@ const madeToOrder: Product[] = [
     slug: "cold-flu-defense",
     name: "Cold & Flu Defense",
     purpose: "Immune support",
-    ingredients: "Apple, Lemon, Carrot, Ginger",
+    ingredients: "Orange, Turmeric, Apple, Ginger, Garlic",
     image: coldFlu,
     stripeLink: "",
   },
@@ -114,7 +126,7 @@ const madeToOrder: Product[] = [
     slug: "vital-flow",
     name: "Vital Flow",
     purpose: "Blood flow • Performance",
-    ingredients: "Celery, Cucumber, Apple, Ginger",
+    ingredients: "Celery, Cucumber, Apple",
     image: vitalFlow,
     stripeLink: "",
   },
@@ -158,15 +170,22 @@ const ProductCard = ({ product, status }: ProductCardProps) => {
         {/* Content */}
         <div className="p-5 space-y-3 flex flex-col flex-1">
           {/* Status Badge */}
-          <Badge 
-            variant={isInStock ? "default" : "secondary"}
-            className={isInStock 
-              ? "bg-primary text-primary-foreground w-fit" 
-              : "bg-muted text-muted-foreground w-fit"
-            }
-          >
-            {isInStock ? "In Stock" : "Preorder"}
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge 
+              variant={isInStock ? "default" : "secondary"}
+              className={isInStock 
+                ? "bg-primary text-primary-foreground w-fit" 
+                : "bg-muted text-muted-foreground w-fit"
+              }
+            >
+              {isInStock ? "In Stock" : "Preorder"}
+            </Badge>
+            {product.badge && (
+              <Badge className="bg-amber-500 text-white w-fit border-0">
+                {product.badge}
+              </Badge>
+            )}
+          </div>
 
           {/* Name & Purpose */}
           <div>
@@ -265,7 +284,7 @@ const MenuSection = () => {
                   : "text-muted-foreground hover:text-foreground"
               }`}
             >
-              Available Now
+              Ready Today – Same-Day Delivery
             </button>
             <button
               onClick={() => setActiveTab("made-to-order")}
@@ -283,10 +302,14 @@ const MenuSection = () => {
         {/* Available Now Tab */}
         {activeTab === "available" && (
           <div className="space-y-16">
-            {/* Ready to Go Juices */}
+            {/* Banner */}
+            <div className="bg-primary/10 text-primary text-center py-3 rounded-lg font-semibold text-sm">
+              Order by 3PM → Delivered Today
+            </div>
+            {/* Ready Today Juices */}
             <div>
               <h3 className="font-heading font-semibold text-xl text-foreground mb-8 text-center">
-                Ready to Go
+                Ready Today
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
                 {availableNow.map((product) => (
@@ -315,7 +338,7 @@ const MenuSection = () => {
             <div className="text-center mb-10">
               <p className="text-muted-foreground flex items-center justify-center gap-2">
                 <Clock className="w-4 h-4" />
-                Next Fresh Drop: Wednesday
+                Pressed Fresh for You – Ships Within 48 Hours
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
