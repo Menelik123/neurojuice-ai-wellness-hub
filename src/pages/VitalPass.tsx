@@ -5,7 +5,6 @@ import {
   CreditCard, 
   Star, 
   Gift, 
-  Clock,
   CheckCircle,
   Zap
 } from "lucide-react";
@@ -19,51 +18,40 @@ import {
 } from "@/components/ui/accordion";
 
 const VitalPass = () => {
-  const memberPrice = window.NJ_CONFIG ? 
-    (window.NJ_CONFIG.REGULAR_PRICE * (1 - window.NJ_CONFIG.MEMBER_DISCOUNT_PCT)).toFixed(2) : 
-    "6.39";
-  
-  const isMember = window.NJ?.isMember || false;
-
-  const handleJoinVitalPass = () => {
-    // Redirect to Shopify membership product (placeholder)
-    window.open('/products/vitalpass-membership', '_blank');
-  };
-
   const features = [
     {
       icon: <CreditCard className="w-8 h-8" />,
-      title: "$10/mo → $10 store credit",
-      description: "Monthly store credit automatically issued to your account"
+      title: "$5 bottles (regular $6)",
+      description: "Member pricing on all individual juices, every order."
     },
     {
       icon: <Star className="w-8 h-8" />,
-      title: "~20% member pricing",
-      description: `Example: $7.99 → $${memberPrice} on all individual juices`
+      title: "Free monthly ginger shots",
+      description: "Complimentary ginger shots delivered with your orders each month."
     },
     {
       icon: <Gift className="w-8 h-8" />,
-      title: "Members-only bundles & perks",
-      description: "Early access to new blends and exclusive birthday treats"
+      title: "Early access & exclusive bundles",
+      description: "Be first to try new drops and get access to member-only bundles."
     }
   ];
 
   const faqItems = [
     {
-      question: "How do store credits work?",
-      answer: "You receive $10 in store credit each month that automatically applies at checkout. Credits accumulate and never expire as long as your membership is active."
+      question: "How does member pricing work?",
+      answer: "As a NeuroRoutine member, all single bottles are $5 instead of $6. Savings apply automatically at checkout."
     },
     {
       question: "Can I cancel anytime?",
-      answer: "Yes! You can cancel your VitalPass membership anytime from your account settings. You'll keep access to member benefits through the end of your billing period."
+      answer: "Yes! You can cancel your membership anytime. You'll keep access to member benefits through the end of your billing period."
     },
     {
       question: "Does this work with delivery and pickup?",
-      answer: "Absolutely! Member pricing and credits apply to both delivery and pickup orders. Just select your preferred option at checkout."
+      answer: "Absolutely! Member pricing applies to both delivery and pickup orders."
     },
     {
-      question: "What's the difference between trial and paid access?",
-      answer: "Free trial gives you 14 days of Dr. Vital access. VitalPass includes Dr. Vital plus monthly credits, member pricing, and exclusive bundles."
+      question: "Do I need a membership to buy?",
+      answer: "No! All products and bundles are available to everyone. Membership just gets you better pricing and perks."
     }
   ];
 
@@ -78,17 +66,11 @@ const VitalPass = () => {
             <div className="max-w-4xl mx-auto space-y-8">
               <div className="space-y-4">
                 <h1 className="font-heading font-bold text-5xl text-foreground">
-                  VitalPass Membership
+                  NeuroRoutine Membership
                 </h1>
                 <p className="font-body text-xl text-muted-foreground leading-relaxed">
-                  Monthly store credit, member pricing, and access to Dr. Vital AI health coaching.
+                  Your weekly performance fuel routine, locked in. Member pricing, free ginger shots, and early access to every drop.
                 </p>
-                
-                {isMember && (
-                  <Badge className="bg-success text-success-foreground font-bold text-lg px-4 py-2">
-                    Active Member
-                  </Badge>
-                )}
               </div>
             </div>
           </div>
@@ -127,7 +109,7 @@ const VitalPass = () => {
             <div className="max-w-2xl mx-auto">
               <Card className="shadow-soft border-2 border-primary/20">
                 <CardHeader className="bg-gradient-hero text-white text-center">
-                  <CardTitle className="font-heading text-3xl">VitalPass</CardTitle>
+                  <CardTitle className="font-heading text-3xl">NeuroRoutine</CardTitle>
                   <div className="flex items-center justify-center space-x-2">
                     <span className="font-bold text-4xl">$10</span>
                     <span className="text-lg opacity-90">/month</span>
@@ -138,19 +120,19 @@ const VitalPass = () => {
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
                       <CheckCircle className="w-5 h-5 text-success" />
-                      <span>$10 monthly store credit (auto-applied at checkout)</span>
+                      <span>$5 bottles (regular $6)</span>
                     </div>
                     <div className="flex items-center space-x-3">
                       <CheckCircle className="w-5 h-5 text-success" />
-                      <span>~20% member pricing on all products</span>
+                      <span>Free monthly ginger shots</span>
                     </div>
                     <div className="flex items-center space-x-3">
                       <CheckCircle className="w-5 h-5 text-success" />
-                      <span>Unlimited Dr. Vital AI coaching access</span>
+                      <span>Early access to new drops</span>
                     </div>
                     <div className="flex items-center space-x-3">
                       <CheckCircle className="w-5 h-5 text-success" />
-                      <span>Members-only bundles and early access</span>
+                      <span>Exclusive bundle pricing</span>
                     </div>
                     <div className="flex items-center space-x-3">
                       <CheckCircle className="w-5 h-5 text-success" />
@@ -158,54 +140,18 @@ const VitalPass = () => {
                     </div>
                   </div>
                   
-                  {!isMember ? (
-                    <Button
-                      onClick={handleJoinVitalPass}
-                      variant="hero"
-                      size="lg"
-                      className="w-full"
-                    >
-                      <Zap className="w-5 h-5" />
-                      Join VitalPass
-                    </Button>
-                  ) : (
-                    <div className="text-center space-y-4">
-                      <div className="p-4 bg-success/10 rounded-lg">
-                        <p className="font-medium text-success">You're already a VitalPass member!</p>
-                      </div>
-                      <Button variant="outline" className="w-full">
-                        Manage Membership
-                      </Button>
-                    </div>
-                  )}
+                  <Button
+                    size="lg"
+                    className="w-full"
+                  >
+                    <Zap className="w-5 h-5 mr-2" />
+                    Join NeuroRoutine — Coming Soon
+                  </Button>
                 </CardContent>
               </Card>
             </div>
           </div>
         </section>
-
-        {/* Credit Balance Section */}
-        {isMember && (
-          <section className="py-16 bg-background">
-            <div className="container mx-auto px-4">
-              <div className="max-w-2xl mx-auto text-center">
-                <Card className="bg-gradient-to-br from-primary/10 to-secondary/10">
-                  <CardContent className="p-8 space-y-4">
-                    <h3 className="font-heading font-bold text-2xl">Your VitalPass Credit</h3>
-                    <div className="space-y-2">
-                      <div className="text-3xl font-bold text-primary" data-credit-balance>
-                        $15.50
-                      </div>
-                      <div className="text-sm text-muted-foreground" data-next-credit-date>
-                        Next credit date: March 15, 2024
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </section>
-        )}
 
         {/* FAQ Section */}
         <section className="py-16 bg-secondary/20">
@@ -231,7 +177,7 @@ const VitalPass = () => {
           </div>
         </section>
 
-        {/* Compliance Footer */}
+        {/* Compliance */}
         <section className="py-8 bg-muted/30">
           <div className="container mx-auto px-4 text-center">
             <p className="text-sm text-muted-foreground">

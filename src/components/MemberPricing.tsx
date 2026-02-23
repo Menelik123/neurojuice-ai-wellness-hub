@@ -8,7 +8,7 @@ interface MemberPricingProps {
 }
 
 const MemberPricing = ({ 
-  regularPrice = 7.99, 
+  regularPrice = 6, 
   showJoinLink = true, 
   size = "md" 
 }: MemberPricingProps) => {
@@ -49,7 +49,7 @@ const MemberPricing = ({
             </Badge>
           ) : (
             <Badge variant="secondary" className="text-xs">
-              with VitalPass
+              with NeuroRoutine
             </Badge>
           )}
         </div>
@@ -62,7 +62,7 @@ const MemberPricing = ({
           onClick={() => window.location.href = '/vitalpass'}
           className="h-auto p-0 text-xs text-primary hover:text-primary-glow"
         >
-          Join VitalPass – Save 20%
+          Join NeuroRoutine – Save
         </Button>
       )}
     </div>

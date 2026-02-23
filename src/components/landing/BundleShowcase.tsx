@@ -91,7 +91,7 @@ const BundleShowcase = () => {
                   <p className="text-sm font-semibold text-primary">{bundle.savings}</p>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  vs. ${(bundle.bottles * 6.99).toFixed(2)} buying singles
+                  vs. ${(bundle.bottles * 6).toFixed(2)} buying singles
                 </p>
                 <Button
                   className="w-full h-12 font-semibold"

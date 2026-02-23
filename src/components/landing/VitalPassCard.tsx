@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const VitalPassCard = () => {
   const benefits = [
-    "$5 bottles (regular $6.99)",
+    "$5 bottles (regular $6)",
     "Free monthly ginger shots",
     "Early access to drops",
     "Exclusive bundle pricing",
@@ -46,7 +46,7 @@ const VitalPassCard = () => {
               size="lg"
               className="w-full h-14 text-base font-semibold"
             >
-              <Link to="/vital-pass">
+              <Link to="/vitalpass">
                 Start NeuroRoutine Membership
               </Link>
             </Button>

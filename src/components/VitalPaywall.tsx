@@ -80,7 +80,7 @@ const VitalPaywall = ({ onTrialStart }: VitalPaywallProps) => {
   };
 
   const handleContactSupport = () => {
-    window.location.href = 'mailto:neurojuice@gmail.com';
+    window.location.href = 'mailto:hello@neurojuice.com';
   };
 
   return (

@@ -4,11 +4,10 @@ import { Menu, X } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const navLinks = [
-  { label: "Menu", href: "#menu" },
+  { label: "Menu", href: "#menu", isRoute: false },
   { label: "Fuel", href: "/fuel", isRoute: true },
-  { label: "Vital Pass", href: "#vital-pass" },
-  { label: "Dr. Vital", href: "#dr-vital" },
-  { label: "Waitlist", href: "#waitlist" },
+  { label: "NeuroRoutine", href: "/vitalpass", isRoute: true },
+  { label: "Dr. Vital", href: "/dr-vital", isRoute: true },
 ];
 
 const MobileNav = () => {
@@ -33,7 +32,7 @@ const MobileNav = () => {
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
+            {navLinks.map((link) =>
               link.isRoute ? (
                 <Link
                   key={link.href}
@@ -43,21 +42,25 @@ const MobileNav = () => {
                   {link.label}
                 </Link>
               ) : (
-                <button
+                <a
                   key={link.href}
-                  onClick={() => handleNavClick(link.href)}
+                  href={link.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleNavClick(link.href);
+                  }}
                   className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {link.label}
-                </button>
+                </a>
               )
-            ))}
+            )}
           </nav>
 
           {/* Desktop CTA */}
           <div className="hidden md:block">
-            <Button onClick={() => handleNavClick("#menu")} size="sm">
-              Order Now
+            <Button asChild size="sm">
+              <a href="#bundles">Shop Bundles</a>
             </Button>
           </div>
 
@@ -75,7 +78,7 @@ const MobileNav = () => {
         {isOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col gap-2">
-              {navLinks.map((link) => (
+              {navLinks.map((link) =>
                 link.isRoute ? (
                   <Link
                     key={link.href}
@@ -86,15 +89,19 @@ const MobileNav = () => {
                     {link.label}
                   </Link>
                 ) : (
-                  <button
+                  <a
                     key={link.href}
-                    onClick={() => handleNavClick(link.href)}
+                    href={link.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavClick(link.href);
+                    }}
                     className="py-3 px-4 text-left text-foreground font-medium hover:bg-muted rounded-lg transition-colors"
                   >
                     {link.label}
-                  </button>
+                  </a>
                 )
-              ))}
+              )}
             </nav>
           </div>
         )}

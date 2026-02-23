@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -16,22 +15,24 @@ import { toast } from "sonner";
 import { Loader2, CheckCircle, ShoppingBag } from "lucide-react";
 
 const products = [
-  { id: "tropical-breeze", name: "Tropical Breeze", price: 6.99 },
-  { id: "lung-detox", name: "Lung Detox", price: 6.99 },
-  { id: "hydration-reset", name: "Hydration Reset", price: 6.99 },
-  { id: "glow-up", name: "Glow Up", price: 6.99 },
-  { id: "cold-flu-defense", name: "Cold & Flu Defense", price: 6.99 },
-  { id: "beet-flow", name: "Beet Flow", price: 6.99 },
-  { id: "vital-flow", name: "Vital Flow", price: 6.99 },
-  { id: "sunshine-starter", name: "Sunshine Starter", price: 6.99 },
-  { id: "mucus-cleanse", name: "Mucus Cleanse", price: 6.99 },
-  { id: "ginger-shot", name: "Ginger Shot", price: 3.99 },
+  { id: "tropical-breeze", name: "Tropical Breeze", price: 6 },
+  { id: "mango-mansa", name: "Mango Mansa", price: 6 },
+  { id: "beet-flow", name: "Beet Flow", price: 6 },
+  { id: "island-mystery", name: "Island Mystery", price: 6 },
+  { id: "lung-detox", name: "Lung Detox", price: 6 },
+  { id: "hydration-reset", name: "Hydration Reset", price: 6 },
+  { id: "glow-up", name: "Glow Up", price: 6 },
+  { id: "cold-flu-defense", name: "Cold & Flu Defense", price: 6 },
+  { id: "vital-flow", name: "Vital Flow", price: 6 },
+  { id: "sunshine-starter", name: "Sunshine Starter", price: 6 },
+  { id: "mucus-cleanse", name: "Mucus Cleanse", price: 6 },
+  { id: "ginger-shot", name: "Ginger Shot", price: 4 },
 ];
 
 const bundles = [
-  { id: "bundle-4", name: "4-Bottle Bundle", price: 24.99 },
-  { id: "bundle-6", name: "6-Bottle Bundle", price: 35.99 },
-  { id: "bundle-8", name: "8-Bottle Bundle (Gallon Equivalent)", price: 45.99 },
+  { id: "starter-stack", name: "Starter Stack (3 Bottles)", price: 15 },
+  { id: "performance-stack", name: "Performance Stack (5 Bottles)", price: 24 },
+  { id: "weekly-neurostack", name: "Weekly NeuroStack (10 Bottles)", price: 45 },
 ];
 
 const pickupTimes = [
@@ -56,12 +57,8 @@ const FuelOrderForm = () => {
     pickupTime: "",
     notes: "",
   });
-  const [selectedProducts, setSelectedProducts] = useState<
-    Record<string, number>
-  >({});
-  const [selectedBundles, setSelectedBundles] = useState<
-    Record<string, number>
-  >({});
+  const [selectedProducts, setSelectedProducts] = useState<Record<string, number>>({});
+  const [selectedBundles, setSelectedBundles] = useState<Record<string, number>>({});
 
   const handleProductChange = (productId: string, quantity: number) => {
     setSelectedProducts((prev) => {
@@ -186,14 +183,7 @@ const FuelOrderForm = () => {
           <Button
             onClick={() => {
               setIsSubmitted(false);
-              setFormData({
-                name: "",
-                phone: "",
-                email: "",
-                pickupDate: "",
-                pickupTime: "",
-                notes: "",
-              });
+              setFormData({ name: "", phone: "", email: "", pickupDate: "", pickupTime: "", notes: "" });
               setSelectedProducts({});
               setSelectedBundles({});
             }}
@@ -214,7 +204,7 @@ const FuelOrderForm = () => {
             <ShoppingBag className="w-8 h-8 text-primary" />
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-            Order for Pickup
+            Place Pickup Order
           </h2>
           <p className="text-muted-foreground">
             Select your products and we'll have them ready.
@@ -222,10 +212,54 @@ const FuelOrderForm = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Bundles Selection - First */}
+          <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
+            <h3 className="font-semibold text-foreground mb-4">Bundles</h3>
+            <div className="space-y-3">
+              {bundles.map((bundle) => (
+                <div
+                  key={bundle.id}
+                  className="flex items-center justify-between bg-background rounded-xl p-4 border border-border/50"
+                >
+                  <div>
+                    <p className="font-medium text-foreground">{bundle.name}</p>
+                    <p className="text-sm text-muted-foreground">
+                      ${bundle.price.toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={() => handleBundleChange(bundle.id, (selectedBundles[bundle.id] || 0) - 1)}
+                      disabled={!selectedBundles[bundle.id]}
+                    >
+                      -
+                    </Button>
+                    <span className="w-6 text-center text-sm font-medium">
+                      {selectedBundles[bundle.id] || 0}
+                    </span>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={() => handleBundleChange(bundle.id, (selectedBundles[bundle.id] || 0) + 1)}
+                    >
+                      +
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Products Selection */}
           <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
             <h3 className="font-semibold text-foreground mb-4">
-              Single Bottles
+              Single Bottles — $6 each
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {products.map((product) => (
@@ -247,12 +281,7 @@ const FuelOrderForm = () => {
                       variant="outline"
                       size="sm"
                       className="h-8 w-8 p-0"
-                      onClick={() =>
-                        handleProductChange(
-                          product.id,
-                          (selectedProducts[product.id] || 0) - 1
-                        )
-                      }
+                      onClick={() => handleProductChange(product.id, (selectedProducts[product.id] || 0) - 1)}
                       disabled={!selectedProducts[product.id]}
                     >
                       -
@@ -265,66 +294,7 @@ const FuelOrderForm = () => {
                       variant="outline"
                       size="sm"
                       className="h-8 w-8 p-0"
-                      onClick={() =>
-                        handleProductChange(
-                          product.id,
-                          (selectedProducts[product.id] || 0) + 1
-                        )
-                      }
-                    >
-                      +
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Bundles Selection */}
-          <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
-            <h3 className="font-semibold text-foreground mb-4">Bundles</h3>
-            <div className="space-y-3">
-              {bundles.map((bundle) => (
-                <div
-                  key={bundle.id}
-                  className="flex items-center justify-between bg-background rounded-xl p-4 border border-border/50"
-                >
-                  <div>
-                    <p className="font-medium text-foreground">{bundle.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      ${bundle.price.toFixed(2)}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() =>
-                        handleBundleChange(
-                          bundle.id,
-                          (selectedBundles[bundle.id] || 0) - 1
-                        )
-                      }
-                      disabled={!selectedBundles[bundle.id]}
-                    >
-                      -
-                    </Button>
-                    <span className="w-6 text-center text-sm font-medium">
-                      {selectedBundles[bundle.id] || 0}
-                    </span>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() =>
-                        handleBundleChange(
-                          bundle.id,
-                          (selectedBundles[bundle.id] || 0) + 1
-                        )
-                      }
+                      onClick={() => handleProductChange(product.id, (selectedProducts[product.id] || 0) + 1)}
                     >
                       +
                     </Button>
@@ -338,9 +308,7 @@ const FuelOrderForm = () => {
           {calculateTotal() > 0 && (
             <div className="bg-primary/5 rounded-2xl p-6 border border-primary/20">
               <div className="flex items-center justify-between">
-                <span className="font-semibold text-foreground">
-                  Order Total
-                </span>
+                <span className="font-semibold text-foreground">Order Total</span>
                 <span className="text-2xl font-bold text-primary">
                   ${calculateTotal().toFixed(2)}
                 </span>
@@ -350,112 +318,56 @@ const FuelOrderForm = () => {
 
           {/* Contact Info */}
           <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
-            <h3 className="font-semibold text-foreground mb-4">
-              Contact Information
-            </h3>
+            <h3 className="font-semibold text-foreground mb-4">Contact Information</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Name *</Label>
-                <Input
-                  id="name"
-                  type="text"
-                  placeholder="Your name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  required
-                />
+                <Input id="name" type="text" placeholder="Your name" value={formData.name} onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))} required />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone *</Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="(555) 123-4567"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, phone: e.target.value }))
-                  }
-                  required
-                />
+                <Input id="phone" type="tel" placeholder="(555) 123-4567" value={formData.phone} onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))} required />
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="email">Email (optional)</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, email: e.target.value }))
-                  }
-                />
+                <Input id="email" type="email" placeholder="you@example.com" value={formData.email} onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))} />
               </div>
             </div>
           </div>
 
           {/* Pickup Details */}
           <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
-            <h3 className="font-semibold text-foreground mb-4">
-              Pickup Details
-            </h3>
+            <h3 className="font-semibold text-foreground mb-4">Pickup Details</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="pickupDate">Pickup Date *</Label>
-                <Input
-                  id="pickupDate"
-                  type="date"
-                  min={getMinDate()}
-                  value={formData.pickupDate}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      pickupDate: e.target.value,
-                    }))
-                  }
-                  required
-                />
+                <Input id="pickupDate" type="date" min={getMinDate()} value={formData.pickupDate} onChange={(e) => setFormData((prev) => ({ ...prev, pickupDate: e.target.value }))} required />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="pickupTime">Pickup Time *</Label>
-                <Select
-                  value={formData.pickupTime}
-                  onValueChange={(value) =>
-                    setFormData((prev) => ({ ...prev, pickupTime: value }))
-                  }
-                >
+                <Select value={formData.pickupTime} onValueChange={(value) => setFormData((prev) => ({ ...prev, pickupTime: value }))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select time" />
                   </SelectTrigger>
                   <SelectContent>
                     {pickupTimes.map((time) => (
-                      <SelectItem key={time} value={time}>
-                        {time}
-                      </SelectItem>
+                      <SelectItem key={time} value={time}>{time}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div className="space-y-2 sm:col-span-2">
                 <Label htmlFor="notes">Special Instructions (optional)</Label>
-                <Textarea
-                  id="notes"
-                  placeholder="Any specific requests or bundle customizations..."
-                  value={formData.notes}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, notes: e.target.value }))
-                  }
-                  rows={3}
-                />
+                <Textarea id="notes" placeholder="Any specific requests or bundle customizations..." value={formData.notes} onChange={(e) => setFormData((prev) => ({ ...prev, notes: e.target.value }))} rows={3} />
               </div>
             </div>
           </div>
 
+          {/* Primary CTA */}
           <Button
             type="submit"
             size="lg"
-            className="w-full h-14 text-lg font-semibold"
+            className="w-full h-16 text-lg font-bold"
             disabled={isSubmitting || calculateTotal() === 0}
           >
             {isSubmitting ? (
@@ -464,13 +376,15 @@ const FuelOrderForm = () => {
                 Submitting...
               </>
             ) : (
-              <>Submit Order — ${calculateTotal().toFixed(2)}</>
+              <>
+                <ShoppingBag className="w-5 h-5 mr-2" />
+                Place Pickup Order — ${calculateTotal().toFixed(2)}
+              </>
             )}
           </Button>
 
           <p className="text-xs text-center text-muted-foreground">
-            Payment will be collected at pickup. We'll text you when your order
-            is ready.
+            Payment will be collected at pickup. We'll text you when your order is ready.
           </p>
         </form>
       </div>

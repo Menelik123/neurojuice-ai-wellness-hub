@@ -151,7 +151,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, status }: ProductCardProps) => {
   const isInStock = status === "in-stock";
-  const regularPrice = product.isGingerShot ? "$4.99" : "$6.99";
+  const regularPrice = product.isGingerShot ? "$4" : "$6";
   const memberPrice = product.isGingerShot ? "$3" : "$5";
 
   return (
