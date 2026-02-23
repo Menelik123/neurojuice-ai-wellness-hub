@@ -187,21 +187,26 @@ const ProductCard = ({ product, status }: ProductCardProps) => {
           <div className="flex items-center gap-2 text-sm">
             <span className="font-semibold text-foreground">{regularPrice} Regular</span>
             <span className="text-muted-foreground">|</span>
-            <span className="font-semibold text-primary">{memberPrice} Vital Pass</span>
+            <span className="font-semibold text-primary">{memberPrice} Member</span>
           </div>
 
           {/* CTA - Push to bottom */}
           <div className="pt-3 space-y-2 mt-auto">
             {isInStock && product.stripeLink ? (
-              <Button 
-                asChild
-                className="w-full h-12"
-              >
-                <a href={product.stripeLink} target="_blank" rel="noopener noreferrer">
-                  <ShoppingBag className="w-4 h-4 mr-2" />
-                  Buy Now
-                </a>
-              </Button>
+              <>
+                <Button 
+                  asChild
+                  className="w-full h-12"
+                >
+                  <a href={product.stripeLink} target="_blank" rel="noopener noreferrer">
+                    <ShoppingBag className="w-4 h-4 mr-2" />
+                    Add to Build Your Stack
+                  </a>
+                </Button>
+                <p className="text-xs text-center text-muted-foreground">
+                  Add 2 more to unlock bundle pricing.
+                </p>
+              </>
             ) : (
               <>
                 <Button 
@@ -211,24 +216,19 @@ const ProductCard = ({ product, status }: ProductCardProps) => {
                 >
                   {product.stripeLink ? (
                     <a href={product.stripeLink} target="_blank" rel="noopener noreferrer">
-                      <Clock className="w-4 h-4 mr-2" />
-                      Preorder (2–3 Days)
+                      <ShoppingBag className="w-4 h-4 mr-2" />
+                      Add to Build Your Stack
                     </a>
                   ) : (
                     <>
-                      <Clock className="w-4 h-4 mr-2" />
-                      Preorder (2–3 Days)
+                      <ShoppingBag className="w-4 h-4 mr-2" />
+                      Add to Build Your Stack
                     </>
                   )}
                 </Button>
-                <Button 
-                  variant="outline"
-                  className="w-full h-10"
-                  onClick={scrollToWaitlist}
-                >
-                  <Bell className="w-4 h-4 mr-2" />
-                  Join SMS Waitlist
-                </Button>
+                <p className="text-xs text-center text-muted-foreground">
+                  Add 2 more to unlock bundle pricing.
+                </p>
               </>
             )}
           </div>
@@ -315,7 +315,7 @@ const MenuSection = () => {
             <div className="text-center mb-10">
               <p className="text-muted-foreground flex items-center justify-center gap-2">
                 <Clock className="w-4 h-4" />
-                2–3 Day Prep Time
+                Next Fresh Drop: Wednesday
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">

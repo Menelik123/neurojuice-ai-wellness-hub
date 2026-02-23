@@ -5,33 +5,31 @@ import { Link } from "react-router-dom";
 
 const VitalPassCard = () => {
   const benefits = [
-    "$5 per drink (regular $6.99)",
-    "$3 ginger shots (regular $4.99)",
+    "$5 bottles (regular $6.99)",
+    "Free monthly ginger shots",
     "Early access to drops",
-    "Exclusive bundles",
+    "Exclusive bundle pricing",
     "Access to Dr. Vital AI",
   ];
 
   return (
-    <section id="vital-pass" className="py-16 px-4 bg-foreground text-background">
+    <section id="membership" className="py-16 px-4 bg-foreground text-background">
       <div className="max-w-2xl mx-auto">
         <Card className="border-0 bg-background text-foreground overflow-hidden">
           <CardContent className="p-8 md:p-10 space-y-6">
-            {/* Header */}
             <div className="text-center space-y-2">
               <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4">
                 <Sparkles className="w-4 h-4" />
-                Membership
+                Monthly Membership
               </div>
               <h2 className="font-heading font-bold text-3xl md:text-4xl text-foreground">
-                Vital Pass
+                NeuroRoutine Membership
               </h2>
               <p className="text-muted-foreground text-lg">
-                $5 per drink (regular $6.99)
+                Your weekly wellness routine, locked in.
               </p>
             </div>
 
-            {/* Benefits */}
             <ul className="space-y-3 py-4">
               {benefits.map((benefit, index) => (
                 <li key={index} className="flex items-center gap-3">
@@ -43,14 +41,13 @@ const VitalPassCard = () => {
               ))}
             </ul>
 
-            {/* CTA */}
             <Button 
               asChild
               size="lg"
               className="w-full h-14 text-base font-semibold"
             >
               <Link to="/vital-pass">
-                Get Vital Pass
+                Start NeuroRoutine Membership
               </Link>
             </Button>
           </CardContent>
