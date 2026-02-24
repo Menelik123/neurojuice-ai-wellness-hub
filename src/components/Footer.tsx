@@ -169,6 +169,18 @@ const Footer = () => {
               </a>
             </div>
           </div>
+
+          {/* Technology Partner Attribution */}
+          <div className="mt-6 text-center">
+            <a
+              href="https://ApexDigi.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-[10px] text-background/40 hover:text-background/60 transition-colors"
+            >
+              Technology & Automation Partner — Apex Digital
+            </a>
+          </div>
         </div>
       </div>
     </footer>
