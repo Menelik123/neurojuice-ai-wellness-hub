@@ -82,6 +82,18 @@ const LandingFooter = () => {
             Privacy Policy
           </Link>
         </div>
+
+        {/* Technology Partner Attribution */}
+        <div className="mt-6 text-center">
+          <a
+            href="https://ApexDigi.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+          >
+            Technology & Automation Partner — Apex Digital
+          </a>
+        </div>
       </div>
     </footer>
   );
