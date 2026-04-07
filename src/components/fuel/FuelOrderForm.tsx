@@ -80,6 +80,19 @@ const FuelOrderForm = () => {
     });
   };
 
+  const getMaxDrinks = () => {
+    let max = 0;
+    Object.entries(selectedBundles).forEach(([id, qty]) => {
+      const bundle = bundles.find((b) => b.id === id);
+      if (bundle) max += bundle.bottles * qty;
+    });
+    return max;
+  };
+
+  const getTotalDrinksSelected = () => {
+    return Object.values(selectedProducts).reduce((sum, qty) => sum + qty, 0);
+  };
+
   const calculateTotal = () => {
     let total = 0;
     Object.entries(selectedBundles).forEach(([id, qty]) => {
