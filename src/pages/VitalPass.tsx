@@ -1,15 +1,27 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { 
   CreditCard, 
   Star, 
   Gift, 
   CheckCircle,
-  Zap
+  Zap,
+  Bell
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import {
   Accordion,
   AccordionContent,
@@ -54,6 +66,37 @@ const VitalPass = () => {
       answer: "No! All products and bundles are available to everyone. Membership just gets you better pricing and perks."
     }
   ];
+
+  const [waitlistName, setWaitlistName] = useState("");
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistPhone, setWaitlistPhone] = useState("");
+  const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
+
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!waitlistEmail) {
+      toast.error("Please enter your email");
+      return;
+    }
+    setWaitlistLoading(true);
+    try {
+      await supabase.functions.invoke("klaviyo-subscribe", {
+        body: {
+          email: waitlistEmail,
+          phone: waitlistPhone || undefined,
+          source: "vitalpass_waitlist",
+          custom_properties: { name: waitlistName || undefined },
+        },
+      });
+      setWaitlistSubmitted(true);
+      toast.success("You're on the list! We'll notify you when NeuroRoutine launches.");
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setWaitlistLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
