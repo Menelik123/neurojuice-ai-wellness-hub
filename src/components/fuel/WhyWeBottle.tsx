@@ -5,7 +5,7 @@ const reasons = [
     icon: Droplets,
     title: "Freshness First",
     description:
-      "Each 16oz bottle is pressed and sealed same-day. No bulk batching, no oxidation, no compromise.",
+      "Each 12oz bottle is pressed and sealed same-day. No bulk batching, no oxidation, no compromise.",
   },
   {
     icon: Target,
