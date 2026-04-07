@@ -82,10 +82,6 @@ const FuelOrderForm = () => {
 
   const calculateTotal = () => {
     let total = 0;
-    Object.entries(selectedProducts).forEach(([id, qty]) => {
-      const product = products.find((p) => p.id === id);
-      if (product) total += product.price * qty;
-    });
     Object.entries(selectedBundles).forEach(([id, qty]) => {
       const bundle = bundles.find((b) => b.id === id);
       if (bundle) total += bundle.price * qty;
