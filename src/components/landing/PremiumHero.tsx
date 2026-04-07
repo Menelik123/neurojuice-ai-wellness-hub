@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import tropicalBreeze from "@/assets/juice-tropical-breeze.png";
-import lungDetox from "@/assets/juice-lung-detox.png";
-import gingerShot from "@/assets/juice-ginger-shot-new.png";
+import heroBottles from "@/assets/hero-bottles-combined.png";
 
 const PremiumHero = () => {
   const scrollToMenu = () => {
@@ -46,22 +44,12 @@ const PremiumHero = () => {
               </div>
             </div>
 
-            {/* Hero Product Images */}
-            <div className="relative order-first lg:order-last flex items-end justify-center gap-4 md:gap-6">
+            {/* Hero Product Image */}
+            <div className="relative order-first lg:order-last">
               <img 
-                src={tropicalBreeze}
-                alt="Tropical Breeze cold-pressed juice"
-                className="w-28 md:w-36 lg:w-44 drop-shadow-lg"
-              />
-              <img 
-                src={lungDetox}
-                alt="Lung Detox cold-pressed juice"
-                className="w-28 md:w-36 lg:w-44 drop-shadow-lg"
-              />
-              <img 
-                src={gingerShot}
-                alt="Ginger Shot"
-                className="w-16 md:w-20 lg:w-24 drop-shadow-lg"
+                src={heroBottles}
+                alt="NeuroJuice fresh juice bottles"
+                className="w-full max-w-md mx-auto lg:max-w-full drop-shadow-lg"
               />
             </div>
           </div>
