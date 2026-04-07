@@ -177,13 +177,31 @@ const VitalPass = () => {
                     </div>
                   </div>
                   
-                  <Button
-                    size="lg"
-                    className="w-full"
-                  >
-                    <Zap className="w-5 h-5 mr-2" />
-                    Join NeuroRoutine — Coming Soon
-                  </Button>
+                  {waitlistSubmitted ? (
+                    <div className="flex items-center justify-center gap-2 py-3 text-primary font-medium">
+                      <Bell className="w-5 h-5" />
+                      You're on the list! We'll notify you at launch.
+                    </div>
+                  ) : (
+                    <form onSubmit={handleWaitlistSubmit} className="space-y-3">
+                      <div className="space-y-2">
+                        <Label htmlFor="wl-name">Name</Label>
+                        <Input id="wl-name" placeholder="Your name" value={waitlistName} onChange={(e) => setWaitlistName(e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="wl-email">Email *</Label>
+                        <Input id="wl-email" type="email" placeholder="you@example.com" value={waitlistEmail} onChange={(e) => setWaitlistEmail(e.target.value)} required />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="wl-phone">Phone</Label>
+                        <Input id="wl-phone" type="tel" placeholder="(555) 123-4567" value={waitlistPhone} onChange={(e) => setWaitlistPhone(e.target.value)} />
+                      </div>
+                      <Button type="submit" size="lg" className="w-full" disabled={waitlistLoading}>
+                        <Bell className="w-5 h-5 mr-2" />
+                        {waitlistLoading ? "Submitting..." : "Notify Me When It Launches"}
+                      </Button>
+                    </form>
+                  )}
                 </CardContent>
               </Card>
             </div>

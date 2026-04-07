@@ -123,12 +123,21 @@ const FuelOrderForm = () => {
       return;
     }
 
-    const hasSelection =
-      Object.keys(selectedProducts).length > 0 ||
-      Object.keys(selectedBundles).length > 0;
+    const hasBundles = Object.keys(selectedBundles).length > 0;
 
-    if (!hasSelection) {
-      toast.error("Please select at least one product or bundle");
+    if (!hasBundles) {
+      toast.error("Please select at least one bundle");
+      return;
+    }
+
+    const maxDrinks = getMaxDrinks();
+    const totalDrinks = getTotalDrinksSelected();
+
+    if (totalDrinks !== maxDrinks) {
+      const diff = maxDrinks - totalDrinks;
+      toast.error(
+        `You selected ${maxDrinks} bottle${maxDrinks !== 1 ? "s" : ""} worth of bundles but only chose ${totalDrinks} drink${totalDrinks !== 1 ? "s" : ""}. Please ${diff > 0 ? `add ${diff} more` : `remove ${Math.abs(diff)}`}.`
+      );
       return;
     }
 
