@@ -14,6 +14,7 @@ import JuiceDetail from "./pages/JuiceDetail";
 import BundleDetail from "./pages/BundleDetail";
 import Fuel from "./pages/Fuel";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import AdminOrders from "./pages/AdminOrders";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/bundle/:slug" element={<BundleDetail />} />
           <Route path="/fuel" element={<Fuel />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/admin/orders" element={<AdminOrders />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
