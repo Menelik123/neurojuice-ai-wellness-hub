@@ -29,11 +29,11 @@ const ComplianceFooter = () => {
           <div className="space-y-3">
             <h4 className="font-heading font-semibold text-foreground">Quick Links</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="#menu" className="text-muted-foreground hover:text-foreground transition-colors">Menu</a></li>
-              <li><a href="#bundles" className="text-muted-foreground hover:text-foreground transition-colors">Bundles</a></li>
+              <li><Link to="/#menu" className="text-muted-foreground hover:text-foreground transition-colors">Menu</Link></li>
+              <li><Link to="/#bundles" className="text-muted-foreground hover:text-foreground transition-colors">Bundles</Link></li>
               <li><Link to="/fuel" className="text-muted-foreground hover:text-foreground transition-colors">Order for Pickup</Link></li>
-              <li><a href="#delivery" className="text-muted-foreground hover:text-foreground transition-colors">How Delivery Works</a></li>
-              <li><a href="#faq" className="text-muted-foreground hover:text-foreground transition-colors">FAQ</a></li>
+              <li><Link to="/#delivery" className="text-muted-foreground hover:text-foreground transition-colors">How Delivery Works</Link></li>
+              <li><Link to="/#faq" className="text-muted-foreground hover:text-foreground transition-colors">FAQ</Link></li>
               <li><Link to="/dr-vital" className="text-muted-foreground hover:text-foreground transition-colors">Dr. Vital AI</Link></li>
             </ul>
           </div>
