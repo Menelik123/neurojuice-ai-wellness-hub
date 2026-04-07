@@ -48,7 +48,7 @@ const ComplianceFooter = () => {
             </ul>
             {/* Social */}
             <div className="flex gap-3 pt-2">
-              <a href="https://instagram.com/neurojuicehq" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Instagram">
+              <a href="https://instagram.com/neurojuicehq" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Follow us on Instagram">
                 <Instagram className="w-5 h-5" />
               </a>
             </div>

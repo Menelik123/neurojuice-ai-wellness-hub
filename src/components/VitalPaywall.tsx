@@ -210,7 +210,11 @@ const VitalPaywall = ({ onTrialStart }: VitalPaywallProps) => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => window.location.href = '/'}
+                  onClick={() => {
+                    // Dismiss the paywall and let user stay on Dr. Vital page
+                    const event = new CustomEvent('paywall-dismiss');
+                    window.dispatchEvent(event);
+                  }}
                   className="text-xs text-muted-foreground"
                 >
                   Maybe later
