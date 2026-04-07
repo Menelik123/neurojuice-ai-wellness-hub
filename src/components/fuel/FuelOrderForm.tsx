@@ -56,6 +56,8 @@ const FuelOrderForm = () => {
     pickupDate: "",
     pickupTime: "",
     notes: "",
+    orderType: "delivery" as "delivery" | "pickup",
+    deliveryAddress: "",
   });
   const [selectedProducts, setSelectedProducts] = useState<Record<string, number>>({});
   const [selectedBundles, setSelectedBundles] = useState<Record<string, number>>({});
@@ -213,10 +215,10 @@ const FuelOrderForm = () => {
             <ShoppingBag className="w-8 h-8 text-primary" />
           </div>
           <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-            Place Pickup Order
+            Place Your Order
           </h2>
           <p className="text-muted-foreground">
-            Select your products and we'll have them ready.
+            Same-day delivery or local pickup — select your products and we'll handle the rest.
           </p>
         </div>
 
@@ -345,16 +347,59 @@ const FuelOrderForm = () => {
             </div>
           </div>
 
-          {/* Pickup Details */}
+          {/* Order Type */}
           <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
-            <h3 className="font-semibold text-foreground mb-4">Pickup Details</h3>
+            <h3 className="font-semibold text-foreground mb-4">Order Type</h3>
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <Button
+                type="button"
+                variant={formData.orderType === "delivery" ? "default" : "outline"}
+                className="h-12"
+                onClick={() => setFormData((prev) => ({ ...prev, orderType: "delivery" }))}
+              >
+                🚗 Delivery
+              </Button>
+              <Button
+                type="button"
+                variant={formData.orderType === "pickup" ? "default" : "outline"}
+                className="h-12"
+                onClick={() => setFormData((prev) => ({ ...prev, orderType: "pickup" }))}
+              >
+                📍 Pickup
+              </Button>
+            </div>
+
+            {formData.orderType === "delivery" && (
+              <div className="space-y-2 mb-4">
+                <Label htmlFor="deliveryAddress">Delivery Address *</Label>
+                <Input
+                  id="deliveryAddress"
+                  type="text"
+                  placeholder="Your full delivery address"
+                  value={formData.deliveryAddress}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, deliveryAddress: e.target.value }))}
+                  required
+                />
+                <p className="text-xs text-muted-foreground">Same-day delivery for local orders placed by 3PM.</p>
+              </div>
+            )}
+
+            {formData.orderType === "pickup" && (
+              <div className="bg-primary/5 rounded-xl p-4 border border-primary/20 mb-4">
+                <p className="text-sm font-medium text-foreground mb-1">Pickup Location</p>
+                <p className="text-sm text-muted-foreground">
+                  Mailbox at the apartment complex — exact address will be texted to you after order confirmation.
+                </p>
+              </div>
+            )}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="pickupDate">Pickup Date *</Label>
+                <Label htmlFor="pickupDate">{formData.orderType === "delivery" ? "Delivery" : "Pickup"} Date *</Label>
                 <Input id="pickupDate" type="date" min={getMinDate()} value={formData.pickupDate} onChange={(e) => setFormData((prev) => ({ ...prev, pickupDate: e.target.value }))} required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="pickupTime">Pickup Time *</Label>
+                <Label htmlFor="pickupTime">{formData.orderType === "delivery" ? "Delivery" : "Pickup"} Time *</Label>
                 <Select value={formData.pickupTime} onValueChange={(value) => setFormData((prev) => ({ ...prev, pickupTime: value }))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select time" />
@@ -388,13 +433,13 @@ const FuelOrderForm = () => {
             ) : (
               <>
                 <ShoppingBag className="w-5 h-5 mr-2" />
-                Place Pickup Order — ${calculateTotal().toFixed(2)}
+                {formData.orderType === "delivery" ? "Place Delivery Order" : "Place Pickup Order"} — ${calculateTotal().toFixed(2)}
               </>
             )}
           </Button>
 
           <p className="text-xs text-center text-muted-foreground">
-            Payment will be collected at pickup. We'll text you when your order is ready.
+            Payment will be collected at {formData.orderType === "delivery" ? "delivery" : "pickup"}. We'll text you when your order is {formData.orderType === "delivery" ? "on the way" : "ready"}.
           </p>
         </form>
       </div>
