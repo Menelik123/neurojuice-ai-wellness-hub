@@ -181,11 +181,21 @@ const AdminOrders = () => {
                   {/* Order Details */}
                   <div className="bg-muted/30 rounded-lg p-4 min-w-[220px]">
                     <p className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">Order Items</p>
-                    {products?.bundleName && (
-                      <p className="font-semibold text-foreground mb-1">
-                        {products.bundleName} {products.quantity > 1 ? `× ${products.quantity}` : ""}
+                    {/* Bundle items */}
+                    {products?.bundles && Array.isArray(products.bundles) && products.bundles.map((b: any, i: number) => (
+                      <p key={`b-${i}`} className="font-semibold text-foreground mb-1">
+                        {b.name} {b.quantity > 1 ? `× ${b.quantity}` : ""} — ${b.price}
                       </p>
+                    ))}
+                    {/* Individual bottles */}
+                    {products?.bottles && Array.isArray(products.bottles) && (
+                      <ul className="space-y-0.5 text-sm text-muted-foreground">
+                        {products.bottles.map((b: any, i: number) => (
+                          <li key={`bt-${i}`}>• {b.name} × {b.quantity}</li>
+                        ))}
+                      </ul>
                     )}
+                    {/* Legacy drinks format */}
                     {products?.drinks && Array.isArray(products.drinks) && (
                       <ul className="space-y-0.5 text-sm text-muted-foreground">
                         {products.drinks.map((drink: string, i: number) => (
@@ -193,8 +203,8 @@ const AdminOrders = () => {
                         ))}
                       </ul>
                     )}
-                    {products?.totalPrice && (
-                      <p className="mt-2 font-bold text-primary text-lg">${products.totalPrice}</p>
+                    {products?.total && (
+                      <p className="mt-2 font-bold text-primary text-lg">${products.total}</p>
                     )}
                   </div>
                 </div>
