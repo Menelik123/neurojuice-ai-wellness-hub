@@ -271,7 +271,9 @@ const FuelOrderForm = () => {
               Choose Your Drinks
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Select which drinks you'd like in your bundle.
+              {getMaxDrinks() > 0
+                ? `Select your drinks — ${getTotalDrinksSelected()} of ${getMaxDrinks()} chosen`
+                : "Select a bundle above first."}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {products.map((product) => (
@@ -302,6 +304,7 @@ const FuelOrderForm = () => {
                       size="sm"
                       className="h-8 w-8 p-0"
                       onClick={() => handleProductChange(product.id, (selectedProducts[product.id] || 0) + 1)}
+                      disabled={getMaxDrinks() === 0 || getTotalDrinksSelected() >= getMaxDrinks()}
                     >
                       +
                     </Button>
