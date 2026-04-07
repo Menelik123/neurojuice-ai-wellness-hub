@@ -23,10 +23,10 @@ const Index = () => {
       <main className="pb-20 md:pb-0">
         <PremiumHero />
         <DrVitalCard />
-        <SocialProof />
         <BundleShowcase />
         <HowItWorks />
         <MenuSection />
+        <SocialProof />
         <DeliveryInfoSection />
         <VitalPassCard />
         <WaitlistForm />

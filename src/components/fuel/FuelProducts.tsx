@@ -141,49 +141,6 @@ const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
           </Button>
         </div>
 
-        {/* Singles - De-emphasized */}
-        <div>
-          <div className="text-center mb-8">
-            <h2 className="text-xl md:text-2xl font-semibold text-muted-foreground mb-2">
-              Single Bottles
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              $6 each · Add 2 more to unlock bundle pricing.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {singleBottles.map((bottle, index) => (
-              <div
-                key={index}
-                className="bg-background rounded-2xl border border-border/40 p-5 hover:border-primary/30 transition-colors"
-              >
-                <h3 className="font-semibold text-foreground mb-1">
-                  {bottle.name}
-                </h3>
-                <p className="text-sm text-muted-foreground mb-3">
-                  {bottle.supports}
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold text-foreground text-sm">
-                    ${bottle.price.toFixed(2)}
-                  </span>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={onAddToOrder}
-                    className="h-8 px-3"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Add 2 more to unlock bundle pricing.
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
       </div>
     </section>
   );
