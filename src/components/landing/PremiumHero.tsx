@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import heroBottles from "@/assets/hero-bottles-combined.png";
+import heroBottles from "@/assets/hero-bottles.png";
 
 const PremiumHero = () => {
   const scrollToMenu = () => {
@@ -15,7 +15,7 @@ const PremiumHero = () => {
     <section className="relative flex flex-col justify-center bg-gradient-to-br from-background via-background to-muted/30 pt-20 md:pt-24">
       <div className="relative z-10 px-4 py-16 md:py-20">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-4 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             {/* Text Content */}
             <div className="text-center lg:text-left space-y-6">
               <p className="text-sm font-semibold tracking-widest uppercase text-primary">NeuroJuice</p>
@@ -44,12 +44,12 @@ const PremiumHero = () => {
               </div>
             </div>
 
-            {/* Hero Product Image */}
-            <div className="relative order-first lg:order-last flex items-center justify-center">
+            {/* Hero Image */}
+            <div className="relative order-first lg:order-last">
               <img 
                 src={heroBottles}
                 alt="NeuroJuice fresh juice bottles"
-                className="w-full max-w-xl mx-auto lg:max-w-full lg:scale-110 drop-shadow-lg"
+                className="w-full max-w-md mx-auto lg:max-w-full rounded-xl"
               />
             </div>
           </div>
