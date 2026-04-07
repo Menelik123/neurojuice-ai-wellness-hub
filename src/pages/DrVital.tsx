@@ -317,7 +317,7 @@ const DrVital = () => {
       
       {/* Paywall Check */}
       {!hasAccess && showPaywall && (
-        <VitalPaywall onTrialStart={handleTrialStart} />
+        <VitalPaywall onTrialStart={handleTrialStart} onDismiss={() => setShowPaywall(false)} />
       )}
       
       <main className="pt-20">

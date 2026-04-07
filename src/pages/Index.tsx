@@ -17,8 +17,8 @@ import EmailCaptureModal from "@/components/EmailCaptureModal";
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
-      <DeliveryBanner />
       <MobileNav />
+      <DeliveryBanner />
       <EmailCaptureModal />
       <main className="pb-20 md:pb-0">
         <PremiumHero />

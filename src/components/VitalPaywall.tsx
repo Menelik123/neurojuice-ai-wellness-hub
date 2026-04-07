@@ -11,9 +11,10 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface VitalPaywallProps {
   onTrialStart: () => void;
+  onDismiss?: () => void;
 }
 
-const VitalPaywall = ({ onTrialStart }: VitalPaywallProps) => {
+const VitalPaywall = ({ onTrialStart, onDismiss }: VitalPaywallProps) => {
   const [email, setEmail] = useState("");
   const [consent, setConsent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -210,7 +211,7 @@ const VitalPaywall = ({ onTrialStart }: VitalPaywallProps) => {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => window.location.href = '/'}
+                  onClick={() => onDismiss?.()}
                   className="text-xs text-muted-foreground"
                 >
                   Maybe later

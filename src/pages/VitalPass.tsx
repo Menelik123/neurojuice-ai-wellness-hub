@@ -1,12 +1,16 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { 
   CreditCard, 
   Star, 
   Gift, 
   CheckCircle,
-  Zap
+  Zap,
+  Bell
 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -16,6 +20,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const VitalPass = () => {
   const features = [
@@ -54,6 +60,37 @@ const VitalPass = () => {
       answer: "No! All products and bundles are available to everyone. Membership just gets you better pricing and perks."
     }
   ];
+
+  const [waitlistName, setWaitlistName] = useState("");
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [waitlistPhone, setWaitlistPhone] = useState("");
+  const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
+
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!waitlistEmail) {
+      toast.error("Please enter your email");
+      return;
+    }
+    setWaitlistLoading(true);
+    try {
+      await supabase.functions.invoke("klaviyo-subscribe", {
+        body: {
+          email: waitlistEmail,
+          phone: waitlistPhone || undefined,
+          source: "vitalpass_waitlist",
+          custom_properties: { name: waitlistName || undefined },
+        },
+      });
+      setWaitlistSubmitted(true);
+      toast.success("You're on the list! We'll notify you when NeuroRoutine launches.");
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setWaitlistLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
@@ -140,13 +177,31 @@ const VitalPass = () => {
                     </div>
                   </div>
                   
-                  <Button
-                    size="lg"
-                    className="w-full"
-                  >
-                    <Zap className="w-5 h-5 mr-2" />
-                    Join NeuroRoutine — Coming Soon
-                  </Button>
+                  {waitlistSubmitted ? (
+                    <div className="flex items-center justify-center gap-2 py-3 text-primary font-medium">
+                      <Bell className="w-5 h-5" />
+                      You're on the list! We'll notify you at launch.
+                    </div>
+                  ) : (
+                    <form onSubmit={handleWaitlistSubmit} className="space-y-3">
+                      <div className="space-y-2">
+                        <Label htmlFor="wl-name">Name</Label>
+                        <Input id="wl-name" placeholder="Your name" value={waitlistName} onChange={(e) => setWaitlistName(e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="wl-email">Email *</Label>
+                        <Input id="wl-email" type="email" placeholder="you@example.com" value={waitlistEmail} onChange={(e) => setWaitlistEmail(e.target.value)} required />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="wl-phone">Phone</Label>
+                        <Input id="wl-phone" type="tel" placeholder="(555) 123-4567" value={waitlistPhone} onChange={(e) => setWaitlistPhone(e.target.value)} />
+                      </div>
+                      <Button type="submit" size="lg" className="w-full" disabled={waitlistLoading}>
+                        <Bell className="w-5 h-5 mr-2" />
+                        {waitlistLoading ? "Submitting..." : "Notify Me When It Launches"}
+                      </Button>
+                    </form>
+                  )}
                 </CardContent>
               </Card>
             </div>
