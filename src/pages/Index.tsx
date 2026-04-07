@@ -8,14 +8,18 @@ import HowItWorks from "@/components/landing/HowItWorks";
 import MenuSection from "@/components/landing/MenuSection";
 import VitalPassCard from "@/components/landing/VitalPassCard";
 import WaitlistForm from "@/components/landing/WaitlistForm";
+import FAQSection from "@/components/landing/FAQSection";
+import DeliveryInfoSection from "@/components/landing/DeliveryInfoSection";
 import ComplianceFooter from "@/components/landing/ComplianceFooter";
 import StickyMobileCTA from "@/components/landing/StickyMobileCTA";
+import EmailCaptureModal from "@/components/EmailCaptureModal";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
       <DeliveryBanner />
       <MobileNav />
+      <EmailCaptureModal />
       <main className="pb-20 md:pb-0">
         <PremiumHero />
         <DrVitalCard />
@@ -23,8 +27,10 @@ const Index = () => {
         <BundleShowcase />
         <HowItWorks />
         <MenuSection />
+        <DeliveryInfoSection />
         <VitalPassCard />
         <WaitlistForm />
+        <FAQSection />
       </main>
       <ComplianceFooter />
       <StickyMobileCTA />

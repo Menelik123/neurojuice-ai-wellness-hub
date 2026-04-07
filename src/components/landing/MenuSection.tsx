@@ -2,16 +2,16 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingBag, Clock, Bell } from "lucide-react";
+import { ShoppingBag, Clock, Flame, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 
-// Product images - Updated
+// Product images
 import tropicalBreeze from "@/assets/product-tropical-breeze.png";
 import lungDetox from "@/assets/product-lung-detox.png";
 import gingerShot from "@/assets/product-ginger-shot.png";
 import glowUp from "@/assets/product-glow-up.png";
 import hydrationReset from "@/assets/product-hydration-reset.png";
 import beetFlow from "@/assets/product-beet-flow.png";
-import greenVitality from "@/assets/product-green-vitality.png";
 import mucusCleanse from "@/assets/juice-mucus-cleanse.png";
 import vitalFlow from "@/assets/juice-vital-flow.png";
 import sunshineStarter from "@/assets/juice-sunshine-starter.png";
@@ -27,9 +27,9 @@ interface Product {
   stripeLink: string;
   isGingerShot?: boolean;
   badge?: string;
+  urgency?: string;
 }
 
-// AVAILABLE NOW products
 const availableNow: Product[] = [
   {
     slug: "tropical-breeze",
@@ -46,7 +46,8 @@ const availableNow: Product[] = [
     ingredients: "Mango, Strawberry, Lemon, Ginger",
     image: mangoMansa,
     stripeLink: "",
-    badge: "Limited Drop",
+    badge: "🔥 New Drop",
+    urgency: "High Demand",
   },
   {
     slug: "beet-flow",
@@ -64,10 +65,10 @@ const availableNow: Product[] = [
     image: tropicalBreeze,
     stripeLink: "",
     badge: "Limited Batch",
+    urgency: "Only a few left",
   },
 ];
 
-// GINGER SHOTS (Available Now)
 const gingerShots: Product[] = [
   {
     slug: "ginger-shot",
@@ -80,7 +81,6 @@ const gingerShots: Product[] = [
   },
 ];
 
-// MADE-TO-ORDER products
 const madeToOrder: Product[] = [
   {
     slug: "lung-detox",
@@ -140,10 +140,6 @@ const madeToOrder: Product[] = [
   },
 ];
 
-const scrollToWaitlist = () => {
-  document.querySelector("#waitlist")?.scrollIntoView({ behavior: "smooth" });
-};
-
 interface ProductCardProps {
   product: Product;
   status: "in-stock" | "preorder";
@@ -158,19 +154,28 @@ const ProductCard = ({ product, status }: ProductCardProps) => {
     <Card className="overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 bg-card shadow-sm hover:shadow-lg group h-full flex flex-col">
       <CardContent className="p-0 flex flex-col h-full">
         {/* Image */}
-        <div className="aspect-[4/5] bg-muted/20 flex items-center justify-center overflow-hidden">
+        <div className="aspect-[4/5] bg-muted/20 flex items-center justify-center overflow-hidden relative">
           <img 
             src={product.image} 
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-lg"
             loading="lazy"
           />
+          {/* Urgency badge overlay */}
+          {product.urgency && (
+            <div className="absolute top-3 right-3">
+              <Badge className="bg-red-500 text-white border-0 text-xs font-semibold flex items-center gap-1">
+                <Zap className="w-3 h-3" />
+                {product.urgency}
+              </Badge>
+            </div>
+          )}
         </div>
 
         {/* Content */}
         <div className="p-5 space-y-3 flex flex-col flex-1">
           {/* Status Badge */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <Badge 
               variant={isInStock ? "default" : "secondary"}
               className={isInStock 
@@ -178,7 +183,7 @@ const ProductCard = ({ product, status }: ProductCardProps) => {
                 : "bg-muted text-muted-foreground w-fit"
               }
             >
-              {isInStock ? "In Stock" : "Preorder"}
+              {isInStock ? "In Stock" : "Made to Order"}
             </Badge>
             {product.badge && (
               <Badge className="bg-amber-500 text-white w-fit border-0">
@@ -204,51 +209,27 @@ const ProductCard = ({ product, status }: ProductCardProps) => {
 
           {/* Pricing */}
           <div className="flex items-center gap-2 text-sm">
-            <span className="font-semibold text-foreground">{regularPrice} Regular</span>
+            <span className="font-semibold text-foreground">{regularPrice}</span>
             <span className="text-muted-foreground">|</span>
             <span className="font-semibold text-primary">{memberPrice} Member</span>
           </div>
 
           {/* CTA - Push to bottom */}
           <div className="pt-3 space-y-2 mt-auto">
-            {isInStock && product.stripeLink ? (
-              <>
-                <Button 
-                  asChild
-                  className="w-full h-12"
-                >
-                  <a href={product.stripeLink} target="_blank" rel="noopener noreferrer">
-                    <ShoppingBag className="w-4 h-4 mr-2" />
-                    Add to Build Your Stack
-                  </a>
-                </Button>
-                <p className="text-xs text-center text-muted-foreground">
-                  Add 2 more to unlock bundle pricing.
-                </p>
-              </>
+            {product.stripeLink ? (
+              <Button asChild className="w-full h-12">
+                <a href={product.stripeLink} target="_blank" rel="noopener noreferrer">
+                  <ShoppingBag className="w-4 h-4 mr-2" />
+                  Buy Now — {regularPrice}
+                </a>
+              </Button>
             ) : (
-              <>
-                <Button 
-                  className="w-full h-12"
-                  disabled={!product.stripeLink}
-                  asChild={!!product.stripeLink}
-                >
-                  {product.stripeLink ? (
-                    <a href={product.stripeLink} target="_blank" rel="noopener noreferrer">
-                      <ShoppingBag className="w-4 h-4 mr-2" />
-                      Add to Build Your Stack
-                    </a>
-                  ) : (
-                    <>
-                      <ShoppingBag className="w-4 h-4 mr-2" />
-                      Add to Build Your Stack
-                    </>
-                  )}
-                </Button>
-                <p className="text-xs text-center text-muted-foreground">
-                  Add 2 more to unlock bundle pricing.
-                </p>
-              </>
+              <Button asChild className="w-full h-12" variant="outline">
+                <Link to="/fuel">
+                  <ShoppingBag className="w-4 h-4 mr-2" />
+                  Order Now — {regularPrice}
+                </Link>
+              </Button>
             )}
           </div>
         </div>
@@ -269,7 +250,7 @@ const MenuSection = () => {
             Our Menu
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-            Fresh, functional juices crafted for wellness
+            Fresh, functional juices crafted for performance
           </p>
         </div>
 
@@ -338,7 +319,7 @@ const MenuSection = () => {
             <div className="text-center mb-10">
               <p className="text-muted-foreground flex items-center justify-center gap-2">
                 <Clock className="w-4 h-4" />
-                Pressed Fresh for You – Ships Within 48 Hours
+                Pressed the day you order. Delivered today.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">

@@ -5,8 +5,9 @@ import { Link } from "react-router-dom";
 
 const navLinks = [
   { label: "Menu", href: "#menu", isRoute: false },
+  { label: "Bundles", href: "#bundles", isRoute: false },
+  { label: "How It Works", href: "#delivery", isRoute: false },
   { label: "Fuel", href: "/fuel", isRoute: true },
-  { label: "NeuroRoutine", href: "/vitalpass", isRoute: true },
   { label: "Dr. Vital", href: "/dr-vital", isRoute: true },
 ];
 
@@ -26,8 +27,11 @@ const MobileNav = () => {
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="font-heading font-bold text-xl text-foreground">
-            NeuroJuice
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+              <span className="text-primary-foreground font-heading font-bold text-sm">N</span>
+            </div>
+            <span className="font-heading font-bold text-xl text-foreground">NeuroJuice</span>
           </Link>
 
           {/* Desktop Nav */}
@@ -60,7 +64,7 @@ const MobileNav = () => {
           {/* Desktop CTA */}
           <div className="hidden md:block">
             <Button asChild size="sm">
-              <a href="#bundles">Shop Bundles</a>
+              <Link to="/fuel">Order Now</Link>
             </Button>
           </div>
 
