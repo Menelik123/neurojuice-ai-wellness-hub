@@ -256,25 +256,23 @@ const FuelOrderForm = () => {
             </div>
           </div>
 
-          {/* Products Selection */}
+          {/* Drink Selection for Bundles */}
           <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
-            <h3 className="font-semibold text-foreground mb-4">
-              Single Bottles — $6 each
+            <h3 className="font-semibold text-foreground mb-1">
+              Choose Your Drinks
             </h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Select which drinks you'd like in your bundle.
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {products.map((product) => (
                 <div
                   key={product.id}
                   className="flex items-center justify-between bg-background rounded-xl p-3 border border-border/50"
                 >
-                  <div>
-                    <p className="font-medium text-foreground text-sm">
-                      {product.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      ${product.price.toFixed(2)}
-                    </p>
-                  </div>
+                  <p className="font-medium text-foreground text-sm">
+                    {product.name}
+                  </p>
                   <div className="flex items-center gap-2">
                     <Button
                       type="button"
