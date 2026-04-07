@@ -30,9 +30,9 @@ const products = [
 ];
 
 const bundles = [
-  { id: "starter-stack", name: "Starter Stack (3 Bottles)", price: 15 },
-  { id: "performance-stack", name: "Performance Stack (5 Bottles)", price: 24 },
-  { id: "weekly-neurostack", name: "Weekly NeuroStack (10 Bottles)", price: 45 },
+  { id: "starter-stack", name: "Starter Stack (3 Bottles)", price: 15, bottles: 3 },
+  { id: "performance-stack", name: "Performance Stack (5 Bottles)", price: 24, bottles: 5 },
+  { id: "weekly-neurostack", name: "Weekly NeuroStack (10 Bottles)", price: 45, bottles: 10 },
 ];
 
 const pickupTimes = [
@@ -78,6 +78,19 @@ const FuelOrderForm = () => {
       }
       return { ...prev, [bundleId]: quantity };
     });
+  };
+
+  const getMaxDrinks = () => {
+    let max = 0;
+    Object.entries(selectedBundles).forEach(([id, qty]) => {
+      const bundle = bundles.find((b) => b.id === id);
+      if (bundle) max += bundle.bottles * qty;
+    });
+    return max;
+  };
+
+  const getTotalDrinksSelected = () => {
+    return Object.values(selectedProducts).reduce((sum, qty) => sum + qty, 0);
   };
 
   const calculateTotal = () => {
@@ -258,7 +271,9 @@ const FuelOrderForm = () => {
               Choose Your Drinks
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Select which drinks you'd like in your bundle.
+              {getMaxDrinks() > 0
+                ? `Select your drinks — ${getTotalDrinksSelected()} of ${getMaxDrinks()} chosen`
+                : "Select a bundle above first."}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {products.map((product) => (
@@ -289,6 +304,7 @@ const FuelOrderForm = () => {
                       size="sm"
                       className="h-8 w-8 p-0"
                       onClick={() => handleProductChange(product.id, (selectedProducts[product.id] || 0) + 1)}
+                      disabled={getMaxDrinks() === 0 || getTotalDrinksSelected() >= getMaxDrinks()}
                     >
                       +
                     </Button>

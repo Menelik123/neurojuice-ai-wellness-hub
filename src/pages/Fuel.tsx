@@ -25,10 +25,10 @@ const Fuel = () => {
       <div ref={bundlesRef}>
         <FuelProducts onAddToOrder={scrollToOrder} />
       </div>
-      <FuelFAQ />
       <div ref={orderFormRef}>
         <FuelOrderForm />
       </div>
+      <FuelFAQ />
       <ComplianceFooter />
     </div>
   );
