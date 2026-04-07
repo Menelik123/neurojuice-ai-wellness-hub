@@ -3,45 +3,42 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { X, Copy, CheckCircle } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { X, Sparkles } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const EmailCaptureModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [consent, setConsent] = useState(false);
-  const [showCode, setShowCode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    // Check if user has seen welcome modal before
     const hasSeenModal = localStorage.getItem('nj_seen_welcome_modal');
-    const isFirstVisit = !hasSeenModal;
-    
-    if (isFirstVisit) {
-      // Show modal after a short delay for better UX
+    if (!hasSeenModal) {
       const timer = setTimeout(() => {
         setIsOpen(true);
-      }, 2000);
-      
+      }, 1500);
       return () => clearTimeout(timer);
     }
   }, []);
 
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, "");
+    if (digits.length <= 3) return digits;
+    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email || !consent) {
+    if (!email && !phone) {
       toast({
-        title: "Missing Information",
-        description: "Please enter your email and accept the terms.",
+        title: "Enter your email or phone",
+        description: "We need at least one way to reach you.",
         variant: "destructive",
       });
       return;
@@ -50,148 +47,132 @@ const EmailCaptureModal = () => {
     setIsLoading(true);
 
     try {
-      // Simulate API call to newsletter endpoint
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const digits = phone.replace(/\D/g, "");
       
-      // Store email and mark as seen
+      if (digits.length > 0) {
+        const formattedPhone = `+1${digits}`;
+        await supabase.functions.invoke("klaviyo-subscribe", {
+          body: {
+            phone: formattedPhone,
+            email: email || undefined,
+            source: "welcome_gate",
+          },
+        });
+      }
+
       localStorage.setItem('nj_memberEmail', email);
       localStorage.setItem('nj_seen_welcome_modal', 'true');
       
-      // Set expiry date (30 days)
-      const expiryDate = new Date();
-      expiryDate.setDate(expiryDate.getDate() + 30);
-      localStorage.setItem('nj_welcome_modal_expiry', expiryDate.toISOString());
-      
-      // Update global state
       if (window.NJ) {
         window.NJ.memberEmail = email;
       }
       
-      setShowCode(true);
+      setIsOpen(false);
       
       toast({
-        title: "Welcome to NeuroJuice!",
-        description: "Your discount code is ready to use.",
+        title: "Welcome to NeuroJuice! 🎉",
+        description: "Use code WELCOME10 for $2 off your first order.",
       });
     } catch (error) {
-      toast({
-        title: "Something went wrong",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
+      // Still let them through
+      localStorage.setItem('nj_seen_welcome_modal', 'true');
+      setIsOpen(false);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const copyCode = () => {
-    navigator.clipboard.writeText('WELCOME10');
-    toast({
-      title: "Code Copied!",
-      description: "Your discount code has been copied to clipboard.",
-    });
-  };
-
   const handleClose = () => {
     setIsOpen(false);
-    
-    // Mark as seen even if they close without submitting
     localStorage.setItem('nj_seen_welcome_modal', 'true');
-    const expiryDate = new Date();
-    expiryDate.setDate(expiryDate.getDate() + 30);
-    localStorage.setItem('nj_welcome_modal_expiry', expiryDate.toISOString());
   };
 
+  if (!isOpen) return null;
+
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-center">
-            {showCode ? "Your Discount Code!" : "Welcome! Get 10% off your first order"}
-          </DialogTitle>
-        </DialogHeader>
-        
-        {!showCode ? (
-          <div className="space-y-6 p-2">
-            <p className="text-center text-muted-foreground">
-              Join our wellness community for personalized tips and exclusive Dr. Vital updates.
-            </p>
-            
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  required
-                  className="w-full"
-                />
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="consent"
-                  checked={consent}
-                  onCheckedChange={(checked) => setConsent(checked === true)}
-                />
-                <Label htmlFor="consent" className="text-sm text-muted-foreground">
-                  I agree to receive wellness tips and product updates from NeuroJuice
-                </Label>
-              </div>
-              
-              <div className="flex space-x-3">
-                <Button
-                  type="submit"
-                  disabled={isLoading || !email || !consent}
-                  className="flex-1"
-                >
-                  {isLoading ? "Processing..." : "Get My Code"}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleClose}
-                  className="flex-1"
-                >
-                  Maybe Later
-                </Button>
-              </div>
-            </form>
-          </div>
-        ) : (
-          <div className="space-y-6 p-2 text-center">
-            <div className="flex items-center justify-center">
-              <CheckCircle className="w-16 h-16 text-success" />
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/80 backdrop-blur-sm p-4">
+      <div className="relative w-full max-w-md bg-background rounded-2xl shadow-2xl overflow-hidden">
+        {/* Close */}
+        <button
+          onClick={handleClose}
+          className="absolute top-4 right-4 p-2 text-muted-foreground hover:text-foreground transition-colors z-10"
+          aria-label="Close"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <div className="p-8 md:p-10 space-y-6">
+          {/* Header */}
+          <div className="text-center space-y-3">
+            <div className="w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
+              <Sparkles className="w-8 h-8 text-primary" />
             </div>
-            
+            <h2 className="font-heading font-bold text-2xl md:text-3xl text-foreground">
+              Get Early Access to Weekly Drops
+            </h2>
+            <p className="text-muted-foreground">
+              Join the list for <span className="font-semibold text-primary">$2 off your first order</span>, 
+              member pricing, and first dibs on limited drops.
+            </p>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <p className="font-medium">Your discount code:</p>
-              <div className="flex items-center justify-center space-x-2 p-3 bg-secondary rounded-lg">
-                <code className="font-mono text-xl font-bold">WELCOME10</code>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={copyCode}
-                >
-                  <Copy className="w-4 h-4" />
-                </Button>
-              </div>
+              <Label htmlFor="gate-email">Email</Label>
+              <Input
+                id="gate-email"
+                type="email"
+                placeholder="you@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="h-12"
+              />
             </div>
-            
-            <p className="text-sm text-muted-foreground">
-              Use this code at checkout for 10% off your first order. Welcome to the NeuroJuice family!
-            </p>
-            
-            <Button onClick={handleClose} className="w-full">
-              Start Shopping
+
+            <div className="space-y-2">
+              <Label htmlFor="gate-phone">Phone (for SMS drop alerts)</Label>
+              <Input
+                id="gate-phone"
+                type="tel"
+                placeholder="(555) 123-4567"
+                value={phone}
+                onChange={(e) => setPhone(formatPhone(e.target.value))}
+                className="h-12"
+              />
+            </div>
+
+            <div className="flex items-start gap-3">
+              <Checkbox
+                id="gate-consent"
+                checked={consent}
+                onCheckedChange={(checked) => setConsent(checked === true)}
+                className="mt-1"
+              />
+              <Label htmlFor="gate-consent" className="text-xs text-muted-foreground leading-relaxed cursor-pointer">
+                I agree to receive text & email updates from NeuroJuice. 
+                Msg & data rates may apply. Reply STOP to unsubscribe.
+              </Label>
+            </div>
+
+            <Button
+              type="submit"
+              disabled={isLoading || (!email && !phone) || !consent}
+              className="w-full h-14 text-base font-bold"
+            >
+              {isLoading ? "Joining..." : "Unlock $2 Off + Early Access"}
             </Button>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+          </form>
+
+          <button
+            onClick={handleClose}
+            className="block w-full text-center text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
+          >
+            No thanks, I'll pay full price
+          </button>
+        </div>
+      </div>
+    </div>
   );
 };
 

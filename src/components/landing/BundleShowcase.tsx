@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingBag, Flame, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface BundleOption {
   name: string;
@@ -20,7 +21,7 @@ const bundles: BundleOption[] = [
     bottles: 3,
     price: "$15",
     perBottle: "$5.00/bottle",
-    savings: "Save $6",
+    savings: "Save $3",
     badge: "Most Popular",
     badgeIcon: Star,
     stripeLink: "",
@@ -30,7 +31,7 @@ const bundles: BundleOption[] = [
     bottles: 5,
     price: "$24",
     perBottle: "$4.80/bottle",
-    savings: "Save $11",
+    savings: "Save $6",
     badge: "Best Value",
     badgeIcon: Flame,
     stripeLink: "",
@@ -40,7 +41,7 @@ const bundles: BundleOption[] = [
     bottles: 10,
     price: "$45",
     perBottle: "$4.50/bottle",
-    savings: "Save $25",
+    savings: "Save $15",
     stripeLink: "",
   },
 ];
@@ -54,7 +55,7 @@ const BundleShowcase = () => {
             Build Your Stack
           </h2>
           <p className="text-muted-foreground text-lg">
-            Bundle more, save more. Choose your weekly routine.
+            The more you stack, the more you save.
           </p>
         </div>
 
@@ -81,7 +82,7 @@ const BundleShowcase = () => {
                   {bundle.name}
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  {bundle.bottles} bottles
+                  {bundle.bottles} bottles — you choose
                 </p>
                 <div className="space-y-1">
                   <p className="font-heading font-bold text-4xl text-foreground">
@@ -95,20 +96,12 @@ const BundleShowcase = () => {
                 </p>
                 <Button
                   className="w-full h-12 font-semibold"
-                  asChild={!!bundle.stripeLink}
-                  disabled={!bundle.stripeLink}
+                  asChild
                 >
-                  {bundle.stripeLink ? (
-                    <a href={bundle.stripeLink} target="_blank" rel="noopener noreferrer">
-                      <ShoppingBag className="w-4 h-4 mr-2" />
-                      Shop Bundle
-                    </a>
-                  ) : (
-                    <>
-                      <ShoppingBag className="w-4 h-4 mr-2" />
-                      Coming Soon
-                    </>
-                  )}
+                  <Link to="/fuel">
+                    <ShoppingBag className="w-4 h-4 mr-2" />
+                    Order Now
+                  </Link>
                 </Button>
               </CardContent>
             </Card>

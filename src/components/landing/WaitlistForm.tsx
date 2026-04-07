@@ -11,13 +11,15 @@ import { supabase } from "@/integrations/supabase/client";
 
 const allDrinks = [
   "Tropical Breeze",
-  "Lung Detox",
+  "Mango Mansa",
+  "Beet Flow",
+  "Island Mystery",
   "Ginger Shot",
+  "Lung Detox",
   "Hydration Reset",
   "Glow Up",
   "Mucus Cleanse",
   "Cold & Flu Defense",
-  "Beet Flow",
   "Vital Flow",
   "Sunshine Starter",
 ];
@@ -114,7 +116,7 @@ const WaitlistForm = () => {
                 You're on the list!
               </h3>
               <p className="text-muted-foreground">
-                We'll text you when it's ready. Thanks for your interest!
+                Check your phone — your 10% code and AI profile link are on the way.
               </p>
             </CardContent>
           </Card>
@@ -134,16 +136,15 @@ const WaitlistForm = () => {
                 <Bell className="w-7 h-7 text-primary" />
               </div>
               <h2 className="font-heading font-bold text-2xl text-foreground">
-                Get Early Drops + AI Juice Recommendations
+                Don't Miss the Next Drop — Get Notified First
               </h2>
               <p className="text-muted-foreground">
-                Sign up for first access to new drops, personalized stack recommendations, and 10% off your first order.
+                Be first to claim limited drops, get personalized stack recommendations, and <span className="font-semibold text-primary">10% off your first order</span>.
               </p>
             </div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Name */}
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
                 <Input
@@ -156,7 +157,6 @@ const WaitlistForm = () => {
                 />
               </div>
 
-              {/* Phone */}
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone <span className="text-destructive">*</span></Label>
                 <Input
@@ -170,7 +170,6 @@ const WaitlistForm = () => {
                 />
               </div>
 
-              {/* Email */}
               <div className="space-y-2">
                 <Label htmlFor="email">Email (optional)</Label>
                 <Input
@@ -183,7 +182,6 @@ const WaitlistForm = () => {
                 />
               </div>
 
-              {/* Preferred Drink */}
               <div className="space-y-2">
                 <Label htmlFor="drink">What do you want most?</Label>
                 <Select value={preferredDrink} onValueChange={setPreferredDrink}>
@@ -200,7 +198,6 @@ const WaitlistForm = () => {
                 </Select>
               </div>
 
-              {/* Consent Checkbox */}
               <div className="flex items-start gap-3 pt-2">
                 <Checkbox
                   id="consent"
@@ -214,14 +211,13 @@ const WaitlistForm = () => {
                 </Label>
               </div>
 
-              {/* Submit */}
               <Button 
                 type="submit" 
                 size="lg"
                 disabled={loading}
                 className="w-full h-14 text-base font-semibold"
               >
-                {loading ? "Joining..." : "Join Waitlist"}
+                {loading ? "Joining..." : "Get Notified First →"}
               </Button>
             </form>
           </CardContent>

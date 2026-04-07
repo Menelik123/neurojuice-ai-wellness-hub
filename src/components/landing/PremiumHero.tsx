@@ -2,17 +2,17 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
 const PremiumHero = () => {
-  const scrollToMembership = () => {
-    document.querySelector("#membership")?.scrollIntoView({ behavior: "smooth" });
-  };
-
   const scrollToMenu = () => {
     document.querySelector("#menu")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const scrollToBundles = () => {
+    document.querySelector("#bundles")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
-    <section className="relative min-h-[70vh] flex flex-col justify-center bg-gradient-to-br from-background via-background to-muted/30">
-      <div className="relative z-10 px-4 pt-24 pb-16 md:pt-32 md:pb-24">
+    <section className="relative flex flex-col justify-center bg-gradient-to-br from-background via-background to-muted/30 pt-20 md:pt-24">
+      <div className="relative z-10 px-4 py-16 md:py-20">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <p className="text-sm font-semibold tracking-widest uppercase text-primary">NeuroJuice</p>
           <h1 className="font-heading font-bold text-4xl md:text-5xl lg:text-6xl text-foreground tracking-tight leading-tight">
@@ -24,11 +24,11 @@ const PremiumHero = () => {
 
           <div className="flex flex-col items-center gap-4 pt-4">
             <Button 
-              onClick={scrollToMembership}
+              onClick={scrollToBundles}
               size="xl"
               className="h-16 px-10 text-lg font-bold"
             >
-              Start Your NeuroRoutine
+              Shop Bundles
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
             <button 
