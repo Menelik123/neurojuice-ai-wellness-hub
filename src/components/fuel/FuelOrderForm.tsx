@@ -194,7 +194,7 @@ const FuelOrderForm = () => {
           <Button
             onClick={() => {
               setIsSubmitted(false);
-              setFormData({ name: "", phone: "", email: "", pickupDate: "", pickupTime: "", notes: "" });
+              setFormData({ name: "", phone: "", email: "", pickupDate: "", pickupTime: "", notes: "", orderType: "delivery", deliveryAddress: "" });
               setSelectedProducts({});
               setSelectedBundles({});
             }}
