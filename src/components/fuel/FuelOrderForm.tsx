@@ -30,9 +30,9 @@ const products = [
 ];
 
 const bundles = [
-  { id: "starter-stack", name: "Starter Stack (3 Bottles)", price: 15 },
-  { id: "performance-stack", name: "Performance Stack (5 Bottles)", price: 24 },
-  { id: "weekly-neurostack", name: "Weekly NeuroStack (10 Bottles)", price: 45 },
+  { id: "starter-stack", name: "Starter Stack (3 Bottles)", price: 15, bottles: 3 },
+  { id: "performance-stack", name: "Performance Stack (5 Bottles)", price: 24, bottles: 5 },
+  { id: "weekly-neurostack", name: "Weekly NeuroStack (10 Bottles)", price: 45, bottles: 10 },
 ];
 
 const pickupTimes = [
