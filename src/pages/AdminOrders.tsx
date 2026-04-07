@@ -165,11 +165,21 @@ const AdminOrders = () => {
                     </div>
 
                     {/* Fulfillment */}
-                    <div className="text-sm">
+                    <div className="text-sm flex items-center gap-2">
+                      {products?.orderType && (
+                        <Badge variant="outline" className={products.orderType === "delivery" ? "border-blue-300 text-blue-700 bg-blue-50" : "border-green-300 text-green-700 bg-green-50"}>
+                          {products.orderType === "delivery" ? "🚗 Delivery" : "📍 Pickup"}
+                        </Badge>
+                      )}
                       <span className="font-medium text-foreground">
                         {order.pickup_date} — {order.pickup_time}
                       </span>
                     </div>
+                    {products?.deliveryAddress && (
+                      <p className="text-sm text-muted-foreground flex items-center gap-1">
+                        <MapPin className="w-3.5 h-3.5" /> {products.deliveryAddress}
+                      </p>
+                    )}
 
                     {order.notes && (
                       <p className="text-sm text-muted-foreground bg-muted/50 rounded px-3 py-2">
