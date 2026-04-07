@@ -149,6 +149,8 @@ const FuelOrderForm = () => {
           price: bundles.find((b) => b.id === id)?.price,
         })),
         total: calculateTotal(),
+        orderType: formData.orderType,
+        deliveryAddress: formData.orderType === "delivery" ? formData.deliveryAddress.trim() : null,
       };
 
       const { data, error } = await supabase.functions.invoke("submit-fuel-order", {
