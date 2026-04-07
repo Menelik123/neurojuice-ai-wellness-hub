@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, ShoppingCart, Crown, Check, Package, MessageSquare } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Crown, Check, Package, MessageSquare, Home } from "lucide-react";
 import StickyNav from "@/components/landing/StickyNav";
 import LandingFooter from "@/components/landing/LandingFooter";
 import SMSInlineCapture from "@/components/landing/SMSInlineCapture";
@@ -148,15 +148,24 @@ const BundleDetail = () => {
       
       <main className="pt-20 pb-16">
         <div className="max-w-6xl mx-auto px-4">
-          {/* Back Button */}
-          <Button
-            variant="ghost"
-            onClick={() => navigate("/")}
-            className="mb-6"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Bundles
-          </Button>
+          {/* Navigation */}
+          <div className="flex items-center gap-3 mb-6">
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/")}
+            >
+              <Home className="w-4 h-4 mr-2" />
+              Home
+            </Button>
+            <span className="text-muted-foreground">/</span>
+            <Button
+              variant="ghost"
+              onClick={() => navigate("/")}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Bundles
+            </Button>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
             {/* Left: Bundle Image */}
