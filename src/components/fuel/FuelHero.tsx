@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { ArrowDown, ShoppingBag } from "lucide-react";
+import { ArrowDown, ShoppingBag, Home } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface FuelHeroProps {
   onViewBundles: () => void;
