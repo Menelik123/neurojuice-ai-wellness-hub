@@ -10,18 +10,18 @@ const bundles = [
   {
     name: "Starter Stack",
     bottles: 3,
-    price: 15,
-    perBottle: "$5.00/bottle",
-    savings: "Save $6",
+    price: 23,
+    perBottle: "$7.67/bottle",
+    savings: "Save $2.50",
     badge: "Most Popular",
     badgeIcon: Star,
   },
   {
-    name: "Performance Stack",
+    name: "Performance Pack",
     bottles: 5,
-    price: 24,
-    perBottle: "$4.80/bottle",
-    savings: "Save $11",
+    price: 38,
+    perBottle: "$7.60/bottle",
+    savings: "Save $4.50",
     badge: "Best Value",
     badgeIcon: Flame,
     featured: true,
@@ -29,42 +29,9 @@ const bundles = [
   {
     name: "Weekly NeuroStack",
     bottles: 10,
-    price: 45,
-    perBottle: "$4.50/bottle",
-    savings: "Save $25",
-  },
-];
-
-const singleBottles = [
-  {
-    name: "Tropical Breeze",
-    supports: "Hydration • Energy • Mood",
-    price: 6,
-  },
-  {
-    name: "Mango Mansa",
-    supports: "Solar Energy • Mood • Vitality",
-    price: 6,
-  },
-  {
-    name: "Beet Flow",
-    supports: "Circulation • Heart health",
-    price: 6,
-  },
-  {
-    name: "Lung Detox",
-    supports: "Breathing • Chest clarity",
-    price: 6,
-  },
-  {
-    name: "Glow Up",
-    supports: "Clear skin • Inner balance",
-    price: 6,
-  },
-  {
-    name: "Cold & Flu Defense",
-    supports: "Immune support",
-    price: 6,
+    price: 70,
+    perBottle: "$7.00/bottle",
+    savings: "Save $15.00",
   },
 ];
 
@@ -72,14 +39,13 @@ const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
   return (
     <section className="py-16 px-6">
       <div className="max-w-6xl mx-auto">
-        {/* Bundles First */}
         <div className="mb-16">
           <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
               Build Your Stack
             </h2>
             <p className="text-muted-foreground">
-              Bundle more, save more. Choose your weekly routine.
+              Bundle more, save more. Choose from all 6 juices.
             </p>
           </div>
 
@@ -116,7 +82,7 @@ const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
                 </div>
 
                 <p className="text-xs text-muted-foreground mb-4">
-                  vs. ${(bundle.bottles * 6).toFixed(2)} buying singles
+                  vs. ${(bundle.bottles * 8.5).toFixed(2)} buying singles
                 </p>
 
                 <Button onClick={onAddToOrder} className="w-full h-12" size="lg">
@@ -127,20 +93,22 @@ const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
           </div>
         </div>
 
-        {/* Ginger Shot Add-On */}
+        {/* Sea Moss Add-On */}
         <div className="mb-16 bg-primary/5 border border-primary/20 rounded-2xl p-6 text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Zap className="w-5 h-5 text-primary" />
-            <h3 className="text-lg font-bold text-foreground">Ginger Shot Add-On</h3>
+            <h3 className="text-lg font-bold text-foreground">Sea Moss Shot Add-On</h3>
           </div>
-          <p className="text-muted-foreground mb-4">
-            Add 2 Ginger Shots for $5 when you build a stack.
+          <p className="text-muted-foreground mb-2">
+            Add a sea moss shot to your order for just $1.00.
+          </p>
+          <p className="text-sm text-muted-foreground mb-4">
+            Or add sea moss to any bottle for +$1.00 ($9.50/bottle).
           </p>
           <Button variant="outline" onClick={onAddToOrder}>
-            Add Ginger Shots
+            Add Sea Moss
           </Button>
         </div>
-
       </div>
     </section>
   );

@@ -15,47 +15,32 @@ import { toast } from "sonner";
 import { Loader2, CheckCircle, ShoppingBag } from "lucide-react";
 
 const products = [
-  { id: "tropical-breeze", name: "Tropical Breeze", price: 6 },
-  { id: "mango-mansa", name: "Mango Mansa", price: 6 },
-  { id: "beet-flow", name: "Beet Flow", price: 6 },
-  { id: "island-mystery", name: "Island Mystery", price: 6 },
-  { id: "lung-detox", name: "Lung Detox", price: 6 },
-  { id: "hydration-reset", name: "Hydration Reset", price: 6 },
-  { id: "glow-up", name: "Glow Up", price: 6 },
-  { id: "cold-flu-defense", name: "Cold & Flu Defense", price: 6 },
-  { id: "vital-flow", name: "Vital Flow", price: 6 },
-  { id: "sunshine-starter", name: "Sunshine Starter", price: 6 },
-  { id: "mucus-cleanse", name: "Mucus Cleanse", price: 6 },
-  { id: "ginger-shot", name: "Ginger Shot", price: 4 },
+  { id: "tropical-breeze", name: "Tropical Breeze", price: 8.5 },
+  { id: "beet-flow", name: "Beet Flow", price: 8.5 },
+  { id: "green-vital", name: "Green Vital", price: 8.5 },
+  { id: "mint-condition", name: "Mint Condition", price: 8.5 },
+  { id: "strawberry-horizon", name: "Strawberry Horizon", price: 8.5 },
+  { id: "hibiscus-delight", name: "Hibiscus Delight", price: 8.5 },
+  { id: "sea-moss-shot", name: "Sea Moss Shot (Add-On)", price: 1 },
 ];
 
 const bundles = [
-  { id: "starter-stack", name: "Starter Stack (3 Bottles)", price: 15, bottles: 3 },
-  { id: "performance-stack", name: "Performance Stack (5 Bottles)", price: 24, bottles: 5 },
-  { id: "weekly-neurostack", name: "Weekly NeuroStack (10 Bottles)", price: 45, bottles: 10 },
+  { id: "starter-stack", name: "Starter Stack (3 Bottles)", price: 23, bottles: 3 },
+  { id: "performance-stack", name: "Performance Pack (5 Bottles)", price: 38, bottles: 5 },
+  { id: "weekly-neurostack", name: "Weekly NeuroStack (10 Bottles)", price: 70, bottles: 10 },
 ];
 
 const pickupTimes = [
-  "10:00 AM",
-  "11:00 AM",
-  "12:00 PM",
-  "1:00 PM",
-  "2:00 PM",
-  "3:00 PM",
-  "4:00 PM",
-  "5:00 PM",
+  "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM",
+  "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM",
 ];
 
 const FuelOrderForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    pickupDate: "",
-    pickupTime: "",
-    notes: "",
+    name: "", phone: "", email: "",
+    pickupDate: "", pickupTime: "", notes: "",
     orderType: "delivery" as "delivery" | "pickup",
     deliveryAddress: "",
   });
@@ -64,20 +49,14 @@ const FuelOrderForm = () => {
 
   const handleProductChange = (productId: string, quantity: number) => {
     setSelectedProducts((prev) => {
-      if (quantity <= 0) {
-        const { [productId]: _, ...rest } = prev;
-        return rest;
-      }
+      if (quantity <= 0) { const { [productId]: _, ...rest } = prev; return rest; }
       return { ...prev, [productId]: quantity };
     });
   };
 
   const handleBundleChange = (bundleId: string, quantity: number) => {
     setSelectedBundles((prev) => {
-      if (quantity <= 0) {
-        const { [bundleId]: _, ...rest } = prev;
-        return rest;
-      }
+      if (quantity <= 0) { const { [bundleId]: _, ...rest } = prev; return rest; }
       return { ...prev, [bundleId]: quantity };
     });
   };
@@ -92,7 +71,9 @@ const FuelOrderForm = () => {
   };
 
   const getTotalDrinksSelected = () => {
-    return Object.values(selectedProducts).reduce((sum, qty) => sum + qty, 0);
+    return Object.entries(selectedProducts)
+      .filter(([id]) => id !== "sea-moss-shot")
+      .reduce((sum, [, qty]) => sum + qty, 0);
   };
 
   const calculateTotal = () => {
@@ -101,6 +82,9 @@ const FuelOrderForm = () => {
       const bundle = bundles.find((b) => b.id === id);
       if (bundle) total += bundle.price * qty;
     });
+    // Add sea moss shots
+    const seaMoss = selectedProducts["sea-moss-shot"] || 0;
+    total += seaMoss * 1;
     return total;
   };
 
@@ -112,50 +96,27 @@ const FuelOrderForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!formData.name || !formData.phone) {
-      toast.error("Please fill in your name and phone number");
-      return;
-    }
-
-    if (!formData.pickupDate || !formData.pickupTime) {
-      toast.error("Please select a pickup date and time");
-      return;
-    }
-
+    if (!formData.name || !formData.phone) { toast.error("Please fill in your name and phone number"); return; }
+    if (!formData.pickupDate || !formData.pickupTime) { toast.error("Please select a date and time"); return; }
     const hasBundles = Object.keys(selectedBundles).length > 0;
-
-    if (!hasBundles) {
-      toast.error("Please select at least one bundle");
-      return;
-    }
-
+    if (!hasBundles) { toast.error("Please select at least one bundle"); return; }
     const maxDrinks = getMaxDrinks();
     const totalDrinks = getTotalDrinksSelected();
-
     if (totalDrinks !== maxDrinks) {
       const diff = maxDrinks - totalDrinks;
-      toast.error(
-        `You selected ${maxDrinks} bottle${maxDrinks !== 1 ? "s" : ""} worth of bundles but only chose ${totalDrinks} drink${totalDrinks !== 1 ? "s" : ""}. Please ${diff > 0 ? `add ${diff} more` : `remove ${Math.abs(diff)}`}.`
-      );
+      toast.error(`You selected ${maxDrinks} bottle${maxDrinks !== 1 ? "s" : ""} worth of bundles but only chose ${totalDrinks} drink${totalDrinks !== 1 ? "s" : ""}. Please ${diff > 0 ? `add ${diff} more` : `remove ${Math.abs(diff)}`}.`);
       return;
     }
+    if (formData.orderType === "delivery" && !formData.deliveryAddress.trim()) { toast.error("Please enter a delivery address"); return; }
 
     setIsSubmitting(true);
-
     try {
       const orderProducts = {
         bottles: Object.entries(selectedProducts).map(([id, qty]) => ({
-          id,
-          name: products.find((p) => p.id === id)?.name,
-          quantity: qty,
-          price: products.find((p) => p.id === id)?.price,
+          id, name: products.find((p) => p.id === id)?.name, quantity: qty, price: products.find((p) => p.id === id)?.price,
         })),
         bundles: Object.entries(selectedBundles).map(([id, qty]) => ({
-          id,
-          name: bundles.find((b) => b.id === id)?.name,
-          quantity: qty,
-          price: bundles.find((b) => b.id === id)?.price,
+          id, name: bundles.find((b) => b.id === id)?.name, quantity: qty, price: bundles.find((b) => b.id === id)?.price,
         })),
         total: calculateTotal(),
         orderType: formData.orderType,
@@ -164,19 +125,14 @@ const FuelOrderForm = () => {
 
       const { data, error } = await supabase.functions.invoke("submit-fuel-order", {
         body: {
-          customer_name: formData.name.trim(),
-          customer_phone: formData.phone.trim(),
-          customer_email: formData.email.trim() || null,
-          products: orderProducts,
-          pickup_date: formData.pickupDate,
-          pickup_time: formData.pickupTime,
+          customer_name: formData.name.trim(), customer_phone: formData.phone.trim(),
+          customer_email: formData.email.trim() || null, products: orderProducts,
+          pickup_date: formData.pickupDate, pickup_time: formData.pickupTime,
           notes: formData.notes.trim() || null,
         },
       });
-
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-
       setIsSubmitted(true);
       toast.success("Order submitted! We'll text you when it's ready.");
     } catch (error) {
@@ -194,23 +150,11 @@ const FuelOrderForm = () => {
           <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-10 h-10 text-primary" />
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-            Order Received!
-          </h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Order Received!</h2>
           <p className="text-muted-foreground mb-6">
-            Thanks, {formData.name}! We'll text you at {formData.phone} when
-            your order is ready for pickup on {formData.pickupDate} at{" "}
-            {formData.pickupTime}.
+            Thanks, {formData.name}! We'll text you at {formData.phone} when your order is ready on {formData.pickupDate} at {formData.pickupTime}.
           </p>
-          <Button
-            onClick={() => {
-              setIsSubmitted(false);
-              setFormData({ name: "", phone: "", email: "", pickupDate: "", pickupTime: "", notes: "", orderType: "delivery", deliveryAddress: "" });
-              setSelectedProducts({});
-              setSelectedBundles({});
-            }}
-            variant="outline"
-          >
+          <Button onClick={() => { setIsSubmitted(false); setFormData({ name: "", phone: "", email: "", pickupDate: "", pickupTime: "", notes: "", orderType: "delivery", deliveryAddress: "" }); setSelectedProducts({}); setSelectedBundles({}); }} variant="outline">
             Place Another Order
           </Button>
         </div>
@@ -225,121 +169,73 @@ const FuelOrderForm = () => {
           <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <ShoppingBag className="w-8 h-8 text-primary" />
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-            Place Your Order
-          </h2>
-          <p className="text-muted-foreground">
-            Same-day delivery or local pickup — select your products and we'll handle the rest.
-          </p>
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">Place Your Order</h2>
+          <p className="text-muted-foreground">Same-day delivery or local pickup — select your products and we'll handle the rest.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Bundles Selection - First */}
+          {/* Bundles */}
           <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
             <h3 className="font-semibold text-foreground mb-4">Bundles</h3>
             <div className="space-y-3">
               {bundles.map((bundle) => (
-                <div
-                  key={bundle.id}
-                  className="flex items-center justify-between bg-background rounded-xl p-4 border border-border/50"
-                >
+                <div key={bundle.id} className="flex items-center justify-between bg-background rounded-xl p-4 border border-border/50">
                   <div>
                     <p className="font-medium text-foreground">{bundle.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      ${bundle.price.toFixed(2)}
-                    </p>
+                    <p className="text-sm text-muted-foreground">${bundle.price.toFixed(2)}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => handleBundleChange(bundle.id, (selectedBundles[bundle.id] || 0) - 1)}
-                      disabled={!selectedBundles[bundle.id]}
-                    >
-                      -
-                    </Button>
-                    <span className="w-6 text-center text-sm font-medium">
-                      {selectedBundles[bundle.id] || 0}
-                    </span>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => handleBundleChange(bundle.id, (selectedBundles[bundle.id] || 0) + 1)}
-                    >
-                      +
-                    </Button>
+                    <Button type="button" variant="outline" size="sm" className="h-8 w-8 p-0" onClick={() => handleBundleChange(bundle.id, (selectedBundles[bundle.id] || 0) - 1)} disabled={!selectedBundles[bundle.id]}>-</Button>
+                    <span className="w-6 text-center text-sm font-medium">{selectedBundles[bundle.id] || 0}</span>
+                    <Button type="button" variant="outline" size="sm" className="h-8 w-8 p-0" onClick={() => handleBundleChange(bundle.id, (selectedBundles[bundle.id] || 0) + 1)}>+</Button>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Drink Selection for Bundles */}
+          {/* Drink Selection */}
           <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
-            <h3 className="font-semibold text-foreground mb-1">
-              Choose Your Drinks
-            </h3>
+            <h3 className="font-semibold text-foreground mb-1">Choose Your Drinks</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              {getMaxDrinks() > 0
-                ? `Select your drinks — ${getTotalDrinksSelected()} of ${getMaxDrinks()} chosen`
-                : "Select a bundle above first."}
+              {getMaxDrinks() > 0 ? `Select your drinks — ${getTotalDrinksSelected()} of ${getMaxDrinks()} chosen` : "Select a bundle above first."}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {products.map((product) => (
-                <div
-                  key={product.id}
-                  className="flex items-center justify-between bg-background rounded-xl p-3 border border-border/50"
-                >
-                  <p className="font-medium text-foreground text-sm">
-                    {product.name}
-                  </p>
+              {products.filter(p => p.id !== "sea-moss-shot").map((product) => (
+                <div key={product.id} className="flex items-center justify-between bg-background rounded-xl p-3 border border-border/50">
+                  <p className="font-medium text-foreground text-sm">{product.name}</p>
                   <div className="flex items-center gap-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => handleProductChange(product.id, (selectedProducts[product.id] || 0) - 1)}
-                      disabled={!selectedProducts[product.id]}
-                    >
-                      -
-                    </Button>
-                    <span className="w-6 text-center text-sm font-medium">
-                      {selectedProducts[product.id] || 0}
-                    </span>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => handleProductChange(product.id, (selectedProducts[product.id] || 0) + 1)}
-                      disabled={getMaxDrinks() === 0 || getTotalDrinksSelected() >= getMaxDrinks()}
-                    >
-                      +
-                    </Button>
+                    <Button type="button" variant="outline" size="sm" className="h-8 w-8 p-0" onClick={() => handleProductChange(product.id, (selectedProducts[product.id] || 0) - 1)} disabled={!selectedProducts[product.id]}>-</Button>
+                    <span className="w-6 text-center text-sm font-medium">{selectedProducts[product.id] || 0}</span>
+                    <Button type="button" variant="outline" size="sm" className="h-8 w-8 p-0" onClick={() => handleProductChange(product.id, (selectedProducts[product.id] || 0) + 1)} disabled={getMaxDrinks() === 0 || getTotalDrinksSelected() >= getMaxDrinks()}>+</Button>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Order Total */}
+          {/* Sea Moss Add-On */}
+          <div className="bg-primary/5 rounded-2xl p-6 border border-primary/20">
+            <h3 className="font-semibold text-foreground mb-2">Sea Moss Shot Add-On — $1.00 each</h3>
+            <p className="text-sm text-muted-foreground mb-3">Add standalone sea moss shots to your order.</p>
+            <div className="flex items-center gap-2">
+              <Button type="button" variant="outline" size="sm" className="h-8 w-8 p-0" onClick={() => handleProductChange("sea-moss-shot", (selectedProducts["sea-moss-shot"] || 0) - 1)} disabled={!selectedProducts["sea-moss-shot"]}>-</Button>
+              <span className="w-6 text-center text-sm font-medium">{selectedProducts["sea-moss-shot"] || 0}</span>
+              <Button type="button" variant="outline" size="sm" className="h-8 w-8 p-0" onClick={() => handleProductChange("sea-moss-shot", (selectedProducts["sea-moss-shot"] || 0) + 1)}>+</Button>
+            </div>
+          </div>
+
+          {/* Total */}
           {calculateTotal() > 0 && (
             <div className="bg-primary/5 rounded-2xl p-6 border border-primary/20">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-foreground">Order Total</span>
-                <span className="text-2xl font-bold text-primary">
-                  ${calculateTotal().toFixed(2)}
-                </span>
+                <span className="text-2xl font-bold text-primary">${calculateTotal().toFixed(2)}</span>
               </div>
             </div>
           )}
 
-          {/* Contact Info */}
+          {/* Contact */}
           <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
             <h3 className="font-semibold text-foreground mb-4">Contact Information</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -362,48 +258,22 @@ const FuelOrderForm = () => {
           <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
             <h3 className="font-semibold text-foreground mb-4">Order Type</h3>
             <div className="grid grid-cols-2 gap-3 mb-4">
-              <Button
-                type="button"
-                variant={formData.orderType === "delivery" ? "default" : "outline"}
-                className="h-12"
-                onClick={() => setFormData((prev) => ({ ...prev, orderType: "delivery" }))}
-              >
-                🚗 Delivery
-              </Button>
-              <Button
-                type="button"
-                variant={formData.orderType === "pickup" ? "default" : "outline"}
-                className="h-12"
-                onClick={() => setFormData((prev) => ({ ...prev, orderType: "pickup" }))}
-              >
-                📍 Pickup
-              </Button>
+              <Button type="button" variant={formData.orderType === "delivery" ? "default" : "outline"} className="h-12" onClick={() => setFormData((prev) => ({ ...prev, orderType: "delivery" }))}>🚗 Delivery</Button>
+              <Button type="button" variant={formData.orderType === "pickup" ? "default" : "outline"} className="h-12" onClick={() => setFormData((prev) => ({ ...prev, orderType: "pickup" }))}>📍 Pickup</Button>
             </div>
-
             {formData.orderType === "delivery" && (
               <div className="space-y-2 mb-4">
                 <Label htmlFor="deliveryAddress">Delivery Address *</Label>
-                <Input
-                  id="deliveryAddress"
-                  type="text"
-                  placeholder="Your full delivery address"
-                  value={formData.deliveryAddress}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, deliveryAddress: e.target.value }))}
-                  required
-                />
+                <Input id="deliveryAddress" type="text" placeholder="Your full delivery address" value={formData.deliveryAddress} onChange={(e) => setFormData((prev) => ({ ...prev, deliveryAddress: e.target.value }))} required />
                 <p className="text-xs text-muted-foreground">Same-day delivery for local orders placed by 3PM.</p>
               </div>
             )}
-
             {formData.orderType === "pickup" && (
               <div className="bg-primary/5 rounded-xl p-4 border border-primary/20 mb-4">
                 <p className="text-sm font-medium text-foreground mb-1">Pickup Location</p>
-                <p className="text-sm text-muted-foreground">
-                  Mailbox at the apartment complex — exact address will be texted to you after order confirmation.
-                </p>
+                <p className="text-sm text-muted-foreground">Mailbox at the apartment complex — exact address will be texted to you after order confirmation.</p>
               </div>
             )}
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="pickupDate">{formData.orderType === "delivery" ? "Delivery" : "Pickup"} Date *</Label>
@@ -412,14 +282,8 @@ const FuelOrderForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="pickupTime">{formData.orderType === "delivery" ? "Delivery" : "Pickup"} Time *</Label>
                 <Select value={formData.pickupTime} onValueChange={(value) => setFormData((prev) => ({ ...prev, pickupTime: value }))}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select time" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {pickupTimes.map((time) => (
-                      <SelectItem key={time} value={time}>{time}</SelectItem>
-                    ))}
-                  </SelectContent>
+                  <SelectTrigger><SelectValue placeholder="Select time" /></SelectTrigger>
+                  <SelectContent>{pickupTimes.map((time) => (<SelectItem key={time} value={time}>{time}</SelectItem>))}</SelectContent>
                 </Select>
               </div>
               <div className="space-y-2 sm:col-span-2">
@@ -429,29 +293,9 @@ const FuelOrderForm = () => {
             </div>
           </div>
 
-          {/* Primary CTA */}
-          <Button
-            type="submit"
-            size="lg"
-            className="w-full h-16 text-lg font-bold"
-            disabled={isSubmitting || calculateTotal() === 0}
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Submitting...
-              </>
-            ) : (
-              <>
-                <ShoppingBag className="w-5 h-5 mr-2" />
-                {formData.orderType === "delivery" ? "Place Delivery Order" : "Place Pickup Order"} — ${calculateTotal().toFixed(2)}
-              </>
-            )}
+          <Button type="submit" size="lg" className="w-full h-16 text-lg font-bold" disabled={isSubmitting || calculateTotal() === 0}>
+            {isSubmitting ? (<><Loader2 className="w-5 h-5 mr-2 animate-spin" />Submitting...</>) : (<><ShoppingBag className="w-5 h-5 mr-2" />Place Order — ${calculateTotal().toFixed(2)}</>)}
           </Button>
-
-          <p className="text-xs text-center text-muted-foreground">
-            Payment will be collected at {formData.orderType === "delivery" ? "delivery" : "pickup"}. We'll text you when your order is {formData.orderType === "delivery" ? "on the way" : "ready"}.
-          </p>
         </form>
       </div>
     </section>

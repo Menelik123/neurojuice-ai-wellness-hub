@@ -5,11 +5,10 @@ import { Link } from "react-router-dom";
 
 const VitalPassSection = () => {
   const benefits = [
-    { icon: Zap, text: "$5 bottles (reg. $6)" },
-    { icon: Check, text: "$3 ginger shots (reg. $4)" },
-    { icon: Sparkles, text: "Early drop access" },
-    { icon: Crown, text: "Exclusive bundles" },
-    { icon: MessageCircle, text: "Access to Dr. Vital AI" },
+    { icon: Zap, text: "$1 off every bottle ($7.50/bottle)" },
+    { icon: Check, text: "Free monthly sea moss shot" },
+    { icon: Sparkles, text: "Early access to new bundles" },
+    { icon: MessageCircle, text: "Access to Doctor Vital content" },
   ];
 
   return (
@@ -44,7 +43,7 @@ const VitalPassSection = () => {
 
               <div className="pt-6 space-y-4">
                 <div className="text-center">
-                  <span className="text-4xl font-heading font-bold">$10</span>
+                  <span className="text-4xl font-heading font-bold">$5</span>
                   <span className="text-background/60">/month</span>
                 </div>
                 
