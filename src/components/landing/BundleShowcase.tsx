@@ -19,9 +19,9 @@ const bundles: BundleOption[] = [
   {
     name: "Starter Stack",
     bottles: 3,
-    price: "$15",
-    perBottle: "$5.00/bottle",
-    savings: "Save $3",
+    price: "$23",
+    perBottle: "$7.67/bottle",
+    savings: "Save $2.50",
     badge: "Most Popular",
     badgeIcon: Star,
     stripeLink: "",
@@ -29,9 +29,9 @@ const bundles: BundleOption[] = [
   {
     name: "Performance Pack",
     bottles: 5,
-    price: "$24",
-    perBottle: "$4.80/bottle",
-    savings: "Save $6",
+    price: "$38",
+    perBottle: "$7.60/bottle",
+    savings: "Save $4.50",
     badge: "Best Value",
     badgeIcon: Flame,
     stripeLink: "",
@@ -39,9 +39,9 @@ const bundles: BundleOption[] = [
   {
     name: "Weekly NeuroStack",
     bottles: 10,
-    price: "$45",
-    perBottle: "$4.50/bottle",
-    savings: "Save $15",
+    price: "$70",
+    perBottle: "$7.00/bottle",
+    savings: "Save $15.00",
     stripeLink: "",
   },
 ];
@@ -92,12 +92,9 @@ const BundleShowcase = () => {
                   <p className="text-sm font-semibold text-primary">{bundle.savings}</p>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  vs. ${(bundle.bottles * 6).toFixed(2)} buying singles
+                  vs. ${(bundle.bottles * 8.5).toFixed(2)} buying singles
                 </p>
-                <Button
-                  className="w-full h-12 font-semibold"
-                  asChild
-                >
+                <Button className="w-full h-12 font-semibold" asChild>
                   <Link to="/fuel">
                     <ShoppingBag className="w-4 h-4 mr-2" />
                     Order Now

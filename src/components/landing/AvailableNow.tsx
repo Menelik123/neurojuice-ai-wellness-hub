@@ -1,57 +1,91 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, MessageSquare } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import SMSInlineCapture from "./SMSInlineCapture";
 
 import tropicalBreeze from "@/assets/juice-tropical-breeze.png";
-import lungDetox from "@/assets/juice-lung-detox.png";
-import gingerShot from "@/assets/juice-ginger-shot-new.png";
+import beetFlow from "@/assets/product-beet-flow.png";
 
 interface Product {
   slug: string;
   name: string;
+  tagline: string;
   purpose: string;
   ingredients: string;
   regularPrice: string;
   memberPrice: string;
   image: string;
   stripeLink: string;
-  isGingerShot?: boolean;
 }
 
 const products: Product[] = [
   {
     slug: "tropical-breeze",
     name: "Tropical Breeze",
-    purpose: "Refresh & Recharge",
-    ingredients: "Pineapple, Lemon, Apple, Ginger",
-    regularPrice: "$6",
-    memberPrice: "$5",
+    tagline: "Refresh & Recharge",
+    purpose: "Energy • Metabolism • Cleanse",
+    ingredients: "Pineapple, Apple, Lemon, Ginger",
+    regularPrice: "$8.50",
+    memberPrice: "$7.50",
     image: tropicalBreeze,
     stripeLink: "https://buy.stripe.com/9B67sK1N33xcgVG6zU1B60b",
   },
   {
-    slug: "lung-detox",
-    name: "Lung Detox",
-    purpose: "Clear Airways",
-    ingredients: "Cucumber, Pineapple, Ginger, Apple",
-    regularPrice: "$6",
-    memberPrice: "$5",
-    image: lungDetox,
-    stripeLink: "https://buy.stripe.com/9B6bJ00IZgjY0WI9M61B60a",
+    slug: "beet-flow",
+    name: "Beet Flow",
+    tagline: "Power Your Heart",
+    purpose: "Circulation • Heart Health",
+    ingredients: "Beet, Carrot, Lemon, Ginger",
+    regularPrice: "$8.50",
+    memberPrice: "$7.50",
+    image: beetFlow,
+    stripeLink: "",
   },
   {
-    slug: "ginger-shot",
-    name: "Ginger Shot",
-    purpose: "Immunity & Digestion",
-    ingredients: "Ginger, Lemon, Apple",
-    regularPrice: "$4",
-    memberPrice: "$3",
-    image: gingerShot,
-    stripeLink: "https://buy.stripe.com/7sY28q2R7d7M48U9M61B609",
-    isGingerShot: true,
+    slug: "green-vital",
+    name: "Green Vital",
+    tagline: "Detox. Restore. Repeat.",
+    purpose: "Detox • Gut Health • Reset",
+    ingredients: "Celery, Green Apple, Spinach/Swiss Chard, Cucumber, Lemon, Ginger, Coconut Water",
+    regularPrice: "$8.50",
+    memberPrice: "$7.50",
+    image: tropicalBreeze,
+    stripeLink: "",
+  },
+  {
+    slug: "mint-condition",
+    name: "Mint Condition",
+    tagline: "Perfectly Fresh",
+    purpose: "Hydration • Recovery",
+    ingredients: "Watermelon, Mint, Basil",
+    regularPrice: "$8.50",
+    memberPrice: "$7.50",
+    image: tropicalBreeze,
+    stripeLink: "",
+  },
+  {
+    slug: "strawberry-horizon",
+    name: "Strawberry Horizon",
+    tagline: "Every Sip, A New Horizon",
+    purpose: "Hydration • Antioxidants",
+    ingredients: "Strawberry, Coconut Water, Lime",
+    regularPrice: "$8.50",
+    memberPrice: "$7.50",
+    image: tropicalBreeze,
+    stripeLink: "",
+  },
+  {
+    slug: "hibiscus-delight",
+    name: "Hibiscus Delight",
+    tagline: "Blossom",
+    purpose: "Heart Health • Liver Support",
+    ingredients: "Hibiscus, Coconut Water, Lemon or Strawberry",
+    regularPrice: "$8.50",
+    memberPrice: "$7.50",
+    image: tropicalBreeze,
+    stripeLink: "",
   },
 ];
 
@@ -78,7 +112,7 @@ const AvailableNow = () => {
               <Card className="border border-border shadow-card hover:shadow-lg transition-all overflow-hidden group-hover:border-primary/50 h-full">
                 <div className="relative">
                   <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground z-10">
-                    AVAILABLE NOW
+                    {product.tagline}
                   </Badge>
                   <img 
                     src={product.image} 
@@ -117,7 +151,7 @@ const AvailableNow = () => {
                       asChild
                       className="w-full bg-[#7FD645] hover:bg-[#6BC535] text-black font-semibold"
                     >
-                      <a href={product.stripeLink} target="_blank" rel="noopener noreferrer">
+                      <a href={product.stripeLink} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
                         Order Now
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </a>
@@ -136,8 +170,12 @@ const AvailableNow = () => {
           ))}
         </div>
 
-        {/* SMS Capture Point */}
-        <div className="mt-12 max-w-xl mx-auto">
+        {/* Sea Moss Info */}
+        <div className="mt-8 text-center text-sm text-muted-foreground">
+          <p>Add sea moss to any bottle for +$1.00 | Standalone sea moss shot: $1.00</p>
+        </div>
+
+        <div className="mt-8 max-w-xl mx-auto">
           <SMSInlineCapture message="Don't see your flavor? Get text alerts for restocks." />
         </div>
       </div>
