@@ -117,7 +117,7 @@ const CartDrawer = () => {
         )}
 
         {items.length > 0 && (
-          <SheetFooter className="flex-col gap-2 border-t border-border pt-3 pb-2 shrink-0">
+          <SheetFooter className="!flex-col gap-2 border-t border-border pt-3 pb-2 shrink-0">
             <div className="flex justify-between w-full text-base sm:text-lg font-heading font-bold">
               <span>Subtotal</span>
               <span>${subtotal.toFixed(2)}</span>
