@@ -10,6 +10,7 @@ import LandingFooter from "@/components/landing/LandingFooter";
 import tropicalBreeze from "@/assets/juice-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
 import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
+import mintCondition from "@/assets/product-mint-condition.png";
 
 interface JuiceProduct {
   slug: string;
@@ -125,7 +126,7 @@ const products: Record<string, JuiceProduct> = {
     ],
     howToUse: "Best enjoyed chilled. Perfect over ice.",
     timing: "Post-workout, hot days, or whenever you need to rehydrate.",
-    image: tropicalBreeze,
+    image: mintCondition,
     regularPrice: "$8.50",
     memberPrice: "$7.50",
     stripeLink: ""
