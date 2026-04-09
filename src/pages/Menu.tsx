@@ -23,7 +23,7 @@ const Menu = () => {
     "green-vital": greenVital,
     "mint-condition": mintCondition,
     "strawberry-horizon": strawberryHorizon,
-    "hibiscus-delight": tropicalBreeze,
+    "hibiscus-delight": hibiscusDelight,
   };
 
   const bundles = [

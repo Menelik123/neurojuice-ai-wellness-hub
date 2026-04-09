@@ -176,7 +176,7 @@ const products: Record<string, JuiceProduct> = {
     ],
     howToUse: "Best enjoyed chilled. Shake well before drinking.",
     timing: "Morning or evening — a gentle daily wellness ritual.",
-    image: tropicalBreeze,
+    image: hibiscusDelight,
     regularPrice: "$8.50",
     memberPrice: "$7.50",
     stripeLink: ""

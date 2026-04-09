@@ -88,7 +88,7 @@ const products: Product[] = [
     ingredients: "Hibiscus, Coconut Water, Lemon or Strawberry",
     regularPrice: "$8.50",
     memberPrice: "$7.50",
-    image: tropicalBreeze,
+    image: hibiscusDelight,
     stripeLink: "",
   },
 ];
