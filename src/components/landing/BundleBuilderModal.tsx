@@ -58,6 +58,7 @@ const BundleBuilderModal = ({ bundle, open, onOpenChange }: BundleBuilderModalPr
     );
     addItem({
       id: `bundle-${bundle.name}`,
+      slug: `bundle-${bundle.bottles}`,
       name: `${bundle.name} (${bundle.bottles} bottles)`,
       type: "bundle",
       quantity: 1,
