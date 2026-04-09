@@ -1,52 +1,61 @@
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingBag, Flame, Star } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ShoppingCart, Flame, Star } from "lucide-react";
+import BundleBuilderModal from "./BundleBuilderModal";
 
 interface BundleOption {
   name: string;
   bottles: number;
-  price: string;
+  price: number;
+  priceDisplay: string;
   perBottle: string;
   savings: string;
   badge?: string;
   badgeIcon?: typeof Flame;
-  stripeLink: string;
 }
 
 const bundles: BundleOption[] = [
   {
     name: "Starter Stack",
     bottles: 3,
-    price: "$23",
+    price: 23,
+    priceDisplay: "$23",
     perBottle: "$7.67/bottle",
     savings: "Save $2.50",
     badge: "Most Popular",
     badgeIcon: Star,
-    stripeLink: "",
   },
   {
     name: "Performance Pack",
     bottles: 5,
-    price: "$38",
+    price: 38,
+    priceDisplay: "$38",
     perBottle: "$7.60/bottle",
     savings: "Save $4.50",
     badge: "Best Value",
     badgeIcon: Flame,
-    stripeLink: "",
   },
   {
     name: "Weekly NeuroStack",
     bottles: 10,
-    price: "$70",
+    price: 70,
+    priceDisplay: "$70",
     perBottle: "$7.00/bottle",
     savings: "Save $15.00",
-    stripeLink: "",
   },
 ];
 
 const BundleShowcase = () => {
+  const [selectedBundle, setSelectedBundle] = useState<BundleOption | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleOrderBundle = (bundle: BundleOption) => {
+    setSelectedBundle(bundle);
+    setModalOpen(true);
+  };
+
   return (
     <section id="bundles" className="py-16 px-4 bg-muted/30">
       <div className="max-w-5xl mx-auto">
@@ -86,7 +95,7 @@ const BundleShowcase = () => {
                 </p>
                 <div className="space-y-1">
                   <p className="font-heading font-bold text-4xl text-foreground">
-                    {bundle.price}
+                    {bundle.priceDisplay}
                   </p>
                   <p className="text-sm text-muted-foreground">{bundle.perBottle}</p>
                   <p className="text-sm font-semibold text-primary">{bundle.savings}</p>
@@ -94,17 +103,21 @@ const BundleShowcase = () => {
                 <p className="text-xs text-muted-foreground">
                   vs. ${(bundle.bottles * 8.5).toFixed(2)} buying singles
                 </p>
-                <Button className="w-full h-12 font-semibold" asChild>
-                  <Link to="/fuel">
-                    <ShoppingBag className="w-4 h-4 mr-2" />
-                    Order Now
-                  </Link>
+                <Button className="w-full h-12 font-semibold" onClick={() => handleOrderBundle(bundle)}>
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Build Your Bundle
                 </Button>
               </CardContent>
             </Card>
           ))}
         </div>
       </div>
+
+      <BundleBuilderModal
+        bundle={selectedBundle ? { name: selectedBundle.name, bottles: selectedBundle.bottles, price: selectedBundle.price } : null}
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+      />
     </section>
   );
 };

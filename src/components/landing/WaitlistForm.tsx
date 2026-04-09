@@ -11,17 +11,12 @@ import { supabase } from "@/integrations/supabase/client";
 
 const allDrinks = [
   "Tropical Breeze",
-  "Mango Mansa",
   "Beet Flow",
-  "Island Mystery",
-  "Ginger Shot",
-  "Lung Detox",
-  "Hydration Reset",
-  "Glow Up",
-  "Mucus Cleanse",
-  "Cold & Flu Defense",
-  "Vital Flow",
-  "Sunshine Starter",
+  "Green Vital",
+  "Mint Condition",
+  "Strawberry Horizon",
+  "Hibiscus Delight",
+  "Sea Moss Shot",
 ];
 
 const WaitlistForm = () => {

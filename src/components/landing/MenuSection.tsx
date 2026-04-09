@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingBag } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ShoppingCart, Minus, Plus } from "lucide-react";
 import ProductDetailModal from "./ProductDetailModal";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
 
 import tropicalBreeze from "@/assets/product-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
@@ -39,7 +41,7 @@ const products: Product[] = [
     ingredients: "Pineapple, Apple, Lemon, Ginger",
     description: "A bold tropical blend designed to energize and restore. Pineapple and apple deliver natural sweetness while ginger ignites your metabolism and lemon cleanses from within.",
     image: tropicalBreeze,
-    stripeLink: "https://buy.stripe.com/9B67sK1N33xcgVG6zU1B60b",
+    stripeLink: "",
     whyChoose: ["Boosts energy and metabolism naturally", "Supports natural cleansing and detox", "Refreshing tropical taste profile", "Perfect for morning or post-workout"],
     detailedIngredients: [
       { name: "Pineapple", benefit: "Natural enzymes support digestion and provide sustained energy." },
@@ -153,6 +155,28 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ product, onViewDetail }: ProductCardProps) => {
+  const { addItem } = useCart();
+  const [quantity, setQuantity] = useState(1);
+  const [addSeaMoss, setAddSeaMoss] = useState(false);
+
+  const unitPrice = 8.50;
+  const displayPrice = addSeaMoss ? unitPrice + 1.0 : unitPrice;
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addItem({
+      id: product.slug,
+      name: product.name,
+      type: "single",
+      quantity,
+      unitPrice,
+      addSeaMoss,
+    });
+    toast.success(`${product.name} added to cart!`);
+    setQuantity(1);
+    setAddSeaMoss(false);
+  };
+
   return (
     <Card
       className="overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 bg-card shadow-sm hover:shadow-lg group h-full flex flex-col cursor-pointer"
@@ -196,31 +220,44 @@ const ProductCard = ({ product, onViewDetail }: ProductCardProps) => {
             <span className="font-semibold text-primary">$7.50 Member</span>
           </div>
 
-          <div className="pt-3 space-y-2 mt-auto">
-            {product.stripeLink ? (
-              <Button
-                className="w-full h-12"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  window.open(product.stripeLink, "_blank");
-                }}
-              >
-                <ShoppingBag className="w-4 h-4 mr-2" />
-                Buy Now — $8.50
+          <div className="pt-3 space-y-3 mt-auto" onClick={(e) => e.stopPropagation()}>
+            {/* Sea Moss Toggle */}
+            <div className="flex items-start gap-2">
+              <Checkbox
+                id={`seamoss-${product.slug}`}
+                checked={addSeaMoss}
+                onCheckedChange={(checked) => setAddSeaMoss(checked === true)}
+                className="mt-0.5"
+              />
+              <label htmlFor={`seamoss-${product.slug}`} className="text-xs text-muted-foreground cursor-pointer leading-tight">
+                + Add Sea Moss Shot — +$1.00 🌿
+                <br />
+                <span className="text-primary text-[10px]">NeuroRoutine Members get one free Sea Moss shot per month</span>
+              </label>
+            </div>
+
+            {/* Quantity + Add to Cart */}
+            <div className="flex items-center gap-2">
+              <div className="flex items-center border border-border rounded-md">
+                <button
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  className="w-8 h-9 flex items-center justify-center hover:bg-muted transition-colors rounded-l-md"
+                >
+                  <Minus className="w-3 h-3" />
+                </button>
+                <span className="w-8 text-center text-sm font-medium">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(quantity + 1)}
+                  className="w-8 h-9 flex items-center justify-center hover:bg-muted transition-colors rounded-r-md"
+                >
+                  <Plus className="w-3 h-3" />
+                </button>
+              </div>
+              <Button className="flex-1 h-9 text-sm" onClick={handleAddToCart}>
+                <ShoppingCart className="w-3.5 h-3.5 mr-1.5" />
+                Add to Cart — ${(displayPrice * quantity).toFixed(2)}
               </Button>
-            ) : (
-              <Button
-                className="w-full h-12"
-                variant="outline"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onViewDetail(product);
-                }}
-              >
-                <ShoppingBag className="w-4 h-4 mr-2" />
-                Order Now — $8.50
-              </Button>
-            )}
+            </div>
           </div>
         </div>
       </CardContent>
@@ -229,12 +266,25 @@ const ProductCard = ({ product, onViewDetail }: ProductCardProps) => {
 };
 
 const MenuSection = () => {
+  const { addItem } = useCart();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   const handleViewDetail = (product: Product) => {
     setSelectedProduct(product);
     setModalOpen(true);
+  };
+
+  const handleSeaMossShotAdd = () => {
+    addItem({
+      id: "sea-moss-shot",
+      name: "Sea Moss Shot",
+      type: "sea-moss-shot",
+      quantity: 1,
+      unitPrice: 1.0,
+      addSeaMoss: false,
+    });
+    toast.success("Sea Moss Shot added to cart!");
   };
 
   const modalProduct = selectedProduct
@@ -293,11 +343,9 @@ const MenuSection = () => {
                 Packed with 92+ minerals. Supports immunity, digestion, and energy. Add to any juice or take standalone.
               </p>
               <p className="font-bold text-foreground">$1.00</p>
-              <Button asChild variant="outline" className="w-full">
-                <Link to="/fuel">
-                  <ShoppingBag className="w-4 h-4 mr-2" />
-                  Order Now
-                </Link>
+              <Button variant="outline" className="w-full" onClick={handleSeaMossShotAdd}>
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                Add to Cart — $1.00
               </Button>
             </CardContent>
           </Card>
@@ -310,7 +358,7 @@ const MenuSection = () => {
               <Badge variant="outline" className="border-primary text-primary">Add-On</Badge>
               <h3 className="font-heading font-bold text-lg text-foreground">Sea Moss Add-On</h3>
               <p className="text-sm text-muted-foreground">
-                Add sea moss to any bottle for just $1.00 more. 92+ minerals in every sip.
+                Add Sea Moss to any bottle for just $1.00 more. 92+ minerals in every sip.
               </p>
               <p className="font-bold text-foreground">+$1.00 <span className="text-sm font-normal text-muted-foreground">($9.50/bottle)</span></p>
             </CardContent>

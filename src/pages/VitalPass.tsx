@@ -12,8 +12,8 @@ import { toast } from "sonner";
 
 const VitalPass = () => {
   const features = [
-    { icon: <CreditCard className="w-8 h-8" />, title: "$1 off every bottle ($7.50/bottle)", description: "Member pricing on all individual juices, every order." },
-    { icon: <Star className="w-8 h-8" />, title: "Free monthly sea moss shot", description: "Complimentary sea moss shot delivered with your orders each month." },
+    { icon: <CreditCard className="w-8 h-8" />, title: "$1 off every bottle ($7.50/bottle, regular $8.50)", description: "Member pricing on all individual juices, every order." },
+    { icon: <Star className="w-8 h-8" />, title: "Free monthly Sea Moss shot", description: "Complimentary Sea Moss shot delivered with your orders each month." },
     { icon: <Gift className="w-8 h-8" />, title: "Early access to new bundles", description: "Be first to try new drops and get access to member-only bundles." },
     { icon: <MessageCircle className="w-8 h-8" />, title: "Access to Doctor Vital content", description: "Exclusive wellness content and personalized juice recommendations." },
   ];
@@ -23,7 +23,7 @@ const VitalPass = () => {
     { question: "Can I cancel anytime?", answer: "Yes! You can cancel your membership anytime. You'll keep access to member benefits through the end of your billing period." },
     { question: "Does this work with delivery and pickup?", answer: "Absolutely! Member pricing applies to both delivery and pickup orders." },
     { question: "Do I need a membership to buy?", answer: "No! All products and bundles are available to everyone. Membership just gets you better pricing and perks." },
-    { question: "What is the sea moss shot?", answer: "A standalone $1.00 sea moss shot packed with minerals. Members get one free every month with their orders." },
+    { question: "What is the Sea Moss shot?", answer: "A standalone $1.00 Sea Moss shot packed with minerals. Members get one free every month with their orders." },
   ];
 
   const [waitlistName, setWaitlistName] = useState("");
@@ -94,8 +94,8 @@ const VitalPass = () => {
                 <CardContent className="p-8 space-y-6">
                   <div className="space-y-4">
                     {[
-                      "$1 off every bottle ($7.50/bottle)",
-                      "Free monthly sea moss shot",
+                      "$1 off every bottle ($7.50/bottle, regular $8.50)",
+                      "Free monthly Sea Moss shot",
                       "Early access to new bundles",
                       "Access to Doctor Vital content",
                       "Cancel anytime (no commitment)"
