@@ -53,7 +53,7 @@ const CartDrawer = () => {
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={setDrawerOpen}>
-      <SheetContent className="flex flex-col w-full sm:max-w-md">
+      <SheetContent className="flex flex-col w-full sm:max-w-md overflow-hidden">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <ShoppingCart className="w-5 h-5" />
