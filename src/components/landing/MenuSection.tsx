@@ -10,6 +10,7 @@ import { toast } from "sonner";
 
 import tropicalBreeze from "@/assets/product-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
+import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
 import gingerShot from "@/assets/product-ginger-shot.png";
 
 interface Ingredient {
@@ -118,7 +119,7 @@ const products: Product[] = [
     purpose: "Hydration • Antioxidants • Electrolytes",
     ingredients: "Strawberry, Coconut Water, Lime",
     description: "A clean, crisp hydration blend that hits different. Strawberry antioxidants, coconut water electrolytes, and lime brightness in every bottle.",
-    image: tropicalBreeze,
+    image: strawberryHorizon,
     stripeLink: "",
     whyChoose: ["Clean and crisp taste profile", "Loaded with strawberry antioxidants", "Coconut water electrolytes for hydration", "Lime brightness for a refreshing finish"],
     detailedIngredients: [
