@@ -14,7 +14,7 @@ import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
 import mintCondition from "@/assets/product-mint-condition.png";
 import greenVital from "@/assets/product-green-vital.png";
 import hibiscusDelight from "@/assets/product-hibiscus-delight.png";
-import gingerShot from "@/assets/product-ginger-shot.png";
+import seaMossShot from "@/assets/product-sea-moss-shot.png";
 
 interface Ingredient {
   name: string;
@@ -336,7 +336,7 @@ const MenuSection = () => {
           <Card className="overflow-hidden border border-border bg-card shadow-sm hover:shadow-lg transition-all">
             <CardContent className="p-5 text-center space-y-3">
               <img
-                src={gingerShot}
+                src={seaMossShot}
                 alt="Sea Moss Shot"
                 className="w-24 h-24 object-cover rounded-full mx-auto"
                 loading="lazy"
