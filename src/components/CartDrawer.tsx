@@ -71,7 +71,7 @@ const CartDrawer = () => {
               <div key={item.id} className="border border-border rounded-lg p-4 space-y-2">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="font-heading font-semibold text-foreground">{item.name}</h4>
+                    <h4 className="font-heading font-semibold text-foreground text-sm sm:text-base leading-tight truncate max-w-[200px] sm:max-w-[280px]">{item.name}</h4>
                     {item.type === "bundle" && item.selectedDrinks && (
                       <p className="text-xs text-muted-foreground mt-1">
                         {item.selectedDrinks.join(", ")}
