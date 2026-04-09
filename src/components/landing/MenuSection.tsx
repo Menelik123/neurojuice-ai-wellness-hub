@@ -336,7 +336,7 @@ const MenuSection = () => {
           <Card className="overflow-hidden border border-border bg-card shadow-sm hover:shadow-lg transition-all">
             <CardContent className="p-5 text-center space-y-3">
               <img
-                src={gingerShot}
+                src={seaMossShot}
                 alt="Sea Moss Shot"
                 className="w-24 h-24 object-cover rounded-full mx-auto"
                 loading="lazy"
