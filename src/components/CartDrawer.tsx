@@ -117,13 +117,13 @@ const CartDrawer = () => {
         )}
 
         {items.length > 0 && (
-          <SheetFooter className="flex-col gap-3 border-t border-border pt-4">
-            <div className="flex justify-between w-full text-lg font-heading font-bold">
+          <SheetFooter className="flex-col gap-2 border-t border-border pt-3 pb-2 shrink-0">
+            <div className="flex justify-between w-full text-base sm:text-lg font-heading font-bold">
               <span>Subtotal</span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
             <Button
-              className="w-full h-12 font-semibold"
+              className="w-full h-11 sm:h-12 font-semibold text-sm sm:text-base truncate"
               size="lg"
               onClick={handleCheckout}
               disabled={isCheckingOut}
@@ -137,8 +137,8 @@ const CartDrawer = () => {
                 `Checkout — $${subtotal.toFixed(2)}`
               )}
             </Button>
-            <p className="text-xs text-muted-foreground text-center">Secure checkout powered by Stripe</p>
-            <button onClick={clearCart} className="text-xs text-muted-foreground hover:text-destructive transition-colors underline">
+            <p className="text-[10px] sm:text-xs text-muted-foreground text-center">Secure checkout powered by Stripe</p>
+            <button onClick={clearCart} className="text-[10px] sm:text-xs text-muted-foreground hover:text-destructive transition-colors underline">
               Clear Cart
             </button>
           </SheetFooter>
