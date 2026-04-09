@@ -1,16 +1,54 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
-import { Minus, Plus, Trash2, ShoppingCart } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingCart, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const CartDrawer = () => {
   const { items, removeItem, updateQuantity, subtotal, isDrawerOpen, setDrawerOpen, clearCart } = useCart();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const getItemTotal = (item: typeof items[0]) => {
     let price = item.unitPrice * item.quantity;
     if (item.addSeaMoss && item.type === "single") price += 1.0 * item.quantity;
     if (item.seaMossCount) price += 1.0 * item.seaMossCount;
     return price;
+  };
+
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    try {
+      const checkoutItems = items.map((item) => ({
+        slug: item.slug,
+        name: item.name,
+        quantity: item.quantity,
+        addSeaMoss: item.addSeaMoss,
+        seaMossCount: item.seaMossCount,
+        type: item.type,
+        bundleBottles: item.bundleBottles,
+        selectedDrinks: item.selectedDrinks,
+      }));
+
+      const { data, error } = await supabase.functions.invoke("create-checkout", {
+        body: { items: checkoutItems, origin: window.location.origin },
+      });
+
+      if (error) throw error;
+      if (data?.url) {
+        clearCart();
+        setDrawerOpen(false);
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL returned");
+      }
+    } catch (err: any) {
+      console.error("Checkout error:", err);
+      toast.error("Checkout failed. Please try again.");
+    } finally {
+      setIsCheckingOut(false);
+    }
   };
 
   return (
@@ -84,10 +122,22 @@ const CartDrawer = () => {
               <span>Subtotal</span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
-            <Button className="w-full h-12 font-semibold" size="lg" disabled>
-              Checkout — ${subtotal.toFixed(2)}
+            <Button
+              className="w-full h-12 font-semibold"
+              size="lg"
+              onClick={handleCheckout}
+              disabled={isCheckingOut}
+            >
+              {isCheckingOut ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                `Checkout — $${subtotal.toFixed(2)}`
+              )}
             </Button>
-            <p className="text-xs text-muted-foreground text-center">Stripe checkout coming soon</p>
+            <p className="text-xs text-muted-foreground text-center">Secure checkout powered by Stripe</p>
             <button onClick={clearCart} className="text-xs text-muted-foreground hover:text-destructive transition-colors underline">
               Clear Cart
             </button>

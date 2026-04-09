@@ -170,6 +170,7 @@ const ProductCard = ({ product, onViewDetail }: ProductCardProps) => {
     e.stopPropagation();
     addItem({
       id: product.slug,
+      slug: product.slug,
       name: product.name,
       type: "single",
       quantity,
@@ -282,6 +283,7 @@ const MenuSection = () => {
   const handleSeaMossShotAdd = () => {
     addItem({
       id: "sea-moss-shot",
+      slug: "sea-moss-shot",
       name: "Sea Moss Shot",
       type: "sea-moss-shot",
       quantity: 1,

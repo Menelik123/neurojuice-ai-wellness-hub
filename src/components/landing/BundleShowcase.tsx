@@ -130,6 +130,7 @@ const BundleShowcase = () => {
 
     addItem({
       id: `curated-${curated.name}`,
+      slug: `bundle-${curated.bottles}`,
       name: `${curated.name} (${curated.bottles} bottles)`,
       type: "bundle",
       quantity: 1,

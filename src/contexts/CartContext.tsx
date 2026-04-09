@@ -2,6 +2,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 
 export interface CartItem {
   id: string;
+  slug: string;
   name: string;
   type: "single" | "bundle" | "sea-moss-shot";
   quantity: number;
