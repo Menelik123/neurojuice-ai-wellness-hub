@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import tropicalBreeze from "@/assets/product-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
 import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
+import mintCondition from "@/assets/product-mint-condition.png";
 import gingerShot from "@/assets/product-ginger-shot.png";
 
 interface Ingredient {
@@ -101,7 +102,7 @@ const products: Product[] = [
     purpose: "Hydration • Recovery • Anti-Inflammatory",
     ingredients: "Watermelon, Mint, Basil",
     description: "A light hydration blend made for recovery. Watermelon replenishes electrolytes, mint cools and refreshes, and basil brings anti-inflammatory support.",
-    image: tropicalBreeze,
+    image: mintCondition,
     stripeLink: "",
     whyChoose: ["Ultimate hydration and recovery blend", "Natural electrolyte replenishment", "Cooling mint for refreshment", "Anti-inflammatory basil support"],
     detailedIngredients: [
