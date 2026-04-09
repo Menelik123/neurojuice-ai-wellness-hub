@@ -7,6 +7,7 @@ import SMSInlineCapture from "./SMSInlineCapture";
 
 import tropicalBreeze from "@/assets/juice-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
+import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
 
 interface Product {
   slug: string;
@@ -73,7 +74,7 @@ const products: Product[] = [
     ingredients: "Strawberry, Coconut Water, Lime",
     regularPrice: "$8.50",
     memberPrice: "$7.50",
-    image: tropicalBreeze,
+    image: strawberryHorizon,
     stripeLink: "",
   },
   {

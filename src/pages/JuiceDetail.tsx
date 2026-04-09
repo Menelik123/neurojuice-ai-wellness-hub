@@ -9,6 +9,7 @@ import LandingFooter from "@/components/landing/LandingFooter";
 
 import tropicalBreeze from "@/assets/juice-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
+import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
 
 interface JuiceProduct {
   slug: string;
@@ -148,7 +149,7 @@ const products: Record<string, JuiceProduct> = {
     ],
     howToUse: "Best enjoyed chilled. Shake well before drinking.",
     timing: "Anytime — perfect as a daily hydration choice.",
-    image: tropicalBreeze,
+    image: strawberryHorizon,
     regularPrice: "$8.50",
     memberPrice: "$7.50",
     stripeLink: ""

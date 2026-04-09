@@ -7,13 +7,14 @@ import { Link } from "react-router-dom";
 
 import tropicalBreeze from "@/assets/product-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
+import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
 
 const imageMap: Record<string, string> = {
   "tropical-breeze": tropicalBreeze,
   "beet-flow": beetFlow,
   "green-vital": tropicalBreeze,
   "mint-condition": tropicalBreeze,
-  "strawberry-horizon": tropicalBreeze,
+  "strawberry-horizon": strawberryHorizon,
   "hibiscus-delight": tropicalBreeze,
 };
 
