@@ -15,17 +15,17 @@ html {
     --background: 0 0% 100%;
     --foreground: 0 0% 0%;
     
-    /* Lime Green - Primary brand color (#7FD645) */
-    --primary: 88 71% 57%;
+    /* Green - Primary brand color (softer, less neon) */
+    --primary: 88 55% 45%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 88 71% 67%;
+    --primary-glow: 88 50% 55%;
     
     /* Light accents */
     --secondary: 0 0% 95%;
     --secondary-foreground: 0 0% 0%;
     
     /* Subtle green accent */
-    --accent: 88 71% 57%;
+    --accent: 88 55% 45%;
     --accent-foreground: 0 0% 100%;
     
     /* Neutral grays */
@@ -43,7 +43,7 @@ html {
     
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 88 71% 57%;
+    --ring: 88 55% 45%;
     
     /* Simple shadows */
     --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
