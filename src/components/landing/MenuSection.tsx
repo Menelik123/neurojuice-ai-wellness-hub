@@ -12,6 +12,7 @@ import tropicalBreeze from "@/assets/product-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
 import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
 import mintCondition from "@/assets/product-mint-condition.png";
+import greenVital from "@/assets/product-green-vital.png";
 import gingerShot from "@/assets/product-ginger-shot.png";
 
 interface Ingredient {
@@ -80,7 +81,7 @@ const products: Product[] = [
     purpose: "Detox • Gut Health • System Reset",
     ingredients: "Celery, Green Apple, Spinach/Swiss Chard, Cucumber, Lemon, Ginger, Coconut Water",
     description: "Our most powerful cleanse. Built to flush toxins, support gut health, and reset your system from the inside out.",
-    image: tropicalBreeze,
+    image: greenVital,
     stripeLink: "",
     whyChoose: ["Most powerful cleanse in our lineup", "Supports gut health and toxin elimination", "Rotating greens prevent adaptation", "Coconut water for natural electrolytes"],
     detailedIngredients: [

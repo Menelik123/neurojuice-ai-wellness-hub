@@ -11,6 +11,7 @@ import tropicalBreeze from "@/assets/juice-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
 import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
 import mintCondition from "@/assets/product-mint-condition.png";
+import greenVital from "@/assets/product-green-vital.png";
 
 interface JuiceProduct {
   slug: string;
@@ -102,7 +103,7 @@ const products: Record<string, JuiceProduct> = {
     ],
     howToUse: "Best enjoyed chilled on an empty stomach for maximum cleansing.",
     timing: "First thing in the morning or as a midday reset.",
-    image: tropicalBreeze,
+    image: greenVital,
     regularPrice: "$8.50",
     memberPrice: "$7.50",
     stripeLink: ""
