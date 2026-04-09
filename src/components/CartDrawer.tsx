@@ -53,7 +53,7 @@ const CartDrawer = () => {
 
   return (
     <Sheet open={isDrawerOpen} onOpenChange={setDrawerOpen}>
-      <SheetContent className="flex flex-col w-full sm:max-w-md">
+      <SheetContent className="flex flex-col w-full sm:max-w-md overflow-hidden">
         <SheetHeader>
           <SheetTitle className="flex items-center gap-2">
             <ShoppingCart className="w-5 h-5" />
@@ -71,7 +71,7 @@ const CartDrawer = () => {
               <div key={item.id} className="border border-border rounded-lg p-4 space-y-2">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="font-heading font-semibold text-foreground">{item.name}</h4>
+                    <h4 className="font-heading font-semibold text-foreground text-sm sm:text-base leading-tight truncate max-w-[200px] sm:max-w-[280px]">{item.name}</h4>
                     {item.type === "bundle" && item.selectedDrinks && (
                       <p className="text-xs text-muted-foreground mt-1">
                         {item.selectedDrinks.join(", ")}
@@ -117,13 +117,13 @@ const CartDrawer = () => {
         )}
 
         {items.length > 0 && (
-          <SheetFooter className="flex-col gap-3 border-t border-border pt-4">
-            <div className="flex justify-between w-full text-lg font-heading font-bold">
+          <SheetFooter className="!flex-col gap-2 border-t border-border pt-3 pb-2 shrink-0">
+            <div className="flex justify-between w-full text-base sm:text-lg font-heading font-bold">
               <span>Subtotal</span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
             <Button
-              className="w-full h-12 font-semibold"
+              className="w-full h-11 sm:h-12 font-semibold text-sm sm:text-base truncate"
               size="lg"
               onClick={handleCheckout}
               disabled={isCheckingOut}
@@ -137,8 +137,8 @@ const CartDrawer = () => {
                 `Checkout — $${subtotal.toFixed(2)}`
               )}
             </Button>
-            <p className="text-xs text-muted-foreground text-center">Secure checkout powered by Stripe</p>
-            <button onClick={clearCart} className="text-xs text-muted-foreground hover:text-destructive transition-colors underline">
+            <p className="text-[10px] sm:text-xs text-muted-foreground text-center">Secure checkout powered by Stripe</p>
+            <button onClick={clearCart} className="text-[10px] sm:text-xs text-muted-foreground hover:text-destructive transition-colors underline">
               Clear Cart
             </button>
           </SheetFooter>
