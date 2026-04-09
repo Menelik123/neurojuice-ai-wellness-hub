@@ -10,6 +10,7 @@ import beetFlow from "@/assets/product-beet-flow.png";
 import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
 import mintCondition from "@/assets/product-mint-condition.png";
 import greenVital from "@/assets/product-green-vital.png";
+import hibiscusDelight from "@/assets/product-hibiscus-delight.png";
 
 const imageMap: Record<string, string> = {
   "tropical-breeze": tropicalBreeze,
