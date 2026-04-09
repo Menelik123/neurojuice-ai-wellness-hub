@@ -23,7 +23,7 @@ const VitalPass = () => {
     { question: "Can I cancel anytime?", answer: "Yes! You can cancel your membership anytime. You'll keep access to member benefits through the end of your billing period." },
     { question: "Does this work with delivery and pickup?", answer: "Absolutely! Member pricing applies to both delivery and pickup orders." },
     { question: "Do I need a membership to buy?", answer: "No! All products and bundles are available to everyone. Membership just gets you better pricing and perks." },
-    { question: "What is the sea moss shot?", answer: "A standalone $1.00 sea moss shot packed with minerals. Members get one free every month with their orders." },
+    { question: "What is the Sea Moss shot?", answer: "A standalone $1.00 Sea Moss shot packed with minerals. Members get one free every month with their orders." },
   ];
 
   const [waitlistName, setWaitlistName] = useState("");
