@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
 
 const navLinks = [
   { label: "Menu", href: "#menu", isRoute: false },
@@ -13,6 +14,7 @@ const navLinks = [
 
 const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { totalItems, setDrawerOpen } = useCart();
 
   const handleNavClick = (href: string) => {
     setIsOpen(false);
@@ -61,21 +63,44 @@ const MobileNav = () => {
             )}
           </nav>
 
-          {/* Desktop CTA */}
-          <div className="hidden md:block">
-            <Button asChild size="sm">
-              <Link to="/fuel">Order Now</Link>
-            </Button>
+          {/* Desktop CTA + Cart */}
+          <div className="hidden md:flex items-center gap-3">
+            <button
+              onClick={() => setDrawerOpen(true)}
+              className="relative p-2 text-foreground hover:text-primary transition-colors"
+              aria-label="Open cart"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs font-bold rounded-full flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </button>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-foreground"
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile Cart + Menu Button */}
+          <div className="flex md:hidden items-center gap-2">
+            <button
+              onClick={() => setDrawerOpen(true)}
+              className="relative p-2 text-foreground"
+              aria-label="Open cart"
+            >
+              <ShoppingCart className="w-5 h-5" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-primary-foreground text-xs font-bold rounded-full flex items-center justify-center">
+                  {totalItems}
+                </span>
+              )}
+            </button>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 text-foreground"
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}

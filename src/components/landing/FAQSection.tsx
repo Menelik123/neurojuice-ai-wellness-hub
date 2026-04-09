@@ -19,7 +19,7 @@ const faqs = [
   {
     question: "What's included in the NeuroRoutine Membership?",
     answer:
-      "$5 bottles (regular $6), free monthly ginger shots, early access to limited drops, exclusive bundle pricing, and access to Dr. Vital AI for personalized juice recommendations.",
+      "$1 off every bottle ($7.50 member price vs. $8.50 regular), free monthly Sea Moss shot, early access to new bundles and drops, access to Dr. Vital AI, and cancel anytime — no contract.",
   },
   {
     question: "Is there a contract for the membership?",

@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 
 const VitalPassCard = () => {
   const benefits = [
-    "$5 bottles (regular $6)",
-    "Free monthly ginger shots",
+    "$1 off every bottle ($7.50/bottle, regular $8.50)",
+    "Free monthly Sea Moss shot",
     "Early access to drops",
     "Exclusive bundle pricing",
     "Access to Dr. Vital AI",
