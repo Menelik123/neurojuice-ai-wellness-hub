@@ -126,7 +126,7 @@ const products: Record<string, JuiceProduct> = {
     ],
     howToUse: "Best enjoyed chilled. Perfect over ice.",
     timing: "Post-workout, hot days, or whenever you need to rehydrate.",
-    image: tropicalBreeze,
+    image: mintCondition,
     regularPrice: "$8.50",
     memberPrice: "$7.50",
     stripeLink: ""
