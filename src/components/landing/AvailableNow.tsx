@@ -9,6 +9,7 @@ import tropicalBreeze from "@/assets/juice-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
 import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
 import mintCondition from "@/assets/product-mint-condition.png";
+import greenVital from "@/assets/product-green-vital.png";
 
 interface Product {
   slug: string;
@@ -53,7 +54,7 @@ const products: Product[] = [
     ingredients: "Celery, Green Apple, Spinach/Swiss Chard, Cucumber, Lemon, Ginger, Coconut Water",
     regularPrice: "$8.50",
     memberPrice: "$7.50",
-    image: tropicalBreeze,
+    image: greenVital,
     stripeLink: "",
   },
   {
