@@ -13,6 +13,7 @@ import beetFlow from "@/assets/product-beet-flow.png";
 import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
 import mintCondition from "@/assets/product-mint-condition.png";
 import greenVital from "@/assets/product-green-vital.png";
+import hibiscusDelight from "@/assets/product-hibiscus-delight.png";
 import gingerShot from "@/assets/product-ginger-shot.png";
 
 interface Ingredient {
@@ -139,7 +140,7 @@ const products: Product[] = [
     purpose: "Heart Health • Blood Pressure • Liver Support",
     ingredients: "Hibiscus, Coconut Water, Lemon or Strawberry",
     description: "A floral wellness blend that works quietly and powerfully. Hibiscus supports heart health, lowers blood pressure, reduces cholesterol, and promotes liver health.",
-    image: tropicalBreeze,
+    image: hibiscusDelight,
     stripeLink: "",
     whyChoose: ["Supports heart health and lowers blood pressure", "Reduces cholesterol naturally", "Promotes liver health and detoxification", "Light and refreshing floral taste"],
     detailedIngredients: [
