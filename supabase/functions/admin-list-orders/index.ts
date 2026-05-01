@@ -12,8 +12,8 @@ serve(async (req) => {
   }
 
   try {
-    const passcode = req.headers.get("x-admin-passcode");
-    const adminPasscode = Deno.env.get("ADMIN_PASSCODE");
+    const passcode = (req.headers.get("x-admin-passcode") || "").trim();
+    const adminPasscode = (Deno.env.get("ADMIN_PASSCODE") || "").trim();
 
     if (!adminPasscode) {
       console.error("ADMIN_PASSCODE not configured");
