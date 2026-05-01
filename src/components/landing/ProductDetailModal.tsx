@@ -33,8 +33,8 @@ interface ProductDetailModalProps {
 }
 
 const ProductDetailModal = ({ product, open, onOpenChange }: ProductDetailModalProps) => {
-  if (!product) return null;
   const { isInStock } = useStock();
+  if (!product) return null;
   const inStock = isInStock(product.slug);
 
   return (
