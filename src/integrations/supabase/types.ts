@@ -77,6 +77,33 @@ export type Database = {
         }
         Relationships: []
       }
+      product_stock: {
+        Row: {
+          created_at: string
+          id: string
+          in_stock: boolean
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          in_stock?: boolean
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          in_stock?: boolean
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       vital_trials: {
         Row: {
           created_at: string | null

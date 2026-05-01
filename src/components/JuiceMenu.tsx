@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import MemberPricing from "@/components/MemberPricing";
 import { juices } from "@/data/juices";
 import { Link } from "react-router-dom";
+import { useStock } from "@/hooks/useStock";
 
 import tropicalBreeze from "@/assets/product-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
@@ -22,6 +23,7 @@ const imageMap: Record<string, string> = {
 };
 
 const JuiceMenu = () => {
+  const { isInStock } = useStock();
   return (
     <section id="menu" className="py-20 bg-gradient-card">
       <div className="container mx-auto px-4">
@@ -35,13 +37,18 @@ const JuiceMenu = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {juices.map((juice) => (
-            <Card key={juice.slug} className="overflow-hidden transform transition-all duration-300 hover:scale-105 shadow-card hover:shadow-soft">
+          {juices.map((juice) => {
+            const inStock = isInStock(juice.slug);
+            return (
+            <Card key={juice.slug} className={`overflow-hidden transform transition-all duration-300 hover:scale-105 shadow-card hover:shadow-soft ${!inStock ? "opacity-75" : ""}`}>
               <CardContent className="p-0">
                 <div className="relative aspect-[4/3] overflow-hidden">
-                  <img src={imageMap[juice.slug] || tropicalBreeze} alt={juice.name} className="w-full h-full object-cover" />
+                  <img src={imageMap[juice.slug] || tropicalBreeze} alt={juice.name} className={`w-full h-full object-cover ${!inStock ? "grayscale" : ""}`} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                   <Badge className="absolute top-4 right-4 bg-primary text-primary-foreground">{juice.tagline}</Badge>
+                  {!inStock && (
+                    <Badge className="absolute top-4 left-4 bg-destructive text-destructive-foreground">Sold Out</Badge>
+                  )}
                 </div>
                 <div className="p-6 space-y-4">
                   <h3 className="font-heading font-bold text-xl text-foreground">{juice.name}</h3>
@@ -60,7 +67,8 @@ const JuiceMenu = () => {
                 </div>
               </CardContent>
             </Card>
-          ))}
+            );
+          })}
         </div>
 
         <div className="mt-16 space-y-12">

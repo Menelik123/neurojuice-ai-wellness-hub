@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import SMSInlineCapture from "./SMSInlineCapture";
+import { useStock } from "@/hooks/useStock";
 
 import tropicalBreeze from "@/assets/juice-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
@@ -94,6 +95,7 @@ const products: Product[] = [
 ];
 
 const AvailableNow = () => {
+  const { isInStock } = useStock();
   return (
     <section id="available-now" className="py-16 px-4 bg-background">
       <div className="max-w-6xl mx-auto">
@@ -107,21 +109,28 @@ const AvailableNow = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <Link 
-              to={`/juice/${product.slug}`} 
+          {products.map((product) => {
+            const inStock = isInStock(product.slug);
+            return (
+            <Link
+              to={`/juice/${product.slug}`}
               key={product.slug}
               className="block group"
             >
-              <Card className="border border-border shadow-card hover:shadow-lg transition-all overflow-hidden group-hover:border-primary/50 h-full">
+              <Card className={`border border-border shadow-card hover:shadow-lg transition-all overflow-hidden group-hover:border-primary/50 h-full ${!inStock ? "opacity-75" : ""}`}>
                 <div className="relative">
                   <Badge className="absolute top-3 left-3 bg-primary text-primary-foreground z-10">
                     {product.tagline}
                   </Badge>
+                  {!inStock && (
+                    <Badge className="absolute top-3 right-3 bg-destructive text-destructive-foreground z-10">
+                      Sold Out
+                    </Badge>
+                  )}
                   <img 
                     src={product.image} 
                     alt={product.name}
-                    className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300"
+                    className={`w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300 ${!inStock ? "grayscale" : ""}`}
                   />
                 </div>
                 <CardContent className="p-5 space-y-3">
@@ -150,7 +159,11 @@ const AvailableNow = () => {
                     </Badge>
                   </div>
                   
-                  {product.stripeLink ? (
+                  {!inStock ? (
+                    <Button disabled className="w-full" variant="outline">
+                      Sold Out — Notify Me
+                    </Button>
+                  ) : product.stripeLink ? (
                     <Button 
                       asChild
                       className="w-full bg-[#7FD645] hover:bg-[#6BC535] text-black font-semibold"
@@ -171,7 +184,8 @@ const AvailableNow = () => {
                 </CardContent>
               </Card>
             </Link>
-          ))}
+            );
+          })}
         </div>
 
         {/* Sea Moss Info */}
