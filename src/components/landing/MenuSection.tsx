@@ -7,6 +7,7 @@ import { ShoppingCart, Minus, Plus } from "lucide-react";
 import ProductDetailModal from "./ProductDetailModal";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
+import { useStock } from "@/hooks/useStock";
 
 import tropicalBreeze from "@/assets/product-tropical-breeze.png";
 import beetFlow from "@/assets/product-beet-flow.png";
@@ -156,9 +157,10 @@ const products: Product[] = [
 interface ProductCardProps {
   product: Product;
   onViewDetail: (product: Product) => void;
+  inStock: boolean;
 }
 
-const ProductCard = ({ product, onViewDetail }: ProductCardProps) => {
+const ProductCard = ({ product, onViewDetail, inStock }: ProductCardProps) => {
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [addSeaMoss, setAddSeaMoss] = useState(false);
@@ -184,7 +186,7 @@ const ProductCard = ({ product, onViewDetail }: ProductCardProps) => {
 
   return (
     <Card
-      className="overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 bg-card shadow-sm hover:shadow-lg group h-full flex flex-col cursor-pointer"
+      className={`overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 bg-card shadow-sm hover:shadow-lg group h-full flex flex-col cursor-pointer ${!inStock ? "opacity-80" : ""}`}
       onClick={() => onViewDetail(product)}
     >
       <CardContent className="p-0 flex flex-col h-full">
@@ -192,9 +194,14 @@ const ProductCard = ({ product, onViewDetail }: ProductCardProps) => {
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-lg"
+            className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 rounded-t-lg ${!inStock ? "grayscale" : ""}`}
             loading="lazy"
           />
+          {!inStock && (
+            <Badge className="absolute top-3 right-3 bg-destructive text-destructive-foreground shadow-md">
+              Sold Out
+            </Badge>
+          )}
         </div>
 
         <div className="p-5 space-y-3 flex flex-col flex-1">
@@ -226,6 +233,12 @@ const ProductCard = ({ product, onViewDetail }: ProductCardProps) => {
           </div>
 
           <div className="pt-3 space-y-3 mt-auto" onClick={(e) => e.stopPropagation()}>
+            {!inStock ? (
+              <Button disabled className="w-full h-9 text-sm" variant="outline">
+                Sold Out
+              </Button>
+            ) : (
+              <>
             {/* Sea Moss Toggle */}
             <div className="flex items-start gap-2">
               <Checkbox
@@ -263,6 +276,8 @@ const ProductCard = ({ product, onViewDetail }: ProductCardProps) => {
                 Add to Cart — ${(displayPrice * quantity).toFixed(2)}
               </Button>
             </div>
+              </>
+            )}
           </div>
         </div>
       </CardContent>
@@ -274,6 +289,7 @@ const MenuSection = () => {
   const { addItem } = useCart();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const { isInStock } = useStock();
 
   const handleViewDetail = (product: Product) => {
     setSelectedProduct(product);
@@ -329,18 +345,18 @@ const MenuSection = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {products.map((product) => (
-            <ProductCard key={product.slug} product={product} onViewDetail={handleViewDetail} />
+            <ProductCard key={product.slug} product={product} onViewDetail={handleViewDetail} inStock={isInStock(product.slug)} />
           ))}
         </div>
 
         {/* Sea Moss Shot Card */}
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
-          <Card className="overflow-hidden border border-border bg-card shadow-sm hover:shadow-lg transition-all">
+          <Card className={`overflow-hidden border border-border bg-card shadow-sm hover:shadow-lg transition-all ${!isInStock("sea-moss-shot") ? "opacity-80" : ""}`}>
             <CardContent className="p-5 text-center space-y-3">
               <img
                 src={seaMossShot}
                 alt="Sea Moss Shot"
-                className="w-24 h-24 object-cover rounded-full mx-auto"
+                className={`w-24 h-24 object-cover rounded-full mx-auto ${!isInStock("sea-moss-shot") ? "grayscale" : ""}`}
                 loading="lazy"
               />
               <Badge className="bg-primary text-primary-foreground">Boost</Badge>
@@ -349,10 +365,14 @@ const MenuSection = () => {
                 Packed with 92+ minerals. Supports immunity, digestion, and energy. Add to any juice or take standalone.
               </p>
               <p className="font-bold text-foreground">$1.00</p>
-              <Button variant="outline" className="w-full" onClick={handleSeaMossShotAdd}>
-                <ShoppingCart className="w-4 h-4 mr-2" />
-                Add to Cart — $1.00
-              </Button>
+              {isInStock("sea-moss-shot") ? (
+                <Button variant="outline" className="w-full" onClick={handleSeaMossShotAdd}>
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Add to Cart — $1.00
+                </Button>
+              ) : (
+                <Button disabled variant="outline" className="w-full">Sold Out</Button>
+              )}
             </CardContent>
           </Card>
 
