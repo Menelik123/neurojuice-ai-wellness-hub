@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Home, RefreshCw, Package, Clock, Phone, Mail, MapPin, User, Lock } from "lucide-react";
+import { Home, RefreshCw, Package, Clock, Phone, Mail, MapPin, User, Lock, CheckCircle2, XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "@/hooks/use-toast";
 
 const ADMIN_CODE = "neurojuice2025";
 
@@ -23,11 +25,20 @@ interface FuelOrder {
   created_at: string;
 }
 
+interface StockItem {
+  id: string;
+  slug: string;
+  name: string;
+  in_stock: boolean;
+}
+
 const AdminOrders = () => {
   const [isAuthed, setIsAuthed] = useState(false);
   const [code, setCode] = useState("");
   const [orders, setOrders] = useState<FuelOrder[]>([]);
   const [loading, setLoading] = useState(false);
+  const [stock, setStock] = useState<StockItem[]>([]);
+  const [stockLoading, setStockLoading] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,9 +67,37 @@ const AdminOrders = () => {
     setLoading(false);
   };
 
+  const fetchStock = async () => {
+    setStockLoading(true);
+    const { data, error } = await supabase
+      .from("product_stock")
+      .select("*")
+      .order("name", { ascending: true });
+    if (!error && data) setStock(data as StockItem[]);
+    setStockLoading(false);
+  };
+
+  const toggleStock = async (item: StockItem) => {
+    const newStatus = !item.in_stock;
+    setStock((prev) => prev.map((s) => (s.id === item.id ? { ...s, in_stock: newStatus } : s)));
+    const { error } = await supabase
+      .from("product_stock")
+      .update({ in_stock: newStatus })
+      .eq("id", item.id);
+    if (error) {
+      setStock((prev) => prev.map((s) => (s.id === item.id ? { ...s, in_stock: item.in_stock } : s)));
+      toast({ title: "Failed to update", description: error.message, variant: "destructive" });
+    } else {
+      toast({
+        title: newStatus ? `${item.name} is back in stock` : `${item.name} marked sold out`,
+      });
+    }
+  };
+
   useEffect(() => {
     if (isAuthed) {
       fetchOrders();
+      fetchStock();
     }
   }, [isAuthed]);
 
@@ -125,6 +164,51 @@ const AdminOrders = () => {
       </header>
 
       <main className="max-w-6xl mx-auto p-4 space-y-4">
+        {/* Inventory Manager */}
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <CardTitle className="font-heading text-lg flex items-center gap-2">
+                <Package className="w-5 h-5 text-primary" /> Inventory
+              </CardTitle>
+              <Button variant="outline" size="sm" onClick={fetchStock} disabled={stockLoading}>
+                <RefreshCw className={`w-4 h-4 ${stockLoading ? "animate-spin" : ""}`} />
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">Toggle a juice off when sold out — site updates instantly.</p>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {stock.map((item) => (
+                <div
+                  key={item.id}
+                  className={`flex items-center justify-between gap-3 rounded-lg border p-3 transition-colors ${
+                    item.in_stock ? "border-border bg-background" : "border-destructive/30 bg-destructive/5"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    {item.in_stock ? (
+                      <CheckCircle2 className="w-4 h-4 text-primary shrink-0" />
+                    ) : (
+                      <XCircle className="w-4 h-4 text-destructive shrink-0" />
+                    )}
+                    <div className="min-w-0">
+                      <p className="font-medium text-sm truncate">{item.name}</p>
+                      <p className={`text-xs ${item.in_stock ? "text-muted-foreground" : "text-destructive font-medium"}`}>
+                        {item.in_stock ? "In Stock" : "Sold Out"}
+                      </p>
+                    </div>
+                  </div>
+                  <Switch checked={item.in_stock} onCheckedChange={() => toggleStock(item)} />
+                </div>
+              ))}
+              {stock.length === 0 && !stockLoading && (
+                <p className="text-sm text-muted-foreground col-span-full text-center py-4">No products yet.</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
         {orders.length === 0 && !loading && (
           <Card>
             <CardContent className="py-12 text-center text-muted-foreground">
