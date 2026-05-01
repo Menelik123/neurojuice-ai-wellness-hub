@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Allow anon to read fuel orders" ON public.fuel_orders;
