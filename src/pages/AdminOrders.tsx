@@ -10,8 +10,6 @@ import { Link } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 
-const ADMIN_CODE = "neurojuice2025";
-
 interface FuelOrder {
   id: string;
   customer_name: string;
@@ -39,30 +37,45 @@ const AdminOrders = () => {
   const [loading, setLoading] = useState(false);
   const [stock, setStock] = useState<StockItem[]>([]);
   const [stockLoading, setStockLoading] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (code === ADMIN_CODE) {
-      setIsAuthed(true);
-      sessionStorage.setItem("admin-access", "granted");
+    setAuthError(null);
+    setLoading(true);
+    const { data, error } = await supabase.functions.invoke("admin-list-orders", {
+      headers: { "x-admin-passcode": code },
+    });
+    setLoading(false);
+    if (error || (data as any)?.error) {
+      setAuthError("Invalid code");
+      return;
     }
+    sessionStorage.setItem("admin-passcode", code);
+    setOrders(((data as any)?.orders || []) as FuelOrder[]);
+    setIsAuthed(true);
   };
 
   useEffect(() => {
-    if (sessionStorage.getItem("admin-access") === "granted") {
+    const stored = sessionStorage.getItem("admin-passcode");
+    if (stored) {
+      setCode(stored);
       setIsAuthed(true);
     }
   }, []);
 
   const fetchOrders = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("fuel_orders")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (!error && data) {
-      setOrders(data as FuelOrder[]);
+    const passcode = sessionStorage.getItem("admin-passcode") || code;
+    const { data, error } = await supabase.functions.invoke("admin-list-orders", {
+      headers: { "x-admin-passcode": passcode },
+    });
+    if (error || (data as any)?.error) {
+      toast({ title: "Failed to load orders", description: "Session expired — please re-enter the code.", variant: "destructive" });
+      sessionStorage.removeItem("admin-passcode");
+      setIsAuthed(false);
+    } else {
+      setOrders(((data as any)?.orders || []) as FuelOrder[]);
     }
     setLoading(false);
   };
@@ -134,8 +147,11 @@ const AdminOrders = () => {
                 onChange={(e) => setCode(e.target.value)}
                 className="text-center"
               />
-              <Button type="submit" className="w-full" disabled={!code.trim()}>
-                Enter
+              {authError && (
+                <p className="text-sm text-destructive text-center">{authError}</p>
+              )}
+              <Button type="submit" className="w-full" disabled={!code.trim() || loading}>
+                {loading ? "Verifying..." : "Enter"}
               </Button>
             </form>
           </CardContent>
