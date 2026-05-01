@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ShoppingBag, Crown, Check, Droplets, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useStock } from "@/hooks/useStock";
 
 interface Ingredient {
   name: string;
@@ -33,6 +34,8 @@ interface ProductDetailModalProps {
 
 const ProductDetailModal = ({ product, open, onOpenChange }: ProductDetailModalProps) => {
   if (!product) return null;
+  const { isInStock } = useStock();
+  const inStock = isInStock(product.slug);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -41,11 +44,16 @@ const ProductDetailModal = ({ product, open, onOpenChange }: ProductDetailModalP
           <img
             src={product.image}
             alt={product.name}
-            className="w-full h-64 object-cover rounded-t-lg"
+            className={`w-full h-64 object-cover rounded-t-lg ${!inStock ? "grayscale" : ""}`}
           />
           <Badge className="absolute top-4 left-4 bg-primary text-primary-foreground">
             {product.tagline}
           </Badge>
+          {!inStock && (
+            <Badge className="absolute top-4 right-4 bg-destructive text-destructive-foreground">
+              Sold Out
+            </Badge>
+          )}
         </div>
 
         <div className="p-6 space-y-5">
@@ -120,7 +128,11 @@ const ProductDetailModal = ({ product, open, onOpenChange }: ProductDetailModalP
             </p>
 
             <div className="flex flex-col sm:flex-row gap-2">
-              {product.stripeLink ? (
+              {!inStock ? (
+                <Button disabled className="flex-1 h-11" variant="outline">
+                  Sold Out — Check Back Soon
+                </Button>
+              ) : product.stripeLink ? (
                 <Button asChild className="flex-1 h-11">
                   <a href={product.stripeLink} target="_blank" rel="noopener noreferrer">
                     <ShoppingBag className="w-4 h-4 mr-2" />
