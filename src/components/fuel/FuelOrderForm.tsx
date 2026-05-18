@@ -41,7 +41,7 @@ const FuelOrderForm = () => {
   const [formData, setFormData] = useState({
     name: "", phone: "", email: "",
     pickupDate: "", pickupTime: "", notes: "",
-    orderType: "delivery" as "delivery" | "pickup",
+    orderType: "pickup" as "delivery" | "pickup",
     deliveryAddress: "",
   });
   const [selectedProducts, setSelectedProducts] = useState<Record<string, number>>({});
@@ -99,10 +99,11 @@ const FuelOrderForm = () => {
     if (!formData.name || !formData.phone) { toast.error("Please fill in your name and phone number"); return; }
     if (!formData.pickupDate || !formData.pickupTime) { toast.error("Please select a date and time"); return; }
     const hasBundles = Object.keys(selectedBundles).length > 0;
-    if (!hasBundles) { toast.error("Please select at least one bundle"); return; }
+    const hasSeaMoss = (selectedProducts["sea-moss-shot"] || 0) > 0;
+    if (!hasBundles && !hasSeaMoss) { toast.error("Please select at least one item"); return; }
     const maxDrinks = getMaxDrinks();
     const totalDrinks = getTotalDrinksSelected();
-    if (totalDrinks !== maxDrinks) {
+    if (hasBundles && totalDrinks !== maxDrinks) {
       const diff = maxDrinks - totalDrinks;
       toast.error(`You selected ${maxDrinks} bottle${maxDrinks !== 1 ? "s" : ""} worth of bundles but only chose ${totalDrinks} drink${totalDrinks !== 1 ? "s" : ""}. Please ${diff > 0 ? `add ${diff} more` : `remove ${Math.abs(diff)}`}.`);
       return;
@@ -154,7 +155,7 @@ const FuelOrderForm = () => {
           <p className="text-muted-foreground mb-6">
             Thanks, {formData.name}! We'll text you at {formData.phone} when your order is ready on {formData.pickupDate} at {formData.pickupTime}.
           </p>
-          <Button onClick={() => { setIsSubmitted(false); setFormData({ name: "", phone: "", email: "", pickupDate: "", pickupTime: "", notes: "", orderType: "delivery", deliveryAddress: "" }); setSelectedProducts({}); setSelectedBundles({}); }} variant="outline">
+          <Button onClick={() => { setIsSubmitted(false); setFormData({ name: "", phone: "", email: "", pickupDate: "", pickupTime: "", notes: "", orderType: "pickup", deliveryAddress: "" }); setSelectedProducts({}); setSelectedBundles({}); }} variant="outline">
             Place Another Order
           </Button>
         </div>
