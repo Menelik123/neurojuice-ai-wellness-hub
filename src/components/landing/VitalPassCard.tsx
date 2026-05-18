@@ -23,7 +23,7 @@ const VitalPassCard = () => {
                 Monthly Membership
               </div>
               <h2 className="font-heading font-bold text-3xl md:text-4xl text-foreground">
-                NeuroRoutine Membership
+                Vital Pass
               </h2>
               <p className="text-muted-foreground text-lg">
                 Your weekly wellness routine, locked in.
@@ -47,7 +47,7 @@ const VitalPassCard = () => {
               className="w-full h-14 text-base font-semibold"
             >
               <Link to="/vitalpass">
-                Start NeuroRoutine Membership
+                Start Vital Pass
               </Link>
             </Button>
           </CardContent>

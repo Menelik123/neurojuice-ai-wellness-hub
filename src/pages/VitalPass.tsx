@@ -19,7 +19,7 @@ const VitalPass = () => {
   ];
 
   const faqItems = [
-    { question: "How does member pricing work?", answer: "As a NeuroRoutine member, all single bottles are $7.50 instead of $8.50. That's $1 off every bottle, every order." },
+    { question: "How does member pricing work?", answer: "As a Vital Pass member, all single bottles are $7.50 instead of $8.50. That's $1 off every bottle, every order." },
     { question: "Can I cancel anytime?", answer: "Yes! You can cancel your membership anytime. You'll keep access to member benefits through the end of your billing period." },
     { question: "Does this work with delivery and pickup?", answer: "Absolutely! Member pricing applies to both delivery and pickup orders." },
     { question: "Do I need a membership to buy?", answer: "No! All products and bundles are available to everyone. Membership just gets you better pricing and perks." },
@@ -41,7 +41,7 @@ const VitalPass = () => {
         body: { email: waitlistEmail, phone: waitlistPhone || undefined, source: "vitalpass_waitlist", custom_properties: { name: waitlistName || undefined } },
       });
       setWaitlistSubmitted(true);
-      toast.success("You're on the list! We'll notify you when NeuroRoutine launches.");
+      toast.success("You're on the list! We'll notify you when Vital Pass launches.");
     } catch { toast.error("Something went wrong. Please try again."); }
     finally { setWaitlistLoading(false); }
   };
@@ -53,7 +53,7 @@ const VitalPass = () => {
         <section className="py-20 bg-gradient-to-br from-background to-primary/10">
           <div className="container mx-auto px-4 text-center">
             <div className="max-w-4xl mx-auto space-y-8">
-              <h1 className="font-heading font-bold text-5xl text-foreground">NeuroRoutine Membership</h1>
+              <h1 className="font-heading font-bold text-5xl text-foreground">Vital Pass</h1>
               <p className="font-body text-xl text-muted-foreground leading-relaxed">
                 Your weekly performance fuel routine, locked in. Member pricing, free sea moss shots, and early access to every drop.
               </p>
@@ -85,7 +85,7 @@ const VitalPass = () => {
             <div className="max-w-2xl mx-auto">
               <Card className="shadow-soft border-2 border-primary/20">
                 <CardHeader className="bg-gradient-hero text-white text-center">
-                  <CardTitle className="font-heading text-3xl">NeuroRoutine</CardTitle>
+                  <CardTitle className="font-heading text-3xl">Vital Pass</CardTitle>
                   <div className="flex items-center justify-center space-x-2">
                     <span className="font-bold text-4xl">$5</span>
                     <span className="text-lg opacity-90">/month</span>

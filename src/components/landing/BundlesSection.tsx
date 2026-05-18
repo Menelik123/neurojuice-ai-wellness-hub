@@ -5,9 +5,9 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import SMSInlineCapture from "./SMSInlineCapture";
 
-import bundleStarterReset from "@/assets/bundle-starter-reset.png";
-import bundleHydrationFlow from "@/assets/bundle-hydration-flow.png";
-import bundleLungSupport from "@/assets/bundle-lung-support.png";
+import bundleStarterReset from "@/assets/bundle-starter-reset.webp";
+import bundleHydrationFlow from "@/assets/bundle-hydration-flow.webp";
+import bundleLungSupport from "@/assets/bundle-lung-support.webp";
 
 interface Bundle {
   slug: string;

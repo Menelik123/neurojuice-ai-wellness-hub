@@ -7,15 +7,16 @@ import { ShoppingCart, Minus, Plus } from "lucide-react";
 import ProductDetailModal from "./ProductDetailModal";
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
-import { useStock } from "@/hooks/useStock";
+import { useProducts } from "@/hooks/useProducts";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
-import tropicalBreeze from "@/assets/product-tropical-breeze.png";
-import beetFlow from "@/assets/product-beet-flow.png";
-import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
-import mintCondition from "@/assets/product-mint-condition.png";
-import greenVital from "@/assets/product-green-vital.png";
-import hibiscusDelight from "@/assets/product-hibiscus-delight.png";
-import seaMossShot from "@/assets/product-sea-moss-shot.png";
+import tropicalBreeze from "@/assets/product-tropical-breeze.webp";
+import beetFlow from "@/assets/product-beet-flow.webp";
+import strawberryHorizon from "@/assets/product-strawberry-horizon.webp";
+import mintCondition from "@/assets/product-mint-condition.webp";
+import greenVital from "@/assets/product-green-vital.webp";
+import hibiscusDelight from "@/assets/product-hibiscus-delight.webp";
+import seaMossShot from "@/assets/product-sea-moss-shot.webp";
 
 interface Ingredient {
   name: string;
@@ -160,12 +161,13 @@ interface ProductCardProps {
   inStock: boolean;
 }
 
-const ProductCard = ({ product, onViewDetail, inStock }: ProductCardProps) => {
+const ProductCard = ({ product, onViewDetail, inStock, price }: ProductCardProps & { price: number }) => {
   const { addItem } = useCart();
+  const { track } = useAnalytics();
   const [quantity, setQuantity] = useState(1);
   const [addSeaMoss, setAddSeaMoss] = useState(false);
 
-  const unitPrice = 8.50;
+  const unitPrice = price;
   const displayPrice = addSeaMoss ? unitPrice + 1.0 : unitPrice;
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -179,6 +181,7 @@ const ProductCard = ({ product, onViewDetail, inStock }: ProductCardProps) => {
       unitPrice,
       addSeaMoss,
     });
+    track("add_to_cart", { juiceSlug: product.slug, juiceName: product.name, quantity });
     toast.success(`${product.name} added to cart!`);
     setQuantity(1);
     setAddSeaMoss(false);
@@ -187,7 +190,7 @@ const ProductCard = ({ product, onViewDetail, inStock }: ProductCardProps) => {
   return (
     <Card
       className={`overflow-hidden border border-border hover:border-primary/30 transition-all duration-300 bg-card shadow-sm hover:shadow-lg group h-full flex flex-col cursor-pointer ${!inStock ? "opacity-80" : ""}`}
-      onClick={() => onViewDetail(product)}
+      onClick={() => { track("juice_viewed", { juiceSlug: product.slug, juiceName: product.name }); onViewDetail(product); }}
     >
       <CardContent className="p-0 flex flex-col h-full">
         <div className="aspect-[4/5] bg-muted/20 flex items-center justify-center overflow-hidden relative">
@@ -227,9 +230,9 @@ const ProductCard = ({ product, onViewDetail, inStock }: ProductCardProps) => {
           </p>
 
           <div className="flex items-center gap-2 text-sm">
-            <span className="font-semibold text-foreground">$8.50</span>
+            <span className="font-semibold text-foreground">${unitPrice.toFixed(2)}</span>
             <span className="text-muted-foreground">|</span>
-            <span className="font-semibold text-primary">$7.50 Member</span>
+            <span className="font-semibold text-primary">${(unitPrice - 1).toFixed(2)} Member</span>
           </div>
 
           <div className="pt-3 space-y-3 mt-auto" onClick={(e) => e.stopPropagation()}>
@@ -289,7 +292,14 @@ const MenuSection = () => {
   const { addItem } = useCart();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const { isInStock } = useStock();
+  const { data: dbProducts } = useProducts();
+
+  const getDbProduct = (slug: string) => dbProducts?.find((p) => p.slug === slug);
+  const isInStock = (slug: string) => {
+    const db = getDbProduct(slug);
+    return db ? db.in_stock : true;
+  };
+  const getPrice = (slug: string) => getDbProduct(slug)?.price ?? 8.50;
 
   const handleViewDetail = (product: Product) => {
     setSelectedProduct(product);
@@ -345,7 +355,7 @@ const MenuSection = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {products.map((product) => (
-            <ProductCard key={product.slug} product={product} onViewDetail={handleViewDetail} inStock={isInStock(product.slug)} />
+            <ProductCard key={product.slug} product={product} onViewDetail={handleViewDetail} inStock={isInStock(product.slug)} price={getPrice(product.slug)} />
           ))}
         </div>
 

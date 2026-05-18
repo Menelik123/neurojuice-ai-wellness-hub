@@ -7,12 +7,12 @@ import { ArrowLeft, ShoppingCart, Crown, Check, Clock, Droplets } from "lucide-r
 import StickyNav from "@/components/landing/StickyNav";
 import LandingFooter from "@/components/landing/LandingFooter";
 
-import tropicalBreeze from "@/assets/juice-tropical-breeze.png";
-import beetFlow from "@/assets/product-beet-flow.png";
-import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
-import mintCondition from "@/assets/product-mint-condition.png";
-import greenVital from "@/assets/product-green-vital.png";
-import hibiscusDelight from "@/assets/product-hibiscus-delight.png";
+import tropicalBreeze from "@/assets/juice-tropical-breeze.webp";
+import beetFlow from "@/assets/product-beet-flow.webp";
+import strawberryHorizon from "@/assets/product-strawberry-horizon.webp";
+import mintCondition from "@/assets/product-mint-condition.webp";
+import greenVital from "@/assets/product-green-vital.webp";
+import hibiscusDelight from "@/assets/product-hibiscus-delight.webp";
 
 interface JuiceProduct {
   slug: string;

@@ -110,6 +110,9 @@ serve(async (req) => {
     const session = await stripe.checkout.sessions.create({
       line_items: lineItems,
       mode: "payment",
+      customer_email: undefined, // let customer enter email at checkout
+      billing_address_collection: "auto",
+      phone_number_collection: { enabled: true },
       success_url: `${origin}/?checkout=success`,
       cancel_url: `${origin}/?checkout=canceled`,
       metadata,

@@ -289,8 +289,7 @@ const DrVital = () => {
     if (action === "order") {
       window.location.href = "/order-options";
     } else if (action === "subscribe") {
-      // Add subscription logic here
-      console.log("Redirect to subscription checkout");
+      window.location.href = "/vitalpass";
     } else if (action === "diy") {
       const finalMessage: Message = {
         id: (Date.now() + 2).toString(),

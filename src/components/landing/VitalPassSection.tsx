@@ -23,7 +23,7 @@ const VitalPassSection = () => {
               
               <div className="space-y-3">
                 <h2 className="font-heading font-bold text-2xl md:text-4xl">
-                  NeuroRoutine Membership
+                  Vital Pass
                 </h2>
                 <p className="text-background/80 text-lg max-w-xl mx-auto">
                   Get more juice for less. Join our membership for exclusive perks.
@@ -55,7 +55,7 @@ const VitalPassSection = () => {
                   >
                     <Link to="/vitalpass">
                       <Crown className="w-5 h-5 mr-2" />
-                      Join NeuroRoutine — Save on Every Drop
+                      Join Vital Pass — Save on Every Drop
                     </Link>
                   </Button>
                 </div>

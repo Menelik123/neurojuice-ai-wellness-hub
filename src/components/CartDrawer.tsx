@@ -5,9 +5,11 @@ import { Minus, Plus, Trash2, ShoppingCart, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 const CartDrawer = () => {
   const { items, removeItem, updateQuantity, subtotal, isDrawerOpen, setDrawerOpen, clearCart } = useCart();
+  const { track } = useAnalytics();
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const getItemTotal = (item: typeof items[0]) => {
@@ -19,6 +21,7 @@ const CartDrawer = () => {
 
   const handleCheckout = async () => {
     setIsCheckingOut(true);
+    items.forEach((item) => track("checkout_started", { juiceSlug: item.slug, juiceName: item.name, quantity: item.quantity }));
     try {
       const checkoutItems = items.map((item) => ({
         slug: item.slug,

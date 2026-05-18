@@ -141,6 +141,32 @@ serve(async (req) => {
       );
     }
 
+    // Send notification email to NeuroJuice team
+    const resendKey = Deno.env.get("RESEND_API_KEY");
+    if (resendKey) {
+      const bottleList = data.products.bottles?.map((b) => `${b.quantity}x ${b.name}`).join(", ") || "";
+      const bundleList = data.products.bundles?.map((b) => `${b.quantity}x ${b.name}`).join(", ") || "";
+      const itemSummary = [bottleList, bundleList].filter(Boolean).join(", ");
+
+      await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          from: "NeuroJuice Orders <onboarding@resend.dev>",
+          to: ["menelikgarrick@gmail.com", "jhyaire.hamilton@gmail.com"],
+          subject: `New Order — ${data.customer_name} (${data.pickup_date} ${data.pickup_time})`,
+          html: `<h2>New NeuroJuice Order</h2>
+            <p><strong>Customer:</strong> ${data.customer_name}</p>
+            <p><strong>Phone:</strong> ${data.customer_phone}</p>
+            <p><strong>Email:</strong> ${data.customer_email || "not provided"}</p>
+            <p><strong>Items:</strong> ${itemSummary}</p>
+            <p><strong>Total:</strong> $${data.products.total}</p>
+            <p><strong>Pickup:</strong> ${data.pickup_date} at ${data.pickup_time}</p>
+            ${data.notes ? `<p><strong>Notes:</strong> ${data.notes}</p>` : ""}`,
+        }),
+      }).catch((e) => console.error("Notification email failed:", e));
+    }
+
     return new Response(
       JSON.stringify({ success: true, message: "Order submitted successfully" }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }

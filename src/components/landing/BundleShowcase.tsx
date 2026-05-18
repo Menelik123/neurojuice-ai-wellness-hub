@@ -8,6 +8,7 @@ import { ShoppingCart, Flame, Star, Zap, Droplets, Heart, ArrowRight } from "luc
 import { useCart } from "@/contexts/CartContext";
 import { toast } from "sonner";
 import BundleBuilderModal from "./BundleBuilderModal";
+import { useBundles } from "@/hooks/useBundles";
 
 interface BundleOption {
   name: string;
@@ -100,18 +101,52 @@ const curatedBundles: CuratedBundle[] = [
   },
 ];
 
+const iconMap: Record<string, typeof Zap> = {
+  "energizer-stack": Zap,
+  "hydration-pack": Droplets,
+  "wellness-reset": Heart,
+  "full-week-stack": Flame,
+};
+
 const BundleShowcase = () => {
   const { addItem } = useCart();
   const [selectedBundle, setSelectedBundle] = useState<BundleOption | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [seaMossChecked, setSeaMossChecked] = useState<Record<string, boolean>>({});
+  const { data: dbBundles } = useBundles();
+
+  const customBundles: BundleOption[] = dbBundles
+    ? dbBundles.filter((b) => !b.is_curated).map((b) => ({
+        name: b.name,
+        bottles: b.bottles,
+        price: b.price,
+        priceDisplay: `$${b.price}`,
+        perBottle: `$${(b.price / b.bottles).toFixed(2)}/bottle`,
+        savings: `Save $${(b.bottles * 8.5 - b.price).toFixed(2)}`,
+        badge: b.badge || undefined,
+        badgeIcon: b.badge === "Most Popular" ? Star : b.badge === "Best Value" ? Flame : undefined,
+      }))
+    : bundles;
+
+  const curatedList = dbBundles
+    ? dbBundles.filter((b) => b.is_curated).map((b) => ({
+        name: b.name,
+        bottles: b.bottles,
+        price: b.price,
+        drinks: b.drinks,
+        tagline: b.tagline,
+        icon: iconMap[b.slug] || Zap,
+        badge: b.badge || undefined,
+        openBuilder: b.drinks.length === 0,
+      }))
+    : curatedBundles;
 
   const handleOrderBundle = (bundle: BundleOption) => {
     setSelectedBundle(bundle);
     setModalOpen(true);
   };
 
-  const handleAddCurated = (curated: CuratedBundle) => {
+  const handleAddCurated = (curated: typeof curatedList[0]) => {
     if (curated.openBuilder) {
       setSelectedBundle({
         name: curated.name,
@@ -169,7 +204,7 @@ const BundleShowcase = () => {
 
           <TabsContent value="curated">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {curatedBundles.map((curated) => (
+              {curatedList.map((curated) => (
                 <Card
                   key={curated.name}
                   className={`border overflow-hidden transition-all duration-300 hover:shadow-lg relative ${
@@ -250,7 +285,7 @@ const BundleShowcase = () => {
 
           <TabsContent value="custom">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {bundles.map((bundle) => (
+              {customBundles.map((bundle) => (
                 <Card
                   key={bundle.name}
                   className={`border overflow-hidden transition-all duration-300 hover:shadow-lg relative ${

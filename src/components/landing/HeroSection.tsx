@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import SMSOptInForm from "./SMSOptInForm";
-import heroBottles from "@/assets/hero-bottles.png";
+import heroBottles from "@/assets/hero-bottles.webp";
 
 const HeroSection = () => {
   const scrollToProducts = () => {

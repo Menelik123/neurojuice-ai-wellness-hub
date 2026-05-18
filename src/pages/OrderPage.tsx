@@ -9,6 +9,7 @@ import { Minus, Plus, ArrowLeft } from "lucide-react";
 import { getJuiceBySlug, type Juice } from "@/data/juices";
 import { formatPrice } from "@/lib/pricing";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/contexts/CartContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -23,6 +24,7 @@ const OrderPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { addItem, setDrawerOpen } = useCart();
   const [juice, setJuice] = useState<Juice | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [deliveryMethod, setDeliveryMethod] = useState("delivery");
@@ -88,26 +90,22 @@ const OrderPage = () => {
       });
     }
 
-    // Show loading toast
-    toast({
-      title: "Opening secure checkout...",
-      description: "Redirecting to payment page",
+    addItem({
+      id: juice.slug,
+      slug: juice.slug,
+      name: juice.name,
+      type: "single",
+      quantity,
+      unitPrice: juice.price,
+      addSeaMoss: false,
     });
 
-    // Build Shopify URL with UTM tracking
-    const utmParams = `?utm_source=5dayguide&utm_medium=qr&utm_campaign=${juice.slug}`;
-    
-    let checkoutUrl: string;
-    if (juice.variantId !== "REPLACE_ME") {
-      // Use variant URL if available
-      checkoutUrl = `https://YOURSTORE.myshopify.com/cart/${juice.variantId}:${quantity}${utmParams}`;
-    } else {
-      // Fallback to product page
-      checkoutUrl = `https://YOURSTORE.myshopify.com/products/${juice.shopifyHandle}?quantity=${quantity}${utmParams.replace('?', '&')}`;
-    }
+    toast({
+      title: "Added to cart!",
+      description: `${quantity}x ${juice.name}`,
+    });
 
-    // Open in same window for better mobile experience
-    window.location.href = checkoutUrl;
+    setDrawerOpen(true);
   };
 
   const handleBackToMenu = () => {

@@ -6,12 +6,12 @@ import { juices } from "@/data/juices";
 import { Link } from "react-router-dom";
 import { useStock } from "@/hooks/useStock";
 
-import tropicalBreeze from "@/assets/product-tropical-breeze.png";
-import beetFlow from "@/assets/product-beet-flow.png";
-import strawberryHorizon from "@/assets/product-strawberry-horizon.png";
-import mintCondition from "@/assets/product-mint-condition.png";
-import greenVital from "@/assets/product-green-vital.png";
-import hibiscusDelight from "@/assets/product-hibiscus-delight.png";
+import tropicalBreeze from "@/assets/product-tropical-breeze.webp";
+import beetFlow from "@/assets/product-beet-flow.webp";
+import strawberryHorizon from "@/assets/product-strawberry-horizon.webp";
+import mintCondition from "@/assets/product-mint-condition.webp";
+import greenVital from "@/assets/product-green-vital.webp";
+import hibiscusDelight from "@/assets/product-hibiscus-delight.webp";
 
 const imageMap: Record<string, string> = {
   "tropical-breeze": tropicalBreeze,

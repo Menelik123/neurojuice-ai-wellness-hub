@@ -1,41 +1,32 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Star, Flame, Zap } from "lucide-react";
+import { Star, Flame, Zap } from "lucide-react";
+import { useBundles } from "@/hooks/useBundles";
 
 interface FuelProductsProps {
   onAddToOrder: () => void;
 }
 
-const bundles = [
-  {
-    name: "Starter Stack",
-    bottles: 3,
-    price: 23,
-    perBottle: "$7.67/bottle",
-    savings: "Save $2.50",
-    badge: "Most Popular",
-    badgeIcon: Star,
-  },
-  {
-    name: "Performance Pack",
-    bottles: 5,
-    price: 38,
-    perBottle: "$7.60/bottle",
-    savings: "Save $4.50",
-    badge: "Best Value",
-    badgeIcon: Flame,
-    featured: true,
-  },
-  {
-    name: "Weekly NeuroStack",
-    bottles: 10,
-    price: 70,
-    perBottle: "$7.00/bottle",
-    savings: "Save $15.00",
-  },
+const FALLBACK_BUNDLES = [
+  { name: "Starter Stack", bottles: 3, price: 23, badge: "Most Popular", featured: false },
+  { name: "Performance Pack", bottles: 5, price: 38, badge: "Best Value", featured: true },
+  { name: "Weekly NeuroStack", bottles: 10, price: 70, badge: "", featured: false },
 ];
 
 const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
+  const { data: dbBundles } = useBundles();
+  const customBundles = dbBundles?.filter((b) => !b.is_curated) ?? [];
+  const displayBundles = customBundles.length > 0
+    ? customBundles.map((b) => ({
+        name: b.name,
+        bottles: b.bottles,
+        price: b.price,
+        badge: b.badge,
+        featured: b.badge === "Best Value",
+      }))
+    : FALLBACK_BUNDLES;
+
+  const singleBottlePrice = dbBundles ? (dbBundles.find((b) => !b.is_curated)?.price ?? 8.5) / (dbBundles.find((b) => !b.is_curated)?.bottles ?? 1) * 1.1 : 8.5;
   return (
     <section className="py-16 px-6">
       <div className="max-w-6xl mx-auto">
@@ -50,7 +41,7 @@ const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {bundles.map((bundle, index) => (
+            {displayBundles.map((bundle, index) => (
               <div
                 key={index}
                 className={`relative bg-background rounded-2xl border p-6 transition-all text-center ${
@@ -77,8 +68,8 @@ const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
                   <p className="font-heading font-bold text-4xl text-foreground">
                     ${bundle.price}
                   </p>
-                  <p className="text-sm text-muted-foreground">{bundle.perBottle}</p>
-                  <p className="text-sm font-semibold text-primary">{bundle.savings}</p>
+                  <p className="text-sm text-muted-foreground">${(bundle.price / bundle.bottles).toFixed(2)}/bottle</p>
+                  <p className="text-sm font-semibold text-primary">Save ${(bundle.bottles * 8.5 - bundle.price).toFixed(2)}</p>
                 </div>
 
                 <p className="text-xs text-muted-foreground mb-4">

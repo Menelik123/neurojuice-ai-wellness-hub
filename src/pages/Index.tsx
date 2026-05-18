@@ -1,5 +1,7 @@
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
 import MobileNav from "@/components/landing/MobileNav";
-import DeliveryBanner from "@/components/landing/DeliveryBanner";
 import PremiumHero from "@/components/landing/PremiumHero";
 import DrVitalCard from "@/components/landing/DrVitalCard";
 import SocialProof from "@/components/landing/SocialProof";
@@ -15,12 +17,24 @@ import StickyMobileCTA from "@/components/landing/StickyMobileCTA";
 import EmailCaptureModal from "@/components/EmailCaptureModal";
 
 const Index = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    const checkout = searchParams.get("checkout");
+    if (checkout === "success") {
+      toast.success("Order confirmed! Check your email for details. 💚");
+      setSearchParams({}, { replace: true });
+    } else if (checkout === "canceled") {
+      toast.info("Checkout canceled — your cart is ready when you are.");
+      setSearchParams({}, { replace: true });
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
       <MobileNav />
-      <DeliveryBanner />
       <EmailCaptureModal />
-      <main className="pb-20 md:pb-0">
+      <main className="pt-24 pb-20 md:pb-0">
         <PremiumHero />
         <DrVitalCard />
         <BundleShowcase />

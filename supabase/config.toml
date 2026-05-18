@@ -1,4 +1,4 @@
-project_id = "reqsbdaljmrmjfgxuymq"
+project_id = "kxohdhxhnsdntxfwmxir"
 
 [functions.validate-exotic-code]
 verify_jwt = false

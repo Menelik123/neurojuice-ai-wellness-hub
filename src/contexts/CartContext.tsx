@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
 export interface CartItem {
   id: string;
@@ -34,8 +34,21 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(() => {
+    try {
+      const saved = localStorage.getItem("nj_cart");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("nj_cart", JSON.stringify(items));
+    } catch {}
+  }, [items]);
 
   const addItem = (item: CartItem) => {
     setItems((prev) => {

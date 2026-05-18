@@ -25,7 +25,15 @@ const MobileNav = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm">
+      {/* Delivery banner */}
+      <div className="bg-foreground text-background py-2 px-4 text-center text-xs font-medium">
+        <div className="flex items-center justify-center gap-2">
+          <span>🚚</span>
+          <span>Order by 3PM → Delivered Today (Local Only)</span>
+        </div>
+      </div>
+      <div className="border-b border-border">
       <div className="max-w-6xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -134,6 +142,7 @@ const MobileNav = () => {
             </nav>
           </div>
         )}
+      </div>
       </div>
     </header>
   );

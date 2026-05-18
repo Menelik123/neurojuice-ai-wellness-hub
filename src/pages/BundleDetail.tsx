@@ -8,9 +8,9 @@ import LandingFooter from "@/components/landing/LandingFooter";
 import SMSInlineCapture from "@/components/landing/SMSInlineCapture";
 import { Link } from "react-router-dom";
 
-import bundleStarterReset from "@/assets/bundle-starter-reset.png";
-import bundleHydrationFlow from "@/assets/bundle-hydration-flow.png";
-import bundleLungSupport from "@/assets/bundle-lung-support.png";
+import bundleStarterReset from "@/assets/bundle-starter-reset.webp";
+import bundleHydrationFlow from "@/assets/bundle-hydration-flow.webp";
+import bundleLungSupport from "@/assets/bundle-lung-support.webp";
 
 interface BundleProduct {
   slug: string;

@@ -17,14 +17,14 @@ const faqs = [
       "Place your order before 3PM and we press your juice fresh that day. No pre-made inventory, no sitting on shelves. Your order triggers the press, and it's delivered to you the same day.",
   },
   {
-    question: "What's included in the NeuroRoutine Membership?",
+    question: "What's included in the Vital Pass?",
     answer:
       "$1 off every bottle ($7.50 member price vs. $8.50 regular), free monthly Sea Moss shot, early access to new bundles and drops, access to Dr. Vital AI, and cancel anytime — no contract.",
   },
   {
     question: "Is there a contract for the membership?",
     answer:
-      "No contracts, no commitments. You can cancel your NeuroRoutine Membership anytime. We believe in earning your loyalty through quality, not locking you in.",
+      "No contracts, no commitments. You can cancel your Vital Pass anytime. We believe in earning your loyalty through quality, not locking you in.",
   },
   {
     question: "How long does the juice last?",

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import heroBottles from "@/assets/hero-bottles.png";
+import heroBottles from "@/assets/hero-bottles.webp";
 
 const PremiumHero = () => {
   const scrollToMenu = () => {
