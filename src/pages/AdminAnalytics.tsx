@@ -54,7 +54,7 @@ const AdminAnalytics = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     // Validate against admin-list-orders function (reuse same passcode)
-    if (code === "RNI2026$" || (PASSCODE && code === PASSCODE)) {
+    if (code === "RNI2026" || (PASSCODE && code === PASSCODE)) {
       sessionStorage.setItem("nj_analytics_auth", "true");
       setAuthed(true);
     } else {

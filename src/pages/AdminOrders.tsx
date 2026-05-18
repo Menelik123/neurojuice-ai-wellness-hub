@@ -330,12 +330,12 @@ const AdminOrders = () => {
                           </p>
                         ))}
                         {prods?.bottles?.map((b: any, i: number) => (
-                          <p key={`bt-${i}`} className="text-sm text-muted-foreground">• {b.name} × {b.quantity}</p>
+                          <p key={`bt-${i}`} className="text-sm text-muted-foreground">• {b.name} × {b.quantity}{b.price ? ` — $${(b.price * b.quantity).toFixed(2)}` : ""}</p>
                         ))}
                         {prods?.drinks?.map((drink: string, i: number) => (
                           <p key={i} className="text-sm text-muted-foreground">• {drink}</p>
                         ))}
-                        {prods?.total && <p className="mt-2 font-bold text-primary text-lg">${prods.total}</p>}
+                        {prods?.total != null && <p className="mt-2 font-bold text-primary text-lg">${Number(prods.total).toFixed(2)}</p>}
                       </div>
                     </div>
                   </CardContent>
