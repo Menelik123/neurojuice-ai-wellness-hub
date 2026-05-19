@@ -31,13 +31,13 @@ const MemberPricing = ({
           {isMember ? (
             <Badge className="bg-success text-success-foreground text-xs">Active Member</Badge>
           ) : (
-            <Badge variant="secondary" className="text-xs">with NeuroRoutine</Badge>
+            <Badge variant="secondary" className="text-xs">with Vital Pass</Badge>
           )}
         </div>
       </div>
       {!isMember && showJoinLink && (
         <Button variant="link" size="sm" onClick={() => window.location.href = '/vitalpass'} className="h-auto p-0 text-xs text-primary hover:text-primary-glow">
-          Join NeuroRoutine – Save $1/bottle
+          Join Vital Pass – Save $1/bottle
         </Button>
       )}
     </div>

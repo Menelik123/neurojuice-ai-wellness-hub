@@ -44,7 +44,7 @@ const ComplianceFooter = () => {
             <ul className="space-y-2 text-sm">
               <li><a href="mailto:hello@neurojuice.com" className="text-muted-foreground hover:text-foreground transition-colors">Contact Us</a></li>
               <li><Link to="/privacy-policy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/vitalpass" className="text-muted-foreground hover:text-foreground transition-colors">NeuroRoutine Membership</Link></li>
+              <li><Link to="/vitalpass" className="text-muted-foreground hover:text-foreground transition-colors">Vital Pass Membership</Link></li>
             </ul>
             {/* Social */}
             <div className="flex gap-3 pt-2">

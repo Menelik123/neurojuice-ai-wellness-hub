@@ -12,7 +12,7 @@ const Header = () => {
     { label: "Menu", href: "/menu" },
     { label: "Fuel", href: "/fuel" },
     { label: "Dr. Vital", href: "/dr-vital" },
-    { label: "NeuroRoutine", href: "/vitalpass" },
+    { label: "Vital Pass", href: "/vitalpass" },
   ];
 
   return (

@@ -253,7 +253,7 @@ const ProductCard = ({ product, onViewDetail, inStock, price }: ProductCardProps
               <label htmlFor={`seamoss-${product.slug}`} className="text-xs text-muted-foreground cursor-pointer leading-tight">
                 + Add Sea Moss Shot — +$1.00 🌿
                 <br />
-                <span className="text-primary text-[10px]">NeuroRoutine Members get one free Sea Moss shot per month</span>
+                <span className="text-primary text-[10px]">Vital Pass Members get one free Sea Moss shot per month</span>
               </label>
             </div>
 
