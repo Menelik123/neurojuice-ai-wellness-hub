@@ -3,12 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CreditCard, Star, Gift, CheckCircle, Bell, MessageCircle } from "lucide-react";
+import { CreditCard, Star, Gift, CheckCircle, MessageCircle, Loader2, User } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 const VitalPass = () => {
   const features = [
@@ -26,24 +27,24 @@ const VitalPass = () => {
     { question: "What is the Sea Moss shot?", answer: "A standalone $1.00 Sea Moss shot packed with minerals. Members get one free every month with their orders." },
   ];
 
-  const [waitlistName, setWaitlistName] = useState("");
-  const [waitlistEmail, setWaitlistEmail] = useState("");
-  const [waitlistPhone, setWaitlistPhone] = useState("");
-  const [waitlistSubmitted, setWaitlistSubmitted] = useState(false);
-  const [waitlistLoading, setWaitlistLoading] = useState(false);
+  const [joinEmail, setJoinEmail] = useState("");
+  const [joinLoading, setJoinLoading] = useState(false);
 
-  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+  const handleJoinNow = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!waitlistEmail) { toast.error("Please enter your email"); return; }
-    setWaitlistLoading(true);
+    setJoinLoading(true);
     try {
-      await supabase.functions.invoke("klaviyo-subscribe", {
-        body: { email: waitlistEmail, phone: waitlistPhone || undefined, source: "vitalpass_waitlist", custom_properties: { name: waitlistName || undefined } },
+      const { data, error } = await supabase.functions.invoke("create-vitalpass-checkout", {
+        body: { email: joinEmail.trim() || undefined, origin: window.location.origin },
       });
-      setWaitlistSubmitted(true);
-      toast.success("You're on the list! We'll notify you when Vital Pass launches.");
-    } catch { toast.error("Something went wrong. Please try again."); }
-    finally { setWaitlistLoading(false); }
+      if (error || !data?.url) throw new Error(error?.message || "No checkout URL");
+      window.location.href = data.url;
+    } catch (err: any) {
+      toast.error("Couldn't start checkout. Please try again.");
+      console.error(err);
+    } finally {
+      setJoinLoading(false);
+    }
   };
 
   return (
@@ -84,42 +85,43 @@ const VitalPass = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto">
               <Card className="shadow-soft border-2 border-primary/20">
-                <CardHeader className="bg-gradient-hero text-white text-center">
+                <CardHeader className="bg-gradient-hero text-white text-center rounded-t-lg">
                   <CardTitle className="font-heading text-3xl">Vital Pass</CardTitle>
-                  <div className="flex items-center justify-center space-x-2">
-                    <span className="font-bold text-4xl">$5</span>
+                  <div className="flex items-center justify-center space-x-2 mt-2">
+                    <span className="font-bold text-5xl">$10</span>
                     <span className="text-lg opacity-90">/month</span>
                   </div>
+                  <p className="text-white/80 text-sm mt-2">Cancel anytime — no commitment</p>
                 </CardHeader>
                 <CardContent className="p-8 space-y-6">
                   <div className="space-y-4">
                     {[
                       "$1 off every bottle ($7.50/bottle, regular $8.50)",
-                      "Free monthly Sea Moss shot",
-                      "Early access to new bundles",
-                      "Access to Doctor Vital content",
-                      "Cancel anytime (no commitment)"
+                      "Free monthly Sea Moss shot with every order",
+                      "Early access to new drops and member-only bundles",
+                      "Full Dr. Vital AI access — personalized juice recs",
+                      "Your own member profile page",
                     ].map((item, i) => (
                       <div key={i} className="flex items-center space-x-3">
-                        <CheckCircle className="w-5 h-5 text-success" />
-                        <span>{item}</span>
+                        <CheckCircle className="w-5 h-5 text-primary shrink-0" />
+                        <span className="text-sm">{item}</span>
                       </div>
                     ))}
                   </div>
-                  {waitlistSubmitted ? (
-                    <div className="flex items-center justify-center gap-2 py-3 text-primary font-medium">
-                      <Bell className="w-5 h-5" />You're on the list! We'll notify you at launch.
+                  <form onSubmit={handleJoinNow} className="space-y-3">
+                    <div className="space-y-2">
+                      <Label htmlFor="join-email">Email (optional — speeds up checkout)</Label>
+                      <Input id="join-email" type="email" placeholder="you@example.com" value={joinEmail} onChange={(e) => setJoinEmail(e.target.value)} />
                     </div>
-                  ) : (
-                    <form onSubmit={handleWaitlistSubmit} className="space-y-3">
-                      <div className="space-y-2"><Label htmlFor="wl-name">Name</Label><Input id="wl-name" placeholder="Your name" value={waitlistName} onChange={(e) => setWaitlistName(e.target.value)} /></div>
-                      <div className="space-y-2"><Label htmlFor="wl-email">Email *</Label><Input id="wl-email" type="email" placeholder="you@example.com" value={waitlistEmail} onChange={(e) => setWaitlistEmail(e.target.value)} required /></div>
-                      <div className="space-y-2"><Label htmlFor="wl-phone">Phone</Label><Input id="wl-phone" type="tel" placeholder="(555) 123-4567" value={waitlistPhone} onChange={(e) => setWaitlistPhone(e.target.value)} /></div>
-                      <Button type="submit" size="lg" className="w-full" disabled={waitlistLoading}>
-                        <Bell className="w-5 h-5 mr-2" />{waitlistLoading ? "Submitting..." : "Notify Me When It Launches"}
-                      </Button>
-                    </form>
-                  )}
+                    <Button type="submit" size="lg" className="w-full h-14 text-base font-bold" disabled={joinLoading}>
+                      {joinLoading ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" />Loading...</> : <><CreditCard className="w-5 h-5 mr-2" />Join Vital Pass — $10/month</>}
+                    </Button>
+                  </form>
+                  <div className="text-center">
+                    <Link to="/profile" className="text-sm text-muted-foreground underline underline-offset-4 hover:text-primary flex items-center justify-center gap-1">
+                      <User className="w-3.5 h-3.5" />Already a member? View your profile
+                    </Link>
+                  </div>
                 </CardContent>
               </Card>
             </div>

@@ -287,7 +287,7 @@ const DrVital = () => {
 
   const handleButtonClick = (action: string) => {
     if (action === "order") {
-      window.location.href = "/order-options";
+      window.location.href = "/fuel";
     } else if (action === "subscribe") {
       window.location.href = "/vitalpass";
     } else if (action === "diy") {
