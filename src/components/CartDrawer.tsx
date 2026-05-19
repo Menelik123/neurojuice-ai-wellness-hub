@@ -1,16 +1,14 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
-import { Minus, Plus, Trash2, ShoppingCart, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
-import { toast } from "sonner";
+import { Minus, Plus, Trash2, ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 const CartDrawer = () => {
   const { items, removeItem, updateQuantity, subtotal, isDrawerOpen, setDrawerOpen, clearCart } = useCart();
   const { track } = useAnalytics();
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const navigate = useNavigate();
 
   const getItemTotal = (item: typeof items[0]) => {
     let price = item.unitPrice * item.quantity;
@@ -19,38 +17,10 @@ const CartDrawer = () => {
     return price;
   };
 
-  const handleCheckout = async () => {
-    setIsCheckingOut(true);
+  const handleCheckout = () => {
     items.forEach((item) => track("checkout_started", { juiceSlug: item.slug, juiceName: item.name, quantity: item.quantity }));
-    try {
-      const checkoutItems = items.map((item) => ({
-        slug: item.slug,
-        name: item.name,
-        quantity: item.quantity,
-        addSeaMoss: item.addSeaMoss,
-        seaMossCount: item.seaMossCount,
-        type: item.type,
-        bundleBottles: item.bundleBottles,
-        selectedDrinks: item.selectedDrinks,
-      }));
-
-      const { data, error } = await supabase.functions.invoke("create-checkout", {
-        body: { items: checkoutItems, origin: window.location.origin },
-      });
-
-      if (error) throw error;
-      if (data?.url) {
-        setDrawerOpen(false);
-        window.location.href = data.url;
-      } else {
-        throw new Error("No checkout URL returned");
-      }
-    } catch (err: any) {
-      console.error("Checkout error:", err);
-      toast.error("Checkout failed. Please try again.");
-    } finally {
-      setIsCheckingOut(false);
-    }
+    setDrawerOpen(false);
+    navigate("/checkout");
   };
 
   return (
@@ -125,19 +95,11 @@ const CartDrawer = () => {
               <span>${subtotal.toFixed(2)}</span>
             </div>
             <Button
-              className="w-full h-11 sm:h-12 font-semibold text-sm sm:text-base truncate"
+              className="w-full h-11 sm:h-12 font-semibold text-sm sm:text-base"
               size="lg"
               onClick={handleCheckout}
-              disabled={isCheckingOut}
             >
-              {isCheckingOut ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Processing...
-                </>
-              ) : (
-                `Checkout — $${subtotal.toFixed(2)}`
-              )}
+              Checkout — ${subtotal.toFixed(2)}
             </Button>
             <p className="text-[10px] sm:text-xs text-muted-foreground text-center">Secure checkout powered by Stripe</p>
             <button onClick={clearCart} className="text-[10px] sm:text-xs text-muted-foreground hover:text-destructive transition-colors underline">

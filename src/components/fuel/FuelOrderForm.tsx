@@ -4,16 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
+// Select removed — time slots use button chips now
 import { toast } from "sonner";
 import { Loader2, ShoppingBag } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const products = [
   { id: "tropical-breeze", name: "Tropical Breeze", price: 8.5 },
@@ -186,6 +181,58 @@ const FuelOrderForm = () => {
           <p className="text-muted-foreground">Same-day delivery or local pickup — select your products and we'll handle the rest.</p>
         </div>
 
+        {/* Fulfillment selection — first thing */}
+        <div className="mb-8 space-y-4">
+          <h3 className="font-heading font-bold text-lg text-foreground text-center">How do you want your order?</h3>
+          <div className="grid grid-cols-2 gap-4">
+            <button
+              type="button"
+              onClick={() => setFormData((prev) => ({ ...prev, orderType: "pickup" }))}
+              className={cn(
+                "rounded-2xl border-2 p-5 text-left transition-all space-y-2",
+                formData.orderType === "pickup"
+                  ? "border-primary bg-primary/5 ring-2 ring-primary/20"
+                  : "border-border hover:border-primary/40 bg-card"
+              )}
+            >
+              <div className="text-3xl">🏪</div>
+              <div>
+                <p className="font-heading font-bold text-foreground">Pickup</p>
+                <p className="text-xs text-muted-foreground leading-snug mt-1">Free · Atlanta area<br />Address texted after order</p>
+              </div>
+            </button>
+            <button
+              type="button"
+              onClick={() => setFormData((prev) => ({ ...prev, orderType: "delivery" }))}
+              className={cn(
+                "rounded-2xl border-2 p-5 text-left transition-all space-y-2",
+                formData.orderType === "delivery"
+                  ? "border-primary bg-primary/5 ring-2 ring-primary/20"
+                  : "border-border hover:border-primary/40 bg-card"
+              )}
+            >
+              <div className="text-3xl">🚗</div>
+              <div>
+                <p className="font-heading font-bold text-foreground">Delivery</p>
+                <p className="text-xs text-muted-foreground leading-snug mt-1">Local Atlanta<br />Same-day by 3 PM</p>
+              </div>
+            </button>
+          </div>
+          {formData.orderType === "pickup" && (
+            <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 text-sm">
+              <p className="font-semibold text-foreground mb-1">📍 About Pickup</p>
+              <p className="text-muted-foreground">We're based in Atlanta, GA. After your order is confirmed, we'll text you the exact pickup address and let you know when it's ready.</p>
+            </div>
+          )}
+          {formData.orderType === "delivery" && (
+            <div className="space-y-2">
+              <Label htmlFor="deliveryAddress">Delivery Address *</Label>
+              <Input id="deliveryAddress" type="text" placeholder="123 Main St, Atlanta, GA 30301" value={formData.deliveryAddress} onChange={(e) => setFormData((prev) => ({ ...prev, deliveryAddress: e.target.value }))} className="h-12" />
+              <p className="text-xs text-muted-foreground">Same-day delivery for local orders placed by 3 PM.</p>
+            </div>
+          )}
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-8">
           {/* Bundles */}
           <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
@@ -267,39 +314,37 @@ const FuelOrderForm = () => {
             </div>
           </div>
 
-          {/* Order Type */}
+          {/* Schedule */}
           <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
-            <h3 className="font-semibold text-foreground mb-4">Order Type</h3>
-            <div className="grid grid-cols-2 gap-3 mb-4">
-              <Button type="button" variant={formData.orderType === "delivery" ? "default" : "outline"} className="h-12" onClick={() => setFormData((prev) => ({ ...prev, orderType: "delivery" }))}>🚗 Delivery</Button>
-              <Button type="button" variant={formData.orderType === "pickup" ? "default" : "outline"} className="h-12" onClick={() => setFormData((prev) => ({ ...prev, orderType: "pickup" }))}>📍 Pickup</Button>
-            </div>
-            {formData.orderType === "delivery" && (
-              <div className="space-y-2 mb-4">
-                <Label htmlFor="deliveryAddress">Delivery Address *</Label>
-                <Input id="deliveryAddress" type="text" placeholder="Your full delivery address" value={formData.deliveryAddress} onChange={(e) => setFormData((prev) => ({ ...prev, deliveryAddress: e.target.value }))} required />
-                <p className="text-xs text-muted-foreground">Same-day delivery for local orders placed by 3PM.</p>
-              </div>
-            )}
-            {formData.orderType === "pickup" && (
-              <div className="bg-primary/5 rounded-xl p-4 border border-primary/20 mb-4">
-                <p className="text-sm font-medium text-foreground mb-1">Pickup Location</p>
-                <p className="text-sm text-muted-foreground">Mailbox at the apartment complex — exact address will be texted to you after order confirmation.</p>
-              </div>
-            )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <h3 className="font-semibold text-foreground mb-4">
+              {formData.orderType === "delivery" ? "Delivery" : "Pickup"} Date & Time
+            </h3>
+            <div className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="pickupDate">{formData.orderType === "delivery" ? "Delivery" : "Pickup"} Date *</Label>
-                <Input id="pickupDate" type="date" min={getMinDate()} value={formData.pickupDate} onChange={(e) => setFormData((prev) => ({ ...prev, pickupDate: e.target.value }))} required />
+                <Input id="pickupDate" type="date" min={getMinDate()} value={formData.pickupDate} onChange={(e) => setFormData((prev) => ({ ...prev, pickupDate: e.target.value }))} className="h-12 max-w-[220px]" required />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="pickupTime">{formData.orderType === "delivery" ? "Delivery" : "Pickup"} Time *</Label>
-                <Select value={formData.pickupTime} onValueChange={(value) => setFormData((prev) => ({ ...prev, pickupTime: value }))}>
-                  <SelectTrigger><SelectValue placeholder="Select time" /></SelectTrigger>
-                  <SelectContent>{pickupTimes.map((time) => (<SelectItem key={time} value={time}>{time}</SelectItem>))}</SelectContent>
-                </Select>
+                <Label>Select a Time *</Label>
+                <div className="grid grid-cols-4 gap-2">
+                  {pickupTimes.map((slot) => (
+                    <button
+                      key={slot}
+                      type="button"
+                      onClick={() => setFormData((prev) => ({ ...prev, pickupTime: slot }))}
+                      className={cn(
+                        "rounded-xl border py-2.5 text-sm font-medium transition-all",
+                        formData.pickupTime === slot
+                          ? "border-primary bg-primary text-primary-foreground"
+                          : "border-border bg-background hover:border-primary/50 text-foreground"
+                      )}
+                    >
+                      {slot.replace(":00", "").replace(" ", "")}
+                    </button>
+                  ))}
+                </div>
               </div>
-              <div className="space-y-2 sm:col-span-2">
+              <div className="space-y-2">
                 <Label htmlFor="notes">Special Instructions (optional)</Label>
                 <Textarea id="notes" placeholder="Any specific requests or bundle customizations..." value={formData.notes} onChange={(e) => setFormData((prev) => ({ ...prev, notes: e.target.value }))} rows={3} />
               </div>

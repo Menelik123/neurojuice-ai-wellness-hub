@@ -38,7 +38,19 @@ serve(async (req) => {
   }
 
   try {
-    const { items, origin } = await req.json() as { items: CartLineItem[]; origin: string };
+    const { items, origin, fulfillment } = await req.json() as {
+      items: CartLineItem[];
+      origin: string;
+      fulfillment?: {
+        orderType: "pickup" | "delivery";
+        deliveryAddress?: string | null;
+        pickupDate?: string;
+        pickupTime?: string;
+        customerName?: string;
+        customerPhone?: string;
+        customerEmail?: string | null;
+      };
+    };
 
     if (!items || items.length === 0) {
       return new Response(JSON.stringify({ error: "Cart is empty" }), {
@@ -99,22 +111,30 @@ serve(async (req) => {
       }
     }
 
-    // Build metadata with selected drinks info
+    // Build metadata — drinks info + fulfillment details
     const metadata: Record<string, string> = {};
     items.forEach((item, i) => {
       if (item.selectedDrinks && item.selectedDrinks.length > 0) {
         metadata[`bundle_${i}_drinks`] = item.selectedDrinks.join(", ");
       }
     });
+    if (fulfillment) {
+      metadata.order_type = fulfillment.orderType || "";
+      metadata.pickup_date = fulfillment.pickupDate || "";
+      metadata.pickup_time = fulfillment.pickupTime || "";
+      metadata.customer_name = fulfillment.customerName || "";
+      metadata.customer_phone = fulfillment.customerPhone || "";
+      if (fulfillment.deliveryAddress) metadata.delivery_address = fulfillment.deliveryAddress;
+    }
 
     const session = await stripe.checkout.sessions.create({
       line_items: lineItems,
       mode: "payment",
-      customer_email: undefined, // let customer enter email at checkout
+      customer_email: fulfillment?.customerEmail || undefined,
       billing_address_collection: "auto",
-      phone_number_collection: { enabled: true },
+      phone_number_collection: { enabled: !fulfillment?.customerPhone },
       success_url: `${origin}/?checkout=success`,
-      cancel_url: `${origin}/?checkout=canceled`,
+      cancel_url: `${origin}/checkout?canceled=1`,
       metadata,
     });
 
