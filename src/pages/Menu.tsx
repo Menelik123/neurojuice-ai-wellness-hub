@@ -41,7 +41,7 @@ const Menu = () => {
         <section className="py-16 bg-gradient-to-br from-background to-secondary/20">
           <div className="container mx-auto px-4 text-center">
             <div className="max-w-3xl mx-auto space-y-6">
-              <h1 className="font-heading font-bold text-5xl text-foreground">Complete NeuroJuice Menu</h1>
+              <h1 className="font-heading font-bold text-3xl md:text-5xl text-foreground">Complete NeuroJuice Menu</h1>
               <p className="font-body text-xl text-muted-foreground leading-relaxed">
                 6 functional juices crafted for performance, recovery, and wellness.
               </p>
@@ -57,7 +57,7 @@ const Menu = () => {
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="font-heading font-bold text-4xl text-foreground mb-4">Individual Blends</h2>
+              <h2 className="font-heading font-bold text-2xl md:text-4xl text-foreground mb-4">Individual Blends</h2>
               <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto">
                 Each blend is crafted with specific ingredients to target your wellness goals.
               </p>
@@ -102,7 +102,7 @@ const Menu = () => {
         <section className="py-16 bg-secondary/20">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="font-heading font-bold text-4xl text-foreground mb-4">Value Bundle Packs</h2>
+              <h2 className="font-heading font-bold text-2xl md:text-4xl text-foreground mb-4">Value Bundle Packs</h2>
             </div>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {bundles.map((bundle, index) => (
@@ -150,7 +150,7 @@ const Menu = () => {
         <section className="py-16 bg-gradient-hero text-white">
           <div className="container mx-auto px-4 text-center">
             <div className="max-w-3xl mx-auto space-y-6">
-              <h2 className="font-heading font-bold text-4xl">Need Help Choosing?</h2>
+              <h2 className="font-heading font-bold text-2xl md:text-4xl">Need Help Choosing?</h2>
               <p className="font-body text-lg opacity-90 leading-relaxed">
                 Let Dr. Vital AI recommend the perfect blend for your wellness goals.
               </p>

@@ -43,7 +43,7 @@ const VitalPassSection = () => {
 
               <div className="pt-6 space-y-4">
                 <div className="text-center">
-                  <span className="text-4xl font-heading font-bold">$5</span>
+                  <span className="text-4xl font-heading font-bold">$10</span>
                   <span className="text-background/60">/month</span>
                 </div>
                 

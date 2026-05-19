@@ -54,7 +54,7 @@ const VitalPass = () => {
         <section className="py-20 bg-gradient-to-br from-background to-primary/10">
           <div className="container mx-auto px-4 text-center">
             <div className="max-w-4xl mx-auto space-y-8">
-              <h1 className="font-heading font-bold text-5xl text-foreground">Vital Pass</h1>
+              <h1 className="font-heading font-bold text-4xl md:text-5xl text-foreground">Vital Pass</h1>
               <p className="font-body text-xl text-muted-foreground leading-relaxed">
                 Your weekly performance fuel routine, locked in. Member pricing, free sea moss shots, and early access to every drop.
               </p>
@@ -65,7 +65,7 @@ const VitalPass = () => {
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
-              <h2 className="font-heading font-bold text-4xl text-center text-foreground mb-12">Member Benefits</h2>
+              <h2 className="font-heading font-bold text-2xl md:text-4xl text-center text-foreground mb-12">Member Benefits</h2>
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                 {features.map((feature, index) => (
                   <Card key={index} className="text-center hover:shadow-soft transition-all duration-300">
@@ -131,7 +131,7 @@ const VitalPass = () => {
         <section className="py-16 bg-secondary/20">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto">
-              <h2 className="font-heading font-bold text-4xl text-center text-foreground mb-12">Frequently Asked Questions</h2>
+              <h2 className="font-heading font-bold text-2xl md:text-4xl text-center text-foreground mb-12">Frequently Asked Questions</h2>
               <Accordion type="single" collapsible className="space-y-4">
                 {faqItems.map((item, index) => (
                   <AccordionItem key={index} value={`item-${index}`} className="bg-background rounded-lg px-6">

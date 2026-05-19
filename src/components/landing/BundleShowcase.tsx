@@ -310,7 +310,7 @@ const BundleShowcase = () => {
                       {bundle.bottles} bottles — you choose
                     </p>
                     <div className="space-y-1">
-                      <p className="font-heading font-bold text-4xl text-foreground">
+                      <p className="font-heading font-bold text-3xl md:text-4xl text-foreground">
                         {bundle.priceDisplay}
                       </p>
                       <p className="text-sm text-muted-foreground">{bundle.perBottle}</p>
