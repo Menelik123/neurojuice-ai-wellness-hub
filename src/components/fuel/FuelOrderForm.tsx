@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, CheckCircle, ShoppingBag } from "lucide-react";
+import { Loader2, ShoppingBag } from "lucide-react";
 
 const products = [
   { id: "tropical-breeze", name: "Tropical Breeze", price: 8.5 },
@@ -36,8 +37,8 @@ const pickupTimes = [
 ];
 
 const FuelOrderForm = () => {
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "", phone: "", email: "",
     pickupDate: "", pickupTime: "", notes: "",
@@ -134,8 +135,38 @@ const FuelOrderForm = () => {
       });
       if (error) throw error;
       if (data?.error) throw new Error(data.error);
-      setIsSubmitted(true);
-      toast.success("Order submitted! We'll text you when it's ready.");
+
+      // Build human-readable item summary
+      const bundleParts = Object.entries(selectedBundles).map(([id, qty]) => {
+        const b = bundles.find((x) => x.id === id);
+        return b ? `${qty}× ${b.name}` : null;
+      }).filter(Boolean);
+      const bottleParts = Object.entries(selectedProducts)
+        .filter(([id, qty]) => id !== "sea-moss-shot" && qty > 0)
+        .map(([id, qty]) => {
+          const p = products.find((x) => x.id === id);
+          return p ? `${qty}× ${p.name}` : null;
+        }).filter(Boolean);
+      const seaMoss = selectedProducts["sea-moss-shot"] || 0;
+      if (seaMoss > 0) bottleParts.push(`${seaMoss}× Sea Moss Shot`);
+      const itemSummary = [...bundleParts, ...bottleParts].join(", ") || "Order";
+
+      sessionStorage.setItem("nj_last_order", JSON.stringify({
+        orderId: data.orderId || "",
+        orderNumber: data.orderNumber || "NJ-ORDER",
+        customerName: formData.name.trim(),
+        customerPhone: formData.phone.trim(),
+        customerEmail: formData.email.trim() || undefined,
+        items: itemSummary,
+        total: calculateTotal(),
+        pickupDate: formData.pickupDate,
+        pickupTime: formData.pickupTime,
+        orderType: formData.orderType,
+        deliveryAddress: formData.orderType === "delivery" ? formData.deliveryAddress : undefined,
+        notes: formData.notes.trim() || undefined,
+      }));
+
+      navigate("/order-confirmation");
     } catch (error) {
       console.error("Order submission error:", error);
       toast.error("Failed to submit order. Please try again.");
@@ -143,25 +174,6 @@ const FuelOrderForm = () => {
       setIsSubmitting(false);
     }
   };
-
-  if (isSubmitted) {
-    return (
-      <section className="py-16 px-6">
-        <div className="max-w-2xl mx-auto text-center">
-          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="w-10 h-10 text-primary" />
-          </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">Order Received!</h2>
-          <p className="text-muted-foreground mb-6">
-            Thanks, {formData.name}! We'll text you at {formData.phone} when your order is ready on {formData.pickupDate} at {formData.pickupTime}.
-          </p>
-          <Button onClick={() => { setIsSubmitted(false); setFormData({ name: "", phone: "", email: "", pickupDate: "", pickupTime: "", notes: "", orderType: "pickup", deliveryAddress: "" }); setSelectedProducts({}); setSelectedBundles({}); }} variant="outline">
-            Place Another Order
-          </Button>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className="py-16 px-6">
