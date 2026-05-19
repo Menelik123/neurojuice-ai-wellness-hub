@@ -58,15 +58,15 @@ const Header = () => {
               <UserCircle className="w-5 h-5" />
               {isLoggedIn && <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />}
             </Link>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </Button>
           </div>
+        </div>
 
         {/* Mobile Navigation */}
         <div className={cn(
