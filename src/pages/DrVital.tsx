@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, User, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
@@ -116,6 +116,7 @@ const TypingIndicator = () => (
 );
 
 const DrVital = () => {
+  const navigate = useNavigate();
   const [conversationStep, setConversationStep] = useState(0);
   const [userResponses, setUserResponses] = useState<string[]>([]);
   const [isBotTyping, setIsBotTyping] = useState(false);
@@ -228,9 +229,12 @@ const DrVital = () => {
     <div className="h-screen bg-gray-950 text-white flex flex-col overflow-hidden">
       {/* Top bar */}
       <div className="flex-none border-b border-gray-800/80 bg-gray-950/95 backdrop-blur-sm px-4 py-3 flex items-center gap-3 z-20">
-        <Link to="/" className="text-gray-400 hover:text-white transition-colors p-1">
+        <button
+          onClick={() => window.history.length > 1 ? navigate(-1) : navigate("/")}
+          className="text-gray-400 hover:text-white transition-colors p-2 -ml-1 rounded-lg hover:bg-white/10 active:bg-white/20"
+        >
           <ArrowLeft className="w-5 h-5" />
-        </Link>
+        </button>
         <div className="flex items-center gap-3 flex-1">
           <DrVitalAvatar speaking={isBotTyping} />
           <div>
