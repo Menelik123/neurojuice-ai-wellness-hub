@@ -176,6 +176,21 @@ const AdminOrders = () => {
     if (isAuthed) { fetchOrders(); fetchData(); }
   }, [isAuthed]);
 
+  // Order status update (routed through edge fn to bypass RLS)
+  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    const passcode = sessionStorage.getItem("admin-passcode") || code;
+    const { data, error } = await supabase.functions.invoke("admin-list-orders", {
+      body: { orderId, status: newStatus },
+      headers: { "x-admin-passcode": passcode },
+    });
+    if (error || (data as any)?.error) {
+      toast({ title: "Update failed", description: error?.message || (data as any)?.error, variant: "destructive" });
+    } else {
+      setOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)));
+      toast({ title: `Order marked ${newStatus}` });
+    }
+  };
+
   // Product updates
   const updateProduct = async (id: string, field: string, value: any) => {
     const { error } = await supabase.from("products").update({ [field]: value }).eq("id", id);
@@ -297,6 +312,15 @@ const AdminOrders = () => {
                         <div className="flex items-center gap-2 flex-wrap">
                           <h3 className="font-heading font-semibold text-lg">{order.customer_name}</h3>
                           <Badge className={`text-xs ${getStatusColor(order.status)}`}>{order.status}</Badge>
+                          {order.status === "pending" && (
+                            <Button size="sm" variant="outline" className="h-6 text-xs px-2 border-blue-300 text-blue-700 hover:bg-blue-50" onClick={() => updateOrderStatus(order.id, "confirmed")}>Confirm</Button>
+                          )}
+                          {order.status === "confirmed" && (
+                            <Button size="sm" variant="outline" className="h-6 text-xs px-2 border-green-300 text-green-700 hover:bg-green-50" onClick={() => updateOrderStatus(order.id, "ready")}>Mark Ready</Button>
+                          )}
+                          {order.status === "ready" && (
+                            <Button size="sm" variant="outline" className="h-6 text-xs px-2 border-muted text-muted-foreground hover:bg-muted" onClick={() => updateOrderStatus(order.id, "completed")}>Complete</Button>
+                          )}
                         </div>
                         <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> {order.customer_phone}</span>

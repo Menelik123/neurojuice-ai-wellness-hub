@@ -40,7 +40,6 @@ const CartDrawer = () => {
 
       if (error) throw error;
       if (data?.url) {
-        clearCart();
         setDrawerOpen(false);
         window.location.href = data.url;
       } else {

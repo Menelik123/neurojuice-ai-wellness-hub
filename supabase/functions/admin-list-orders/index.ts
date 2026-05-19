@@ -35,6 +35,38 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
+    // Check if this is a status update request
+    const contentType = req.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      const body = await req.text();
+      if (body) {
+        const json = JSON.parse(body);
+        if (json.orderId && json.status) {
+          const allowed = ["pending", "confirmed", "ready", "completed"];
+          if (!allowed.includes(json.status)) {
+            return new Response(JSON.stringify({ error: "Invalid status" }), {
+              status: 400,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          }
+          const { error } = await supabase
+            .from("fuel_orders")
+            .update({ status: json.status, updated_at: new Date().toISOString() })
+            .eq("id", json.orderId);
+          if (error) {
+            return new Response(JSON.stringify({ error: "Update failed" }), {
+              status: 500,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          }
+          return new Response(JSON.stringify({ success: true }), {
+            status: 200,
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+      }
+    }
+
     const { data, error } = await supabase
       .from("fuel_orders")
       .select("*")

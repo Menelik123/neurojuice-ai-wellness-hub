@@ -37,23 +37,7 @@ const OrderOptions = () => {
       return;
     }
     
-    // In a real app, this would navigate to checkout with address data
-    const addressParams = new URLSearchParams({
-      street: deliveryForm.street,
-      city: deliveryForm.city,
-      state: deliveryForm.state,
-      zip: deliveryForm.zip
-    });
-    
-    toast({
-      title: "Redirecting to Checkout",
-      description: "Taking you to complete your order...",
-    });
-    
-    // Simulate redirect to checkout
-    setTimeout(() => {
-      window.open(`https://your-shopify-store.myshopify.com?${addressParams}`, "_blank");
-    }, 1000);
+    window.location.href = "/fuel";
   };
 
   const handleNotifySubmit = (e: React.FormEvent) => {

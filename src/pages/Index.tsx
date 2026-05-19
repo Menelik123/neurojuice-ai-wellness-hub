@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "sonner";
+import { useCart } from "@/contexts/CartContext";
 import MobileNav from "@/components/landing/MobileNav";
 import PremiumHero from "@/components/landing/PremiumHero";
 import DrVitalCard from "@/components/landing/DrVitalCard";
@@ -18,10 +19,12 @@ import EmailCaptureModal from "@/components/EmailCaptureModal";
 
 const Index = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { clearCart } = useCart();
 
   useEffect(() => {
     const checkout = searchParams.get("checkout");
     if (checkout === "success") {
+      clearCart();
       toast.success("Order confirmed! Check your email for details. 💚");
       setSearchParams({}, { replace: true });
     } else if (checkout === "canceled") {
