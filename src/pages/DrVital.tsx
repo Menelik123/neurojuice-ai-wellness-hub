@@ -1,13 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Send, Bot, User, MessageCircle } from "lucide-react";
+import { Send, User, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import VitalPaywall from "@/components/VitalPaywall";
-import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Message {
@@ -17,199 +13,174 @@ interface Message {
   timestamp: Date;
   isSystemMessage?: boolean;
   hasButtons?: boolean;
-  buttons?: Array<{
-    text: string;
-    action: "order" | "subscribe" | "diy" | "quick-response";
-    value?: string;
-  }>;
+  buttons?: Array<{ text: string; action: string }>;
 }
 
+const quickResponses = [
+  "I need more energy",
+  "Help with immune support",
+  "Looking for detox",
+  "Improve my focus",
+  "Post-workout recovery",
+  "Better sleep quality",
+  "Reduce stress levels",
+  "Digestive health",
+];
+
+const juiceBlends: Record<string, { name: string; ingredients: string; why: string }> = {
+  energy: { name: "Energy Blast", ingredients: "Carrot, Orange, Ginger, Turmeric", why: "Vitamin A and C deliver sustained energy while ginger ignites metabolism without the crash." },
+  immune: { name: "Immune Shield", ingredients: "Orange, Lemon, Elderberry, Ginger", why: "High vitamin C boosts white blood cells; elderberry provides antioxidants." },
+  focus: { name: "Brain Boost", ingredients: "Blueberry, Grape, Green Apple, Lemon", why: "Anthocyanins improve cognitive function and memory recall." },
+  detox: { name: "Green Vitality", ingredients: "Cucumber, Spinach, Green Apple, Lemon", why: "Chlorophyll aids liver detox; cucumber hydrates deep at the cellular level." },
+  stress: { name: "Calm & Restore", ingredients: "Watermelon, Mint, Coconut Water", why: "Natural sugars provide gentle energy; mint activates the parasympathetic system." },
+  sleep: { name: "Twilight Elixir", ingredients: "Tart Cherry, Banana, Almond Milk", why: "Tart cherries contain natural melatonin; potassium supports overnight muscle recovery." },
+  recovery: { name: "Beet Flow", ingredients: "Beet, Carrot, Lemon, Ginger", why: "Nitrates in beet support blood flow and reduce inflammation post-workout." },
+  digestion: { name: "Mint Condition", ingredients: "Mint, Pineapple, Ginger, Apple", why: "Bromelain from pineapple and mint calm the gut lining for smooth digestion." },
+};
+
+const getPersonalizedBlends = (responses: string[]) => {
+  const combined = responses.join(" ").toLowerCase();
+  const selected: typeof juiceBlends[string][] = [];
+  if (combined.match(/energy|tired|fatigue|coffee/)) selected.push(juiceBlends.energy);
+  if (combined.match(/immune|sick|cold|flu/)) selected.push(juiceBlends.immune);
+  if (combined.match(/focus|concentrat|work|study/)) selected.push(juiceBlends.focus);
+  if (combined.match(/detox|cleanse|bloat|heavy/)) selected.push(juiceBlends.detox);
+  if (combined.match(/stress|anxi|overwhelm|tension/)) selected.push(juiceBlends.stress);
+  if (combined.match(/sleep|insomnia|rest|tired/)) selected.push(juiceBlends.sleep);
+  if (combined.match(/workout|recover|gym|muscle/)) selected.push(juiceBlends.recovery);
+  if (combined.match(/digest|gut|stomach|bloat/)) selected.push(juiceBlends.digestion);
+  if (selected.length === 0) selected.push(juiceBlends.energy, juiceBlends.immune, juiceBlends.focus);
+  return [...new Map(selected.map((b) => [b.name, b])).values()].slice(0, 3);
+};
+
+const getHolisticTip = (responses: string[]) => {
+  const combined = responses.join(" ").toLowerCase();
+  if (combined.match(/sleep|tired/)) return "Try the 4-7-8 breathing technique before bed — inhale 4, hold 7, exhale 8. It activates your parasympathetic system within minutes.";
+  if (combined.match(/stress|work/)) return "A 2-minute hydration break every hour lowers cortisol. Dehydration amplifies your body's stress response by up to 30%.";
+  if (combined.match(/energy|morning/)) return "10 minutes of morning sunlight regulates your circadian rhythm and naturally amplifies your energy without caffeine.";
+  if (combined.match(/digest|gut/)) return "Chew each bite 20 times. Digestion starts in the mouth — this alone can reduce bloating by 40%.";
+  return "Start your morning with 16oz of water before anything else. Overnight your body loses nearly a liter — rehydrating first sets the tone for everything that follows.";
+};
+
+// ── Animated Dr. Vital Avatar ──────────────────────────────────────────────
+const DrVitalAvatar = ({ speaking }: { speaking: boolean }) => (
+  <div className="relative flex items-center justify-center">
+    {/* Outer pulse rings */}
+    <div className={cn("absolute w-36 h-36 rounded-full border border-emerald-400/20 animate-ping", speaking && "border-emerald-400/40")} style={{ animationDuration: "2.5s" }} />
+    <div className={cn("absolute w-28 h-28 rounded-full border border-emerald-400/30 animate-ping")} style={{ animationDuration: "2s", animationDelay: "0.5s" }} />
+    {/* Rotating ring */}
+    <div className="absolute w-24 h-24 rounded-full border-2 border-dashed border-emerald-500/40 animate-spin" style={{ animationDuration: "12s" }} />
+    {/* Glow base */}
+    <div className={cn(
+      "relative w-20 h-20 rounded-full flex items-center justify-center transition-all duration-500",
+      "bg-gradient-to-br from-emerald-600 to-emerald-900 shadow-2xl",
+      speaking ? "shadow-emerald-400/60" : "shadow-emerald-900/60"
+    )}>
+      {/* Inner glow when speaking */}
+      {speaking && <div className="absolute inset-0 rounded-full bg-emerald-400/20 animate-pulse" />}
+      {/* Face */}
+      <div className="relative z-10 flex flex-col items-center gap-0.5">
+        {/* Head */}
+        <div className="w-8 h-8 rounded-full bg-white/90 flex items-center justify-center relative">
+          {/* Eyes */}
+          <div className="flex gap-1.5">
+            <div className={cn("w-1 h-1 rounded-full bg-emerald-700", speaking && "animate-pulse")} />
+            <div className={cn("w-1 h-1 rounded-full bg-emerald-700", speaking && "animate-pulse")} />
+          </div>
+          {/* Stethoscope hint */}
+          <div className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-2 h-0.5 bg-emerald-600 rounded-full" />
+        </div>
+        {/* Body / coat */}
+        <div className="w-5 h-3 rounded-t-sm bg-white/80 flex items-center justify-center">
+          <div className="w-1 h-2 bg-emerald-600 rounded-full" />
+        </div>
+      </div>
+    </div>
+    {/* Status dot */}
+    <div className={cn(
+      "absolute bottom-1 right-1 w-3.5 h-3.5 rounded-full border-2 border-gray-900 transition-colors",
+      speaking ? "bg-amber-400 animate-pulse" : "bg-emerald-400"
+    )} />
+  </div>
+);
+
+// ── Typing indicator ───────────────────────────────────────────────────────
+const TypingIndicator = () => (
+  <div className="flex justify-start">
+    <div className="bg-gray-800 border border-gray-700 rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-1">
+      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "0ms" }} />
+      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "150ms" }} />
+      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-bounce" style={{ animationDelay: "300ms" }} />
+    </div>
+  </div>
+);
+
 const DrVital = () => {
-  const [userName, setUserName] = useState("");
   const [conversationStep, setConversationStep] = useState(0);
   const [userResponses, setUserResponses] = useState<string[]>([]);
-  const [chatStarted, setChatStarted] = useState(false);
-  const [showPaywall, setShowPaywall] = useState(true);
-  const [hasAccess, setHasAccess] = useState(false);
-  const [isLoadingAccess, setIsLoadingAccess] = useState(true);
+  const [isBotTyping, setIsBotTyping] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "system",
-      type: "bot",
-      content: "You are Dr. Vital, a certified holistic juice specialist and AI health coach. Speak warmly and professionally. Always ask clarifying questions before recommending blends. Include: 'Not medical advice; consult a healthcare professional.'",
-      timestamp: new Date(),
-      isSystemMessage: true
-    },
     {
       id: "1",
       type: "bot",
-      content: "Hello, I'm Dr. Vital. How are you feeling today? Tell me about your symptoms, energy levels, mood, or wellness goals.",
-      timestamp: new Date()
-    }
+      content: "Hello, I'm Dr. Vital 👋\n\nI'm your personal holistic juice specialist. Tell me how you're feeling today — your energy, mood, symptoms, or wellness goals — and I'll prescribe the exact blends your body needs.\n\n*Not medical advice. Always consult a healthcare professional.*",
+      timestamp: new Date(),
+    },
   ]);
   const [inputValue, setInputValue] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Check access on component mount
   useEffect(() => {
-    const savedEmail = localStorage.getItem('nj_memberEmail');
-    if (savedEmail) {
-      window.NJ.memberEmail = savedEmail;
-    }
-    checkAccess();
-  }, []);
-
-  const checkAccess = async () => {
-    const config = window.NJ_CONFIG;
-    
-    if (config?.VITAL_PAYWALL_MODE === "free") {
-      setHasAccess(true);
-      setIsLoadingAccess(false);
-      setShowPaywall(false);
-      return;
-    }
-
-    const email = window.NJ?.memberEmail || localStorage.getItem('nj_memberEmail');
-    
-    if (!email) {
-      setHasAccess(false);
-      setIsLoadingAccess(false);
-      return;
-    }
-
-    try {
-      const { data, error } = await supabase.functions.invoke('check-vital-access', {
-        body: { email }
-      });
-
-      if (error) throw error;
-
-      if (data.hasAccess) {
-        setHasAccess(true);
-        setShowPaywall(false);
-        window.NJ.isMember = data.type === 'member';
-        
-        if (data.type === 'trial' && data.expiresAt) {
-          window.NJ.hasVitalTrial = true;
-          window.NJ.trialEndsAt = new Date(data.expiresAt);
-        }
-      } else {
-        setHasAccess(false);
-      }
-    } catch (error) {
-      console.error('Error checking access:', error);
-      setHasAccess(false);
-    } finally {
-      setIsLoadingAccess(false);
-    }
-  };
-
-  // Check access permissions (legacy function kept for consistency)
-  const hasAccessCheck = () => {
-    return hasAccess;
-  };
-
-  const trialEndsAt = window.NJ?.trialEndsAt;
-  const isTrialActive = window.NJ?.hasVitalTrial && trialEndsAt && new Date() < trialEndsAt;
-
-  const handleTrialStart = () => {
-    // Recheck access after trial starts
-    checkAccess();
-  };
-
-  const quickResponses = [
-    "I need more energy",
-    "Help with immune support", 
-    "Looking for detox",
-    "Improve my focus",
-    "Post-workout recovery",
-    "Better sleep quality",
-    "Reduce stress levels",
-    "Digestive health"
-  ];
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, isBotTyping]);
 
   const followUpQuestions = [
-    "Can you walk me through your typical morning routine and diet?",
-    "How are your sleep quality and stress levels lately?"
+    "Tell me more — what does your typical morning look like? Do you skip breakfast, rely on coffee, or eat clean?",
+    "And how are your sleep and stress levels lately? Any tension, restless nights, or feeling mentally cloudy?",
   ];
 
-  const juiceBlends = {
-    energy: {
-      name: "Energy Blast",
-      ingredients: "Carrot (1 cup), Orange (¾ cup), Ginger (1 tsp), Turmeric (½ tsp)",
-      why: "Vitamin A from carrots supports sustained energy, while vitamin C and ginger provide natural stimulation without caffeine crashes."
-    },
-    immune: {
-      name: "Immune Shield", 
-      ingredients: "Orange (1 cup), Lemon (½ cup), Elderberry (¼ cup), Zinc supplement",
-      why: "High vitamin C content boosts white blood cell production, elderberry provides antioxidants, and zinc supports immune function."
-    },
-    focus: {
-      name: "Brain Boost",
-      ingredients: "Blueberry (¾ cup), Grape (¾ cup), Walnut extract (1 tsp), Lion's Mane (optional)",
-      why: "Anthocyanins from berries improve cognitive function, while omega-3s from walnut extract support brain health and memory."
-    },
-    detox: {
-      name: "Green Vitality",
-      ingredients: "Cucumber (1 cup), Spinach (1 cup), Green Apple (½ cup), Lemon (¼ cup)",
-      why: "Chlorophyll aids liver detoxification, cucumber provides hydration, and apple adds natural sweetness while supporting digestion."
-    },
-    stress: {
-      name: "Calm & Restore",
-      ingredients: "Watermelon (1 cup), Mint (fresh), Magnesium powder (optional), Coconut water (½ cup)",
-      why: "Natural sugars provide gentle energy, mint has calming properties, and magnesium helps reduce cortisol levels."
-    },
-    sleep: {
-      name: "Twilight Elixir",
-      ingredients: "Tart Cherry (¾ cup), Chamomile tea (cooled), Banana (½), Almond milk (½ cup)",
-      why: "Tart cherries naturally contain melatonin, chamomile promotes relaxation, and potassium from banana supports muscle recovery."
-    }
+  const addBotMessage = (content: string, hasButtons = false, buttons?: Message["buttons"]) => {
+    setIsBotTyping(true);
+    setTimeout(() => {
+      setIsBotTyping(false);
+      setMessages((prev) => [...prev, {
+        id: Date.now().toString(),
+        type: "bot",
+        content,
+        timestamp: new Date(),
+        hasButtons,
+        buttons,
+      }]);
+    }, 1200 + Math.random() * 600);
   };
 
-  const getPersonalizedBlends = (responses: string[]) => {
-    const combined = responses.join(" ").toLowerCase();
-    const selectedBlends = [];
-    
-    if (combined.includes("energy") || combined.includes("tired") || combined.includes("coffee")) {
-      selectedBlends.push(juiceBlends.energy);
-    }
-    if (combined.includes("immune") || combined.includes("sick") || combined.includes("cold")) {
-      selectedBlends.push(juiceBlends.immune);
-    }
-    if (combined.includes("focus") || combined.includes("concentration") || combined.includes("work")) {
-      selectedBlends.push(juiceBlends.focus);
-    }
-    if (combined.includes("detox") || combined.includes("cleanse") || combined.includes("bloat")) {
-      selectedBlends.push(juiceBlends.detox);
-    }
-    if (combined.includes("stress") || combined.includes("anxious") || combined.includes("overwhelm")) {
-      selectedBlends.push(juiceBlends.stress);
-    }
-    if (combined.includes("sleep") || combined.includes("insomnia") || combined.includes("rest")) {
-      selectedBlends.push(juiceBlends.sleep);
-    }
-    
-    // Default to energy, immune, and focus if no specific matches
-    if (selectedBlends.length === 0) {
-      selectedBlends.push(juiceBlends.energy, juiceBlends.immune, juiceBlends.focus);
-    }
-    
-    return selectedBlends.slice(0, 3);
-  };
+  const generateBotResponse = (userInput: string, step: number) => {
+    if (step === 0) {
+      addBotMessage(followUpQuestions[0]);
+    } else if (step === 1) {
+      addBotMessage(followUpQuestions[1]);
+    } else if (step === 2) {
+      const allResponses = [...userResponses, userInput];
+      const blends = getPersonalizedBlends(allResponses);
+      const tip = getHolisticTip(allResponses);
 
-  const getHolisticTip = (responses: string[]) => {
-    const combined = responses.join(" ").toLowerCase();
-    
-    if (combined.includes("sleep") || combined.includes("tired")) {
-      return "Holistic tip: Try the 4-7-8 breathing technique before bed - inhale for 4, hold for 7, exhale for 8. This activates your parasympathetic nervous system for better sleep.";
+      let content = "Based on everything you've shared, here are your **personalized NeuroJuice prescriptions**:\n\n";
+      blends.forEach((blend, i) => {
+        content += `**${i + 1}. ${blend.name}**\n`;
+        content += `Ingredients: ${blend.ingredients}\n`;
+        content += `Why it works for you: ${blend.why}\n\n`;
+      });
+      content += `---\n💡 **Holistic Tip:** ${tip}\n\n`;
+      content += `_Ready to order these or have more questions?_`;
+
+      addBotMessage(content, true, [
+        { text: "Order These Now", action: "order" },
+        { text: "Learn More About Vital Pass", action: "subscribe" },
+        { text: "Ask Another Question", action: "continue" },
+      ]);
+    } else {
+      addBotMessage("Great question! I'm always here. What else can I help you with — energy, recovery, sleep, focus? Just ask. 🌿");
     }
-    if (combined.includes("stress") || combined.includes("work")) {
-      return "Holistic tip: Take a 2-minute hydration break every hour. Dehydration increases cortisol levels and can amplify stress responses.";
-    }
-    if (combined.includes("energy") || combined.includes("morning")) {
-      return "Holistic tip: Start your day with 10 minutes of sunlight exposure. This helps regulate your circadian rhythm and naturally boosts energy.";
-    }
-    
-    return "Holistic tip: Remember to drink at least 8 glasses of water daily. Proper hydration is the foundation of cellular energy and mental clarity.";
   };
 
   const handleSendMessage = () => {
@@ -219,292 +190,150 @@ const DrVital = () => {
       id: Date.now().toString(),
       type: "user",
       content: inputValue,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
 
-    setMessages(prev => [...prev, userMessage]);
-    setUserResponses(prev => [...prev, inputValue]);
+    setMessages((prev) => [...prev, userMessage]);
+    setUserResponses((prev) => [...prev, inputValue]);
+    const currentStep = conversationStep;
+    setConversationStep((s) => s + 1);
     setInputValue("");
 
-    // Generate bot response based on conversation step
-    setTimeout(() => {
-      generateBotResponse(inputValue, conversationStep);
-      setConversationStep(prev => prev + 1);
-    }, 1000);
-  };
-
-  const generateBotResponse = (userInput: string, step: number) => {
-    let botContent = "";
-    let hasButtons = false;
-    let buttons: Array<{text: string, action: "order" | "subscribe" | "diy" | "quick-response", value?: string}> = [];
-
-    if (step === 0) {
-      // First response - ask follow-up question
-      botContent = followUpQuestions[0];
-    } else if (step === 1) {
-      // Second response - ask second follow-up
-      botContent = followUpQuestions[1];
-    } else if (step === 2) {
-      // Third response - provide personalized recommendations
-      const blends = getPersonalizedBlends([...userResponses, userInput]);
-      const holisticTip = getHolisticTip([...userResponses, userInput]);
-      
-      botContent = `Based on your responses, here are three personalized NeuroJuice blends for you:\n\n`;
-      
-      blends.forEach((blend, index) => {
-        botContent += `**${index + 1}. ${blend.name}**\n`;
-        botContent += `Ingredients: ${blend.ingredients}\n`;
-        botContent += `Why it works: ${blend.why}\n\n`;
-      });
-      
-      botContent += `${holisticTip}\n\n`;
-      botContent += `Unlock NeuroJuice Pro: unlimited Dr. Vital access, 20% off bundles, monthly wellness check-ins. First two months are free; cancel anytime.\n\n`;
-      botContent += `*Not medical advice; consult a healthcare professional.*`;
-      
-      hasButtons = true;
-      buttons = [
-        { text: "Order Now", action: "order" },
-        { text: "Subscribe & Save", action: "subscribe" },
-        { text: "DIY at Home", action: "diy" }
-      ];
-    } else {
-      // Final response
-      const name = userName || "friend";
-      botContent = `I'm here anytime, ${name}. Drink well, feel well! 🧃✨`;
-    }
-
-    const botMessage: Message = {
-      id: (Date.now() + 1).toString(),
-      type: "bot",
-      content: botContent,
-      timestamp: new Date(),
-      hasButtons,
-      buttons
-    };
-    
-    setMessages(prev => [...prev, botMessage]);
+    generateBotResponse(inputValue, currentStep);
   };
 
   const handleButtonClick = (action: string) => {
-    if (action === "order") {
-      window.location.href = "/fuel";
-    } else if (action === "subscribe") {
-      window.location.href = "/vitalpass";
-    } else if (action === "diy") {
-      const finalMessage: Message = {
-        id: (Date.now() + 2).toString(),
-        type: "bot", 
-        content: "Perfect! Screenshot those recipes and enjoy making your personalized blends at home. Remember to use fresh, organic ingredients when possible. Cheers to your health journey! 🥤✨",
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, finalMessage]);
+    if (action === "order") window.location.href = "/fuel";
+    else if (action === "subscribe") window.location.href = "/vitalpass";
+    else if (action === "continue") {
+      setInputValue("");
+      addBotMessage("Of course! What else is going on with your body or wellness goals? I'm listening.");
     }
   };
 
   const handleQuickResponse = (response: string) => {
     setInputValue(response);
-    setChatStarted(true);
   };
 
-  const startConversation = () => {
-    setChatStarted(true);
+  const formatMessage = (content: string) => {
+    return content.split("\n").map((line, i) => {
+      const bold = line.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+      const italic = bold.replace(/\*(.*?)\*/g, "<em>$1</em>");
+      if (line === "---") return <hr key={i} className="border-gray-600 my-2" />;
+      return <p key={i} className={cn("leading-relaxed", line === "" && "h-2")} dangerouslySetInnerHTML={{ __html: italic }} />;
+    });
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-body">
-      <Header />
-      
-      {/* Paywall Check */}
-      {!hasAccess && showPaywall && (
-        <VitalPaywall onTrialStart={handleTrialStart} onDismiss={() => setShowPaywall(false)} />
-      )}
-      
-      <main className="pt-20">
-        {/* Hero Section */}
-        <section className="py-20 bg-gradient-to-br from-background to-secondary/20">
-          <div className="container mx-auto px-4 text-center">
-            <div className="max-w-4xl mx-auto space-y-8">
-              <div className="flex items-center justify-center space-x-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-hero rounded-full flex items-center justify-center">
-                  <Bot className="w-8 h-8 text-white" />
-                </div>
-                <h1 className="font-heading font-bold text-5xl text-foreground">
-                  Dr. Vital AI
-                </h1>
-                {isTrialActive && trialEndsAt && (
-                  <Badge variant="outline" className="ml-4">
-                    Trial ends {trialEndsAt.toLocaleDateString()}
-                  </Badge>
-                )}
-              </div>
-              
-              <p className="font-body text-xl text-muted-foreground leading-relaxed max-w-3xl mx-auto">
-                Your personal holistic juice specialist and AI health coach. Get personalized blend recommendations 
-                based on your unique symptoms, goals, and lifestyle through our advanced wellness conversation.
-              </p>
-              
-              <div className="grid md:grid-cols-3 gap-6 mt-12">
-                <Card className="text-center p-6">
-                  <CardHeader>
-                    <CardTitle className="text-primary">🧠 Personalized Analysis</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">Advanced AI analyzes your responses to create custom juice blends</p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="text-center p-6">
-                  <CardHeader>
-                    <CardTitle className="text-primary">🌿 Holistic Approach</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">Combines nutrition science with wellness lifestyle recommendations</p>
-                  </CardContent>
-                </Card>
-                
-                <Card className="text-center p-6">
-                  <CardHeader>
-                    <CardTitle className="text-primary">⚡ Instant Results</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">Get tailored juice recipes and health tips in minutes</p>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+    <div className="h-screen bg-gray-950 text-white flex flex-col overflow-hidden">
+      {/* Top bar */}
+      <div className="flex-none border-b border-gray-800/80 bg-gray-950/95 backdrop-blur-sm px-4 py-3 flex items-center gap-3 z-20">
+        <Link to="/" className="text-gray-400 hover:text-white transition-colors p-1">
+          <ArrowLeft className="w-5 h-5" />
+        </Link>
+        <div className="flex items-center gap-3 flex-1">
+          <DrVitalAvatar speaking={isBotTyping} />
+          <div>
+            <p className="font-bold text-white text-sm leading-tight">Dr. Vital</p>
+            <p className="text-emerald-400 text-xs">{isBotTyping ? "Composing your prescription..." : "Online · Holistic Juice Specialist"}</p>
           </div>
-        </section>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-xs text-emerald-400 font-medium">Live</span>
+        </div>
+      </div>
 
-        {/* Chat Interface Section */}
-        <section className="py-16 bg-background">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto">
-              {!chatStarted ? (
-                <Card className="shadow-soft border-0">
-                  <CardHeader className="bg-gradient-hero text-white text-center">
-                    <CardTitle className="flex items-center justify-center space-x-2">
-                      <Bot className="w-6 h-6" />
-                      <span className="font-heading text-2xl">Start Your Wellness Journey</span>
-                    </CardTitle>
-                  </CardHeader>
-                  
-                  <CardContent className="p-8">
-                    <div className="text-center space-y-6">
-                      <p className="font-body text-lg text-muted-foreground">
-                        Dr. Vital will ask you a few questions about your health, lifestyle, and goals 
-                        to create personalized juice blends just for you.
-                      </p>
-                      
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        {quickResponses.map((response, index) => (
-                          <Button
-                            key={index}
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleQuickResponse(response)}
-                            className="text-xs h-auto py-3 px-2"
-                          >
-                            {response}
-                          </Button>
-                        ))}
-                      </div>
-                      
-                      <Button 
-                        onClick={startConversation}
-                        variant="hero"
-                        size="lg"
-                        className="mt-8"
-                      >
-                        <MessageCircle className="w-5 h-5" />
-                        Start Conversation
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ) : (
-                <Card className="shadow-soft border-0 h-[600px]">
-                  <CardHeader className="bg-gradient-hero text-white">
-                    <CardTitle className="flex items-center space-x-2">
-                      <Bot className="w-5 h-5" />
-                      <span className="font-heading">Dr. Vital AI</span>
-                    </CardTitle>
-                  </CardHeader>
+      {/* Quick-start chips — shown before first user message */}
+      {userResponses.length === 0 && (
+        <div className="flex-none px-4 py-3 bg-gray-950 border-b border-gray-800/50">
+          <p className="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">Quick start — tap to begin</p>
+          <div className="flex flex-wrap gap-2">
+            {quickResponses.map((r) => (
+              <button
+                key={r}
+                onClick={() => handleQuickResponse(r)}
+                className="text-xs px-3 py-1.5 rounded-full border border-emerald-700/60 text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/60 transition-colors active:scale-95"
+              >
+                {r}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
-                  <CardContent className="p-0 h-full flex flex-col">
-                    {/* Messages Area */}
-                    <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-background">
-                      {messages.filter(m => !m.isSystemMessage).map((message) => (
-                        <div
-                          key={message.id}
-                          className={cn(
-                            "flex",
-                            message.type === "user" ? "justify-end" : "justify-start"
-                          )}
-                        >
-                          <div
-                            className={cn(
-                              "max-w-[80%] rounded-lg p-4 font-body",
-                              message.type === "user"
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-muted text-foreground"
-                            )}
-                          >
-                            <div className="flex items-start space-x-3">
-                              {message.type === "bot" && <Bot className="w-5 h-5 mt-0.5 flex-shrink-0" />}
-                              <div className="space-y-3">
-                                <p className="leading-relaxed whitespace-pre-line">{message.content}</p>
-                                {message.hasButtons && message.buttons && (
-                                  <div className="flex flex-wrap gap-2">
-                                    {message.buttons.map((button, index) => (
-                                      <Button
-                                        key={index}
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => handleButtonClick(button.action)}
-                                        className="text-xs"
-                                      >
-                                        {button.text}
-                                      </Button>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-                              {message.type === "user" && <User className="w-5 h-5 mt-0.5 flex-shrink-0" />}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Input Area */}
-                    <div className="p-6 bg-background border-t">
-                      <div className="flex space-x-3">
-                        <Input
-                          value={inputValue}
-                          onChange={(e) => setInputValue(e.target.value)}
-                          onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                          placeholder="Tell Dr. Vital how you're feeling..."
-                          className="flex-1 font-body"
-                        />
-                        <Button 
-                          onClick={handleSendMessage}
-                          disabled={!inputValue.trim()}
-                          size="icon"
-                          variant="default"
-                        >
-                          <Send className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4" style={{ overscrollBehavior: "contain" }}>
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={cn("flex items-end gap-2", message.type === "user" ? "justify-end" : "justify-start")}
+          >
+            {message.type === "bot" && (
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center shrink-0 mb-1">
+                <span className="text-white text-xs font-bold">V</span>
+              </div>
+            )}
+            <div
+              className={cn(
+                "max-w-[82%] sm:max-w-[70%] rounded-2xl px-4 py-3 text-sm space-y-1",
+                message.type === "user"
+                  ? "bg-emerald-600 text-white rounded-br-none"
+                  : "bg-gray-800 border border-gray-700 text-gray-100 rounded-bl-none"
+              )}
+            >
+              <div className="space-y-1">{formatMessage(message.content)}</div>
+              {message.hasButtons && message.buttons && (
+                <div className="flex flex-wrap gap-2 pt-3 border-t border-gray-700 mt-2">
+                  {message.buttons.map((btn, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleButtonClick(btn.action)}
+                      className={cn(
+                        "text-xs px-3 py-1.5 rounded-full font-medium transition-all active:scale-95",
+                        i === 0 ? "bg-emerald-600 hover:bg-emerald-500 text-white" : "border border-gray-600 text-gray-300 hover:border-emerald-500 hover:text-emerald-300"
+                      )}
+                    >
+                      {btn.text}
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
+            {message.type === "user" && (
+              <div className="w-7 h-7 rounded-full bg-gray-700 flex items-center justify-center shrink-0 mb-1">
+                <User className="w-3.5 h-3.5 text-gray-300" />
+              </div>
+            )}
           </div>
-        </section>
-      </main>
+        ))}
+        {isBotTyping && <TypingIndicator />}
+        <div ref={messagesEndRef} />
+      </div>
 
-      <Footer />
+      {/* Input bar */}
+      <div className="flex-none border-t border-gray-800 bg-gray-950 px-4 py-3 pb-safe">
+        <div className="flex gap-2 items-center max-w-2xl mx-auto">
+          <Input
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && handleSendMessage()}
+            placeholder="Tell Dr. Vital how you're feeling…"
+            className="flex-1 bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus-visible:ring-emerald-500 rounded-full h-11 px-4 text-sm"
+          />
+          <button
+            onClick={handleSendMessage}
+            disabled={!inputValue.trim()}
+            className={cn(
+              "w-11 h-11 rounded-full flex items-center justify-center transition-all active:scale-95 shrink-0",
+              inputValue.trim() ? "bg-emerald-600 hover:bg-emerald-500 text-white" : "bg-gray-800 text-gray-600 cursor-not-allowed"
+            )}
+          >
+            <Send className="w-4 h-4" />
+          </button>
+        </div>
+        <p className="text-center text-[10px] text-gray-600 mt-2">Not medical advice · For wellness guidance only</p>
+      </div>
     </div>
   );
 };
