@@ -122,37 +122,48 @@ serve(async (req) => {
       const itemSummary = [bundleList, bottleList].filter(Boolean).join(", ");
       const orderType = data.products.orderType === "delivery" ? "Delivery" : "Pickup";
 
+      const sendEmail = async (payload: object, label: string) => {
+        try {
+          const res = await fetch("https://api.resend.com/emails", {
+            method: "POST",
+            headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const json = await res.json();
+          if (!res.ok) {
+            console.error(`[${label}] Resend error ${res.status}:`, JSON.stringify(json));
+          } else {
+            console.log(`[${label}] Sent — id:`, json.id);
+          }
+        } catch (e) {
+          console.error(`[${label}] Network error:`, e);
+        }
+      };
+
       // Team notification
-      await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          from: "NeuroJuice Orders <onboarding@resend.dev>",
-          to: ["menelikgarrick@gmail.com", "jhyaire.hamilton@gmail.com"],
-          subject: `🧃 New Order ${orderNumber} — ${data.customer_name} (${data.pickup_date} ${data.pickup_time})`,
-          html: `<h2>New NeuroJuice Order — ${orderNumber}</h2>
-            <p><strong>Customer:</strong> ${data.customer_name}</p>
-            <p><strong>Phone:</strong> ${data.customer_phone}</p>
-            <p><strong>Email:</strong> ${data.customer_email || "not provided"}</p>
-            <p><strong>Type:</strong> ${orderType}</p>
-            ${data.products.deliveryAddress ? `<p><strong>Delivery Address:</strong> ${data.products.deliveryAddress}</p>` : ""}
-            <p><strong>Items:</strong> ${itemSummary}</p>
-            <p><strong>Total:</strong> $${Number(data.products.total).toFixed(2)}</p>
-            <p><strong>${orderType} Date:</strong> ${data.pickup_date} at ${data.pickup_time}</p>
-            ${data.notes ? `<p><strong>Notes:</strong> ${data.notes}</p>` : ""}`,
-        }),
-      }).catch((e) => console.error("Team notification email failed:", e));
+      await sendEmail({
+        from: "NeuroJuice Orders <onboarding@resend.dev>",
+        to: ["menelikgarrick@gmail.com"],
+        subject: `🧃 New Order ${orderNumber} — ${data.customer_name} (${data.pickup_date} ${data.pickup_time})`,
+        html: `<h2>New NeuroJuice Order — ${orderNumber}</h2>
+          <p><strong>Customer:</strong> ${data.customer_name}</p>
+          <p><strong>Phone:</strong> ${data.customer_phone}</p>
+          <p><strong>Email:</strong> ${data.customer_email || "not provided"}</p>
+          <p><strong>Type:</strong> ${orderType}</p>
+          ${data.products.deliveryAddress ? `<p><strong>Delivery Address:</strong> ${data.products.deliveryAddress}</p>` : ""}
+          <p><strong>Items:</strong> ${itemSummary}</p>
+          <p><strong>Total:</strong> $${Number(data.products.total).toFixed(2)}</p>
+          <p><strong>${orderType} Date:</strong> ${data.pickup_date} at ${data.pickup_time}</p>
+          ${data.notes ? `<p><strong>Notes:</strong> ${data.notes}</p>` : ""}`,
+      }, "team-notification");
 
       // Customer confirmation email (only if they provided email)
       if (data.customer_email) {
-        await fetch("https://api.resend.com/emails", {
-          method: "POST",
-          headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
-          body: JSON.stringify({
-            from: "NeuroJuice <onboarding@resend.dev>",
-            to: [data.customer_email.trim()],
-            subject: `Your NeuroJuice Order is Confirmed — ${orderNumber}`,
-            html: `
+        await sendEmail({
+          from: "NeuroJuice <onboarding@resend.dev>",
+          to: [data.customer_email.trim()],
+          subject: `Your NeuroJuice Order is Confirmed — ${orderNumber}`,
+          html: `
 <!DOCTYPE html>
 <html>
 <body style="font-family: sans-serif; background:#f9fafb; padding:24px; color:#111;">
@@ -176,16 +187,15 @@ serve(async (req) => {
       <p style="font-size:24px;font-weight:bold;letter-spacing:3px;color:#ea580c;margin:8px 0;">NJTHANKS</p>
       <p style="margin:0;font-size:13px;color:#9a3412;">Save $1 on your next order. Valid for 30 days.</p>
     </div>
-    <p style="color:#6b7280;font-size:14px;text-align:center;">We'll text you at ${data.customer_phone} when your order is ready. Questions? Reply to this email.</p>
+    <p style="color:#6b7280;font-size:14px;text-align:center;">We'll text you at ${data.customer_phone} when your order is ready. Questions? Reply to this email or text us.</p>
     <div style="text-align:center;margin-top:24px;">
-      <a href="https://neurojuice.vercel.app/menu" style="background:#16a34a;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:bold;">Browse More Blends</a>
+      <a href="${Deno.env.get("SITE_URL") || "https://neurojuice.vercel.app"}/menu" style="background:#16a34a;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:bold;">Browse More Blends</a>
     </div>
     <p style="text-align:center;color:#9ca3af;font-size:11px;margin-top:24px;">NeuroJuice · Atlanta, Georgia · hello@neurojuice.com</p>
   </div>
 </body>
 </html>`,
-          }),
-        }).catch((e) => console.error("Customer confirmation email failed:", e));
+        }, "customer-confirmation");
       }
     }
 

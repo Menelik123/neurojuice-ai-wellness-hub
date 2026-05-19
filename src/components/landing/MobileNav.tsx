@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ShoppingCart } from "lucide-react";
+import { Menu, X, ShoppingCart, UserCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 
@@ -15,6 +15,7 @@ const navLinks = [
 const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { totalItems, setDrawerOpen } = useCart();
+  const isLoggedIn = typeof window !== "undefined" && !!localStorage.getItem("nj_memberEmail");
 
   const handleNavClick = (href: string) => {
     setIsOpen(false);
@@ -71,8 +72,12 @@ const MobileNav = () => {
             )}
           </nav>
 
-          {/* Desktop CTA + Cart */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Desktop right: profile + cart */}
+          <div className="hidden md:flex items-center gap-2">
+            <Link to="/profile" className="relative p-2 text-muted-foreground hover:text-primary transition-colors" aria-label="My Account">
+              <UserCircle className="w-5 h-5" />
+              {isLoggedIn && <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />}
+            </Link>
             <button
               onClick={() => setDrawerOpen(true)}
               className="relative p-2 text-foreground hover:text-primary transition-colors"
@@ -87,8 +92,12 @@ const MobileNav = () => {
             </button>
           </div>
 
-          {/* Mobile Cart + Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
+          {/* Mobile: profile + cart + hamburger */}
+          <div className="flex md:hidden items-center gap-1">
+            <Link to="/profile" className="relative p-2 text-muted-foreground hover:text-primary transition-colors" aria-label="My Account">
+              <UserCircle className="w-5 h-5" />
+              {isLoggedIn && <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />}
+            </Link>
             <button
               onClick={() => setDrawerOpen(true)}
               className="relative p-2 text-foreground"

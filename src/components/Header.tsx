@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
+import { Menu, X, UserCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isLoggedIn = typeof window !== "undefined" && !!localStorage.getItem("nj_memberEmail");
 
   const navItems = [
     { label: "Home", href: "/" },
@@ -43,7 +44,20 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Mobile Menu Button */}
+          {/* Profile + Desktop right side */}
+          <div className="hidden md:flex items-center gap-2">
+            <Link to="/profile" className="relative p-2 text-muted-foreground hover:text-primary transition-colors" aria-label="My Account">
+              <UserCircle className="w-5 h-5" />
+              {isLoggedIn && <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />}
+            </Link>
+          </div>
+
+          {/* Mobile: profile + menu button */}
+          <div className="md:hidden flex items-center gap-1">
+            <Link to="/profile" className="relative p-2 text-muted-foreground hover:text-primary transition-colors" aria-label="My Account">
+              <UserCircle className="w-5 h-5" />
+              {isLoggedIn && <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />}
+            </Link>
           <Button
             variant="ghost"
             size="icon"
@@ -52,7 +66,7 @@ const Header = () => {
           >
             {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </Button>
-        </div>
+          </div>
 
         {/* Mobile Navigation */}
         <div className={cn(

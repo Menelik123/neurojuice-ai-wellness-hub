@@ -6,7 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Star, ShoppingBag, Home, Loader2, Mail, LogOut, CreditCard } from "lucide-react";
+import {
+  CheckCircle, Star, ShoppingBag, Loader2, Mail,
+  LogOut, CreditCard, Package, Clock, Home, UserCircle,
+} from "lucide-react";
 import { toast } from "sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -17,12 +20,12 @@ interface MembershipData {
   is_active: boolean;
   current_period_end: string | null;
   created_at: string;
-  stripe_subscription_id: string | null;
 }
 
 interface FuelOrder {
   id: string;
   customer_name: string;
+  customer_email: string;
   products: any;
   pickup_date: string;
   pickup_time: string;
@@ -30,12 +33,15 @@ interface FuelOrder {
   created_at: string;
 }
 
-const PERKS = [
-  "$1 off every bottle — $7.50 instead of $8.50",
-  "Free monthly Sea Moss shot with every order",
-  "Early access to new drops and member-only bundles",
-  "Full Dr. Vital AI — personalized juice recommendations",
-];
+const STATUS_STYLES: Record<string, string> = {
+  completed: "bg-muted text-muted-foreground",
+  ready: "bg-green-100 text-green-700",
+  confirmed: "bg-blue-100 text-blue-700",
+  pending: "bg-yellow-100 text-yellow-700",
+};
+
+const formatDate = (d: string) =>
+  new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
 const MemberProfile = () => {
   const [searchParams] = useSearchParams();
@@ -46,41 +52,43 @@ const MemberProfile = () => {
   const [membership, setMembership] = useState<MembershipData | null>(null);
   const [orders, setOrders] = useState<FuelOrder[]>([]);
   const [checked, setChecked] = useState(false);
-  const [portalLoading, setPortalLoading] = useState(false);
 
-  // Auto-check if email is already stored
   useEffect(() => {
-    if (email) checkMembership(email);
+    if (email) lookup(email);
   }, []);
 
-  const checkMembership = async (emailToCheck: string) => {
+  const lookup = async (emailToCheck: string) => {
     setLoading(true);
     try {
-      // Check membership status
+      const clean = emailToCheck.toLowerCase().trim();
+
+      // Check membership
       const { data: memberData } = await supabase
         .from("vitalpass_memberships" as any)
-        .select("email, name, is_active, current_period_end, created_at, stripe_subscription_id")
-        .eq("email", emailToCheck.toLowerCase().trim())
+        .select("email, name, is_active, current_period_end, created_at")
+        .eq("email", clean)
         .maybeSingle();
 
       if (memberData) {
         setMembership(memberData as unknown as MembershipData);
-        localStorage.setItem("nj_memberEmail", emailToCheck.toLowerCase().trim());
-        window.NJ.memberEmail = emailToCheck.toLowerCase().trim();
         window.NJ.isMember = (memberData as any).is_active;
-
-        // Fetch their fuel orders
-        const { data: orderData } = await supabase
-          .from("fuel_orders" as any)
-          .select("id, customer_name, products, pickup_date, pickup_time, status, created_at")
-          .eq("customer_email", emailToCheck.toLowerCase().trim())
-          .order("created_at", { ascending: false })
-          .limit(5);
-
-        if (orderData) setOrders(orderData as unknown as FuelOrder[]);
       } else {
         setMembership(null);
+        window.NJ.isMember = false;
       }
+
+      // Always fetch orders for this email
+      const { data: orderData } = await supabase
+        .from("fuel_orders" as any)
+        .select("id, customer_name, customer_email, products, pickup_date, pickup_time, status, created_at")
+        .eq("customer_email", clean)
+        .order("created_at", { ascending: false })
+        .limit(10);
+
+      if (orderData) setOrders(orderData as unknown as FuelOrder[]);
+
+      localStorage.setItem("nj_memberEmail", clean);
+      window.NJ.memberEmail = clean;
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong. Please try again.");
@@ -93,7 +101,7 @@ const MemberProfile = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) { toast.error("Please enter your email"); return; }
-    checkMembership(email.trim());
+    lookup(email.trim());
   };
 
   const handleLogout = () => {
@@ -106,152 +114,144 @@ const MemberProfile = () => {
     setOrders([]);
   };
 
-  const formatDate = (d: string) =>
-    new Date(d).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
-
-  const getStatusColor = (status: string) => {
-    if (status === "completed") return "bg-muted text-muted-foreground";
-    if (status === "ready") return "bg-green-100 text-green-700";
-    if (status === "confirmed") return "bg-blue-100 text-blue-700";
-    return "bg-yellow-100 text-yellow-700";
+  const getItemLabel = (products: any) => {
+    const parts: string[] = [];
+    products?.bundles?.forEach((b: any) => b.name && parts.push(b.name));
+    products?.bottles?.filter((b: any) => b.id !== "sea-moss-shot" && b.quantity > 0)
+      .forEach((b: any) => parts.push(`${b.quantity}× ${b.name}`));
+    const sm = products?.bottles?.find((b: any) => b.id === "sea-moss-shot");
+    if (sm?.quantity > 0) parts.push(`${sm.quantity}× Sea Moss Shot`);
+    return parts.join(", ") || "Order";
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
       <Header />
       <main className="pt-20 pb-16">
-        <div className="max-w-2xl mx-auto px-4 py-12">
+        <div className="max-w-2xl mx-auto px-4 py-10 space-y-6">
 
-          {/* Welcome banner */}
+          {/* Welcome banner after Vital Pass signup */}
           {isWelcome && (
-            <div className="bg-primary/10 border border-primary/30 rounded-2xl p-6 mb-8 text-center">
+            <div className="bg-primary/10 border border-primary/30 rounded-2xl p-6 text-center">
               <CheckCircle className="w-10 h-10 text-primary mx-auto mb-3" />
               <h2 className="font-heading font-bold text-xl text-foreground mb-1">Welcome to Vital Pass! 💚</h2>
-              <p className="text-muted-foreground text-sm">Your membership is active. Check your email for your welcome message, then explore your perks below.</p>
+              <p className="text-muted-foreground text-sm">Your membership is active. Check your email for a welcome message.</p>
             </div>
           )}
 
-          {/* Header */}
-          <div className="text-center mb-10">
+          {/* Page header */}
+          <div className="text-center">
             <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <Star className="w-8 h-8 text-primary" />
+              <UserCircle className="w-8 h-8 text-primary" />
             </div>
-            <h1 className="font-heading font-bold text-3xl text-foreground mb-2">Member Profile</h1>
-            <p className="text-muted-foreground">Check your Vital Pass membership and order history.</p>
+            <h1 className="font-heading font-bold text-2xl md:text-3xl text-foreground mb-1">My Account</h1>
+            <p className="text-muted-foreground text-sm">Track your orders and manage your membership.</p>
           </div>
 
-          {/* Email lookup form */}
-          {!checked || !membership ? (
+          {/* Email lookup */}
+          {!checked ? (
             <Card>
               <CardContent className="p-8">
-                {checked && !membership ? (
-                  <div className="text-center space-y-6">
-                    <div>
-                      <p className="text-muted-foreground mb-1">No active membership found for</p>
-                      <p className="font-semibold text-foreground">{email}</p>
-                    </div>
-                    <div className="space-y-3">
-                      <Link to="/vitalpass">
-                        <Button size="lg" className="w-full">
-                          <CreditCard className="w-4 h-4 mr-2" />Join Vital Pass — $10/month
-                        </Button>
-                      </Link>
-                      <Button variant="outline" className="w-full" onClick={() => { setChecked(false); setEmail(""); }}>
-                        Try a different email
-                      </Button>
-                    </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="profile-email">Enter the email you order with</Label>
+                    <Input
+                      id="profile-email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      autoFocus
+                      className="h-12"
+                    />
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="profile-email">Enter your membership email</Label>
-                      <Input
-                        id="profile-email"
-                        type="email"
-                        placeholder="you@example.com"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        autoFocus
-                      />
-                    </div>
-                    <Button type="submit" size="lg" className="w-full" disabled={loading}>
-                      {loading ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Checking...</> : <><Mail className="w-4 h-4 mr-2" />View My Profile</>}
-                    </Button>
-                    <p className="text-center text-sm text-muted-foreground">
-                      Not a member?{" "}
-                      <Link to="/vitalpass" className="text-primary underline underline-offset-4">Join Vital Pass</Link>
-                    </p>
-                  </form>
-                )}
+                  <Button type="submit" size="lg" className="w-full h-12" disabled={loading}>
+                    {loading
+                      ? <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Looking up...</>
+                      : <><Mail className="w-4 h-4 mr-2" />View My Account</>}
+                  </Button>
+                  <p className="text-center text-xs text-muted-foreground">
+                    No account required — just use the email from your order.
+                  </p>
+                </form>
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-6">
-              {/* Membership card */}
-              <Card className="border-2 border-primary/30 shadow-soft">
-                <CardHeader className="bg-gradient-to-r from-primary to-primary/80 text-white rounded-t-lg">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="font-heading text-xl">{membership.name || membership.email}</CardTitle>
-                      <p className="text-white/80 text-sm mt-1">{membership.email}</p>
-                    </div>
-                    <Badge className={membership.is_active ? "bg-white text-primary font-bold" : "bg-red-100 text-red-700"}>
-                      {membership.is_active ? "Active Member" : "Inactive"}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-6 space-y-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="text-muted-foreground">Member since</p>
-                      <p className="font-semibold">{formatDate(membership.created_at)}</p>
-                    </div>
-                    {membership.current_period_end && (
+            <div className="space-y-5">
+
+              {/* Vital Pass membership card — only if member */}
+              {membership && membership.is_active ? (
+                <Card className="border-2 border-primary/30 shadow-sm overflow-hidden">
+                  <CardHeader className="bg-gradient-to-r from-primary to-primary/80 text-white rounded-t-lg py-5">
+                    <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-muted-foreground">Next billing</p>
-                        <p className="font-semibold">{formatDate(membership.current_period_end)}</p>
+                        <CardTitle className="font-heading text-lg text-white">{membership.name || membership.email}</CardTitle>
+                        <p className="text-white/80 text-sm mt-0.5">{membership.email}</p>
                       </div>
-                    )}
-                  </div>
-                  <div className="border-t pt-4">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Your Perks</p>
-                    <div className="space-y-2">
-                      {PERKS.map((perk, i) => (
-                        <div key={i} className="flex items-start gap-2 text-sm">
-                          <CheckCircle className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                          <span>{perk}</span>
+                      <Badge className="bg-white text-primary font-bold shrink-0">Active Member</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-5 space-y-3">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-muted-foreground text-xs">Member since</p>
+                        <p className="font-semibold">{formatDate(membership.created_at)}</p>
+                      </div>
+                      {membership.current_period_end && (
+                        <div>
+                          <p className="text-muted-foreground text-xs">Next billing</p>
+                          <p className="font-semibold">{formatDate(membership.current_period_end)}</p>
                         </div>
+                      )}
+                    </div>
+                    <div className="flex gap-2 pt-1">
+                      {[
+                        "$1 off every bottle",
+                        "Free Sea Moss shot / mo",
+                        "Early access to drops",
+                      ].map((perk) => (
+                        <span key={perk} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
+                          {perk}
+                        </span>
                       ))}
                     </div>
-                  </div>
-                  <div className="flex gap-3 pt-2">
-                    <Link to="/fuel" className="flex-1">
-                      <Button className="w-full" variant="default">
-                        <ShoppingBag className="w-4 h-4 mr-2" />Order Now
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card className="border border-dashed border-primary/30">
+                  <CardContent className="p-5 flex items-center justify-between gap-4">
+                    <div>
+                      <p className="font-semibold text-foreground text-sm">No Vital Pass membership</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">Save $1 per bottle and get a free Sea Moss shot every month.</p>
+                    </div>
+                    <Link to="/vitalpass" className="shrink-0">
+                      <Button size="sm">
+                        <CreditCard className="w-3.5 h-3.5 mr-1.5" />Join — $10/mo
                       </Button>
                     </Link>
-                    <Link to="/dr-vital" className="flex-1">
-                      <Button className="w-full" variant="outline">
-                        <Star className="w-4 h-4 mr-2" />Dr. Vital
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Order history */}
               <Card>
-                <CardHeader>
-                  <CardTitle className="font-heading text-lg">Recent Orders</CardTitle>
+                <CardHeader className="pb-3">
+                  <CardTitle className="font-heading text-base flex items-center gap-2">
+                    <Package className="w-4 h-4 text-primary" />
+                    Order History
+                  </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="pt-0">
                   {orders.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <ShoppingBag className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">No orders yet.</p>
+                    <div className="text-center py-10 text-muted-foreground space-y-3">
+                      <ShoppingBag className="w-10 h-10 mx-auto opacity-30" />
+                      <p className="text-sm">No orders found for {email}.</p>
+                      <p className="text-xs">Orders only appear here if you provided your email at checkout.</p>
                       <Link to="/fuel">
-                        <Button variant="link" className="mt-2">Place your first order</Button>
+                        <Button variant="outline" size="sm" className="mt-2">
+                          <ShoppingBag className="w-3.5 h-3.5 mr-1.5" />Place an Order
+                        </Button>
                       </Link>
                     </div>
                   ) : (
@@ -259,16 +259,23 @@ const MemberProfile = () => {
                       {orders.map((order) => {
                         const prods = order.products as any;
                         return (
-                          <div key={order.id} className="border rounded-lg p-4">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="font-medium text-sm">{order.pickup_date} — {order.pickup_time}</span>
-                              <Badge className={`text-xs ${getStatusColor(order.status)}`}>{order.status}</Badge>
+                          <div key={order.id} className="border border-border rounded-xl p-4 space-y-2">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="min-w-0">
+                                <p className="font-medium text-sm text-foreground truncate">{getItemLabel(prods)}</p>
+                                <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
+                                  <Clock className="w-3 h-3" />
+                                  {order.pickup_date} at {order.pickup_time}
+                                  {prods?.orderType === "delivery" ? " · Delivery" : " · Pickup"}
+                                </p>
+                              </div>
+                              <Badge className={`text-xs shrink-0 capitalize ${STATUS_STYLES[order.status] || STATUS_STYLES.pending}`}>
+                                {order.status}
+                              </Badge>
                             </div>
-                            <div className="text-sm text-muted-foreground">
-                              {prods?.bundles?.map((b: any) => `${b.name}`).join(", ")}
-                              {prods?.bottles?.filter((b: any) => b.id !== "sea-moss-shot").map((b: any) => `${b.name} ×${b.quantity}`).join(", ")}
-                            </div>
-                            {prods?.total && <p className="text-sm font-bold text-primary mt-1">${Number(prods.total).toFixed(2)}</p>}
+                            {prods?.total != null && (
+                              <p className="text-sm font-bold text-primary">${Number(prods.total).toFixed(2)}</p>
+                            )}
                           </div>
                         );
                       })}
@@ -277,12 +284,27 @@ const MemberProfile = () => {
                 </CardContent>
               </Card>
 
-              {/* Actions */}
-              <div className="flex justify-between items-center text-sm">
-                <Link to="/" className="text-muted-foreground hover:text-foreground flex items-center gap-1">
+              {/* Quick actions */}
+              <div className="grid grid-cols-2 gap-3">
+                <Link to="/fuel">
+                  <Button className="w-full" variant="default">
+                    <ShoppingBag className="w-4 h-4 mr-2" />Order Again
+                  </Button>
+                </Link>
+                <Link to="/dr-vital">
+                  <Button className="w-full" variant="outline">
+                    <Star className="w-4 h-4 mr-2" />Ask Dr. Vital
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Footer row */}
+              <div className="flex justify-between items-center text-xs text-muted-foreground pt-2">
+                <Link to="/" className="flex items-center gap-1 hover:text-foreground transition-colors">
                   <Home className="w-3.5 h-3.5" />Home
                 </Link>
-                <button onClick={handleLogout} className="text-muted-foreground hover:text-destructive flex items-center gap-1">
+                <p className="text-muted-foreground">{email}</p>
+                <button onClick={handleLogout} className="flex items-center gap-1 hover:text-destructive transition-colors">
                   <LogOut className="w-3.5 h-3.5" />Sign out
                 </button>
               </div>
