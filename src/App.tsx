@@ -32,8 +32,8 @@ const App = () => (
       <CartProvider>
         <Toaster />
         <Sonner />
-        <CartDrawer />
         <BrowserRouter>
+          <CartDrawer />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/order-options" element={<OrderOptions />} />
@@ -57,6 +57,7 @@ const App = () => (
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
+
       </CartProvider>
     </TooltipProvider>
   </QueryClientProvider>
