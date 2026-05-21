@@ -14,96 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      products: {
-        Row: {
-          id: string
-          slug: string
-          name: string
-          price: number
-          tagline: string
-          benefit: string
-          ingredients: string[]
-          in_stock: boolean
-          sort_order: number
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          slug: string
-          name: string
-          price?: number
-          tagline?: string
-          benefit?: string
-          ingredients?: string[]
-          in_stock?: boolean
-          sort_order?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          slug?: string
-          name?: string
-          price?: number
-          tagline?: string
-          benefit?: string
-          ingredients?: string[]
-          in_stock?: boolean
-          sort_order?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      bundles: {
-        Row: {
-          id: string
-          slug: string
-          name: string
-          bottles: number
-          price: number
-          tagline: string
-          badge: string
-          is_curated: boolean
-          drinks: string[]
-          in_stock: boolean
-          sort_order: number
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          slug: string
-          name: string
-          bottles: number
-          price: number
-          tagline?: string
-          badge?: string
-          is_curated?: boolean
-          drinks?: string[]
-          in_stock?: boolean
-          sort_order?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          slug?: string
-          name?: string
-          bottles?: number
-          price?: number
-          tagline?: string
-          badge?: string
-          is_curated?: boolean
-          drinks?: string[]
-          in_stock?: boolean
-          sort_order?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       exotic_access_codes: {
         Row: {
           code: string
@@ -127,6 +37,7 @@ export type Database = {
       }
       fuel_orders: {
         Row: {
+          amount_cents: number | null
           created_at: string
           customer_email: string | null
           customer_name: string
@@ -137,9 +48,11 @@ export type Database = {
           pickup_time: string
           products: Json
           status: string
+          stripe_session_id: string | null
           updated_at: string
         }
         Insert: {
+          amount_cents?: number | null
           created_at?: string
           customer_email?: string | null
           customer_name: string
@@ -150,9 +63,11 @@ export type Database = {
           pickup_time: string
           products: Json
           status?: string
+          stripe_session_id?: string | null
           updated_at?: string
         }
         Update: {
+          amount_cents?: number | null
           created_at?: string
           customer_email?: string | null
           customer_name?: string
@@ -163,6 +78,7 @@ export type Database = {
           pickup_time?: string
           products?: Json
           status?: string
+          stripe_session_id?: string | null
           updated_at?: string
         }
         Relationships: []
