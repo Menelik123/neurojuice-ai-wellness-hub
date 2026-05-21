@@ -32,10 +32,10 @@ const SMSInlineCapture = ({ variant = "light", message = "Don't miss the next dr
     setIsLoading(true);
     
     try {
-      const { data, error } = await supabase.functions.invoke("klaviyo-subscribe", {
-        body: { 
+      const { data, error } = await supabase.functions.invoke("brevo-subscribe", {
+        body: {
           phone: phone.trim(),
-          source: "inline_capture"
+          source: "sms_inline_capture",
         },
       });
 

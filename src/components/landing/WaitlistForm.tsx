@@ -67,15 +67,11 @@ const WaitlistForm = () => {
     try {
       const formattedPhone = `+1${digits}`;
       
-      const { error } = await supabase.functions.invoke("klaviyo-subscribe", {
+      const { error } = await supabase.functions.invoke("brevo-subscribe", {
         body: {
           phone: formattedPhone,
           email: email || undefined,
           source: "waitlist_form",
-          custom_properties: {
-            name: name || undefined,
-            preferred_drink: preferredDrink || undefined,
-          },
         },
       });
 

@@ -94,6 +94,28 @@ const Checkout = () => {
       });
 
       if (error || !data?.url) throw new Error(error?.message || "No checkout URL");
+
+      // Save order details so confirmation page has something to show after Stripe redirect
+      const itemsLabel = items.map((i) => {
+        const parts = [`${i.quantity}× ${i.name}`];
+        if (i.addSeaMoss) parts.push("+ Sea Moss Shot");
+        if (i.seaMossCount) parts.push(`+ ${i.seaMossCount} Sea Moss Shot${i.seaMossCount > 1 ? "s" : ""}`);
+        return parts.join(" ");
+      }).join(", ");
+      sessionStorage.setItem("nj_last_order", JSON.stringify({
+        orderId: "",
+        orderNumber: "NJ-" + Math.random().toString(36).slice(2, 10).toUpperCase(),
+        customerName: name.trim(),
+        customerPhone: phone.trim(),
+        customerEmail: email.trim() || undefined,
+        items: itemsLabel,
+        total: subtotal,
+        pickupDate,
+        pickupTime,
+        orderType,
+        deliveryAddress: orderType === "delivery" ? deliveryAddress.trim() : undefined,
+      }));
+
       setDrawerOpen(false);
       window.location.href = data.url;
     } catch (err: any) {

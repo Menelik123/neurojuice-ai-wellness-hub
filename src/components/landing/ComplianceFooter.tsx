@@ -20,7 +20,7 @@ const ComplianceFooter = () => {
                 <MapPin className="w-3.5 h-3.5" /> Atlanta, Georgia
               </p>
               <p className="flex items-center gap-2">
-                <Mail className="w-3.5 h-3.5" /> hello@neurojuice.com
+                <Mail className="w-3.5 h-3.5" /> menelikgarrick@gmail.com · jhyaire.hamilton@gmail.com
               </p>
             </div>
           </div>
@@ -42,8 +42,11 @@ const ComplianceFooter = () => {
           <div className="space-y-3">
             <h4 className="font-heading font-semibold text-foreground">Support</h4>
             <ul className="space-y-2 text-sm">
-              <li><a href="mailto:hello@neurojuice.com" className="text-muted-foreground hover:text-foreground transition-colors">Contact Us</a></li>
+              <li><a href="mailto:menelikgarrick@gmail.com,jhyaire.hamilton@gmail.com" className="text-muted-foreground hover:text-foreground transition-colors">Contact Us</a></li>
               <li><Link to="/privacy-policy" className="text-muted-foreground hover:text-foreground transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors">Terms of Service</Link></li>
+              <li><Link to="/refund-policy" className="text-muted-foreground hover:text-foreground transition-colors">Refund Policy</Link></li>
+              <li><Link to="/shipping-policy" className="text-muted-foreground hover:text-foreground transition-colors">Shipping & Delivery</Link></li>
               <li><Link to="/vitalpass" className="text-muted-foreground hover:text-foreground transition-colors">Vital Pass Membership</Link></li>
             </ul>
             {/* Social */}
@@ -75,12 +78,12 @@ const ComplianceFooter = () => {
         {/* Copyright */}
         <div className="text-center text-xs text-muted-foreground pt-4 border-t border-border space-y-2">
           <p>© {new Date().getFullYear()} NeuroJuice. All rights reserved.</p>
-          <Link 
-            to="/privacy-policy" 
-            className="text-muted-foreground hover:text-foreground transition-colors underline"
-          >
-            Privacy Policy
-          </Link>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link to="/privacy-policy" className="text-muted-foreground hover:text-foreground transition-colors underline">Privacy Policy</Link>
+            <Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors underline">Terms of Service</Link>
+            <Link to="/refund-policy" className="text-muted-foreground hover:text-foreground transition-colors underline">Refund Policy</Link>
+            <Link to="/shipping-policy" className="text-muted-foreground hover:text-foreground transition-colors underline">Shipping & Delivery</Link>
+          </div>
         </div>
 
         {/* Technology Partner Attribution */}

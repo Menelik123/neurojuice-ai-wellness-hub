@@ -117,6 +117,7 @@ const AdminOrders = () => {
   const [isAuthed, setIsAuthed] = useState(false);
   const [code, setCode] = useState("");
   const [orders, setOrders] = useState<FuelOrder[]>([]);
+  const [stripeOrders, setStripeOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
@@ -137,6 +138,7 @@ const AdminOrders = () => {
     }
     sessionStorage.setItem("admin-passcode", code);
     setOrders(((data as any)?.orders || []) as FuelOrder[]);
+    setStripeOrders((data as any)?.stripeOrders || []);
     setIsAuthed(true);
   };
 
@@ -157,6 +159,7 @@ const AdminOrders = () => {
       setIsAuthed(false);
     } else {
       setOrders(((data as any)?.orders || []) as FuelOrder[]);
+      setStripeOrders((data as any)?.stripeOrders || []);
     }
     setLoading(false);
   };
@@ -283,9 +286,12 @@ const AdminOrders = () => {
 
       <main className="max-w-6xl mx-auto p-4">
         <Tabs defaultValue="orders">
-          <TabsList className="grid w-full grid-cols-3 mb-6">
+          <TabsList className="grid w-full grid-cols-4 mb-6">
             <TabsTrigger value="orders" className="font-semibold">
-              Orders <Badge variant="outline" className="ml-1.5 text-xs">{orders.length}</Badge>
+              Fuel <Badge variant="outline" className="ml-1.5 text-xs">{orders.length}</Badge>
+            </TabsTrigger>
+            <TabsTrigger value="stripe" className="font-semibold">
+              Stripe <Badge variant="outline" className="ml-1.5 text-xs">{stripeOrders.length}</Badge>
             </TabsTrigger>
             <TabsTrigger value="products" className="font-semibold">Products</TabsTrigger>
             <TabsTrigger value="bundles" className="font-semibold">Bundles</TabsTrigger>
@@ -360,6 +366,71 @@ const AdminOrders = () => {
                           <p key={i} className="text-sm text-muted-foreground">• {drink}</p>
                         ))}
                         {prods?.total != null && <p className="mt-2 font-bold text-primary text-lg">${Number(prods.total).toFixed(2)}</p>}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </TabsContent>
+
+          {/* ── STRIPE ORDERS TAB ── */}
+          <TabsContent value="stripe" className="space-y-4">
+            {stripeOrders.length === 0 && !loading && (
+              <Card>
+                <CardContent className="py-12 text-center text-muted-foreground">
+                  <Package className="w-10 h-10 mx-auto mb-3 opacity-50" />
+                  <p className="text-lg font-medium">No Stripe orders yet</p>
+                  <p className="text-sm">Orders paid via Stripe checkout will appear here.</p>
+                </CardContent>
+              </Card>
+            )}
+            {stripeOrders.map((order: any) => {
+              const meta = order.metadata || {};
+              const lineItems: any[] = order.line_items || [];
+              return (
+                <Card key={order.id} className="border border-border">
+                  <CardContent className="p-4 md:p-6">
+                    <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                      <div className="space-y-2 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h3 className="font-heading font-semibold text-lg">{order.customer_name || meta.customer_name || "Unknown"}</h3>
+                          <Badge className="text-xs bg-blue-500/20 text-blue-700 border-blue-300">Stripe · Paid</Badge>
+                        </div>
+                        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                          {(order.customer_email) && (
+                            <span className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" /> {order.customer_email}</span>
+                          )}
+                          {meta.customer_phone && (
+                            <span className="flex items-center gap-1"><Phone className="w-3.5 h-3.5" /> {meta.customer_phone}</span>
+                          )}
+                          <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {formatDate(order.created_at)}</span>
+                        </div>
+                        {(meta.pickup_date || meta.pickup_time) && (
+                          <div className="text-sm flex items-center gap-2">
+                            {meta.order_type && (
+                              <Badge variant="outline" className={meta.order_type === "delivery" ? "border-blue-300 text-blue-700 bg-blue-50" : "border-green-300 text-green-700 bg-green-50"}>
+                                {meta.order_type === "delivery" ? "🚗 Delivery" : "📍 Pickup"}
+                              </Badge>
+                            )}
+                            <span className="font-medium text-foreground">{meta.pickup_date} — {meta.pickup_time}</span>
+                          </div>
+                        )}
+                        {meta.delivery_address && (
+                          <p className="text-sm text-muted-foreground flex items-center gap-1">
+                            <MapPin className="w-3.5 h-3.5" /> {meta.delivery_address}
+                          </p>
+                        )}
+                        <p className="text-xs text-muted-foreground font-mono">{order.stripe_session_id}</p>
+                      </div>
+                      <div className="bg-muted/30 rounded-lg p-4 min-w-[220px]">
+                        <p className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">Items</p>
+                        {lineItems.map((item: any, i: number) => (
+                          <p key={i} className="text-sm text-muted-foreground">• {item.quantity}× {item.name} — ${item.amount}</p>
+                        ))}
+                        {order.amount_total != null && (
+                          <p className="mt-2 font-bold text-primary text-lg">${Number(order.amount_total).toFixed(2)}</p>
+                        )}
                       </div>
                     </div>
                   </CardContent>

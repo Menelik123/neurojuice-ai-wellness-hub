@@ -39,11 +39,11 @@ const LandingFooter = () => {
           {/* Contact & Social */}
           <div className="flex items-center gap-6">
             <a 
-              href="mailto:hello@neurojuice.com"
+              href="mailto:menelikgarrick@gmail.com"
               className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
             >
               <Mail className="w-5 h-5" />
-              <span className="text-sm">hello@neurojuice.com</span>
+              <span className="text-sm">menelikgarrick@gmail.com · jhyaire.hamilton@gmail.com</span>
             </a>
             <a 
               href="https://instagram.com/neurojuicehq"

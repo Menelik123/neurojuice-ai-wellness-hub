@@ -31,11 +31,11 @@ const SMSOptInForm = ({ variant = "inline", showEmail = true }: SMSOptInFormProp
     setIsSubmitting(true);
     
     try {
-      const { data, error } = await supabase.functions.invoke("klaviyo-subscribe", {
-        body: { 
-          phone: phone.trim(), 
+      const { data, error } = await supabase.functions.invoke("brevo-subscribe", {
+        body: {
+          phone: phone.trim(),
           email: email.trim() || undefined,
-          source: "sms_optin_form"
+          source: "sms_optin_form",
         },
       });
 

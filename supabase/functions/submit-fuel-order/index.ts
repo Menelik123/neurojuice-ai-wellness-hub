@@ -115,56 +115,56 @@ serve(async (req) => {
     const orderId = inserted.id as string;
     const orderNumber = "NJ-" + orderId.replace(/-/g, "").substring(0, 8).toUpperCase();
 
-    const resendKey = Deno.env.get("RESEND_API_KEY");
-    if (resendKey) {
-      const bottleList = data.products.bottles?.filter(b => b.quantity > 0).map((b) => `${b.quantity}× ${b.name}`).join(", ") || "";
-      const bundleList = data.products.bundles?.filter(b => b.quantity > 0).map((b) => `${b.quantity}× ${b.name}`).join(", ") || "";
-      const itemSummary = [bundleList, bottleList].filter(Boolean).join(", ");
-      const orderType = data.products.orderType === "delivery" ? "Delivery" : "Pickup";
+    const brevoKey = Deno.env.get("BREVO_API_KEY");
+    const bottleList = data.products.bottles?.filter(b => b.quantity > 0).map((b) => `${b.quantity}× ${b.name}`).join(", ") || "";
+    const bundleList = data.products.bundles?.filter(b => b.quantity > 0).map((b) => `${b.quantity}× ${b.name}`).join(", ") || "";
+    const itemSummary = [bundleList, bottleList].filter(Boolean).join(", ");
+    const orderType = data.products.orderType === "delivery" ? "Delivery" : "Pickup";
 
-      const sendEmail = async (payload: object, label: string) => {
-        try {
-          const res = await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-          const json = await res.json();
-          if (!res.ok) {
-            console.error(`[${label}] Resend error ${res.status}:`, JSON.stringify(json));
-          } else {
-            console.log(`[${label}] Sent — id:`, json.id);
-          }
-        } catch (e) {
-          console.error(`[${label}] Network error:`, e);
-        }
-      };
+    const sendEmail = async (to: string[], subject: string, html: string, label: string) => {
+      if (!brevoKey) { console.warn(`[${label}] BREVO_API_KEY not set`); return; }
+      try {
+        const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+          method: "POST",
+          headers: { "api-key": brevoKey, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sender: { name: "NeuroJuice", email: "hello@neurojuice.org" },
+            to: to.map((e) => ({ email: e })),
+            subject,
+            htmlContent: html,
+          }),
+        });
+        const json = await res.json();
+        if (!res.ok) console.error(`[${label}] Brevo error ${res.status}:`, JSON.stringify(json));
+        else console.log(`[${label}] sent — messageId:`, json.messageId);
+      } catch (e) {
+        console.error(`[${label}] network error:`, e);
+      }
+    };
 
-      // Team notification
-      await sendEmail({
-        from: "NeuroJuice Orders <onboarding@resend.dev>",
-        to: ["menelikgarrick@gmail.com"],
-        subject: `🧃 New Order ${orderNumber} — ${data.customer_name} (${data.pickup_date} ${data.pickup_time})`,
-        html: `<h2>New NeuroJuice Order — ${orderNumber}</h2>
-          <p><strong>Customer:</strong> ${data.customer_name}</p>
-          <p><strong>Phone:</strong> ${data.customer_phone}</p>
-          <p><strong>Email:</strong> ${data.customer_email || "not provided"}</p>
-          <p><strong>Type:</strong> ${orderType}</p>
-          ${data.products.deliveryAddress ? `<p><strong>Delivery Address:</strong> ${data.products.deliveryAddress}</p>` : ""}
-          <p><strong>Items:</strong> ${itemSummary}</p>
-          <p><strong>Total:</strong> $${Number(data.products.total).toFixed(2)}</p>
-          <p><strong>${orderType} Date:</strong> ${data.pickup_date} at ${data.pickup_time}</p>
-          ${data.notes ? `<p><strong>Notes:</strong> ${data.notes}</p>` : ""}`,
-      }, "team-notification");
+    // Team notification
+    await sendEmail(
+      ["menelikgarrick@gmail.com", "jhyaire.hamilton@gmail.com"],
+      `🧃 New Order ${orderNumber} — ${data.customer_name} (${data.pickup_date} ${data.pickup_time})`,
+      `<h2>New NeuroJuice Order — ${orderNumber}</h2>
+        <p><strong>Customer:</strong> ${data.customer_name}</p>
+        <p><strong>Phone:</strong> ${data.customer_phone}</p>
+        <p><strong>Email:</strong> ${data.customer_email || "not provided"}</p>
+        <p><strong>Type:</strong> ${orderType}</p>
+        ${data.products.deliveryAddress ? `<p><strong>Delivery Address:</strong> ${data.products.deliveryAddress}</p>` : ""}
+        <p><strong>Items:</strong> ${itemSummary}</p>
+        <p><strong>Total:</strong> $${Number(data.products.total).toFixed(2)}</p>
+        <p><strong>${orderType} Date:</strong> ${data.pickup_date} at ${data.pickup_time}</p>
+        ${data.notes ? `<p><strong>Notes:</strong> ${data.notes}</p>` : ""}`,
+      "team-notification"
+    );
 
-      // Customer confirmation email (only if they provided email)
-      if (data.customer_email) {
-        await sendEmail({
-          from: "NeuroJuice <onboarding@resend.dev>",
-          to: [data.customer_email.trim()],
-          subject: `Your NeuroJuice Order is Confirmed — ${orderNumber}`,
-          html: `
-<!DOCTYPE html>
+    // Customer confirmation email (only if they provided email)
+    if (data.customer_email) {
+      await sendEmail(
+        [data.customer_email.trim()],
+        `Your NeuroJuice Order is Confirmed — ${orderNumber}`,
+        `<!DOCTYPE html>
 <html>
 <body style="font-family: sans-serif; background:#f9fafb; padding:24px; color:#111;">
   <div style="max-width:520px;margin:0 auto;background:#fff;border-radius:16px;padding:32px;border:1px solid #e5e7eb;">
@@ -191,12 +191,12 @@ serve(async (req) => {
     <div style="text-align:center;margin-top:24px;">
       <a href="${Deno.env.get("SITE_URL") || "https://neurojuice.vercel.app"}/menu" style="background:#16a34a;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:bold;">Browse More Blends</a>
     </div>
-    <p style="text-align:center;color:#9ca3af;font-size:11px;margin-top:24px;">NeuroJuice · Atlanta, Georgia · hello@neurojuice.com</p>
+    <p style="text-align:center;color:#9ca3af;font-size:11px;margin-top:24px;">NeuroJuice · Atlanta, Georgia · menelikgarrick@gmail.com · jhyaire.hamilton@gmail.com</p>
   </div>
 </body>
 </html>`,
-        }, "customer-confirmation");
-      }
+        "customer-confirmation"
+      );
     }
 
     return new Response(

@@ -6,8 +6,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Loader2, CreditCard, ShoppingBag, CheckCircle, FlaskConical } from "lucide-react";
 
-const PASSCODE = "RNI2026";
-
 const TEST_ORDER = {
   customer_name: "Menelik (Test)",
   customer_phone: "4043520000",
@@ -32,11 +30,18 @@ const AdminTest = () => {
   const [fuelLoading, setFuelLoading] = useState(false);
   const [fuelDone, setFuelDone] = useState(false);
 
-  const handlePasscode = (e: React.FormEvent) => {
+  const handlePasscode = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode === PASSCODE) {
-      setAuthed(true);
-    } else {
+    try {
+      const res = await supabase.functions.invoke("admin-list-orders", {
+        headers: { "x-admin-passcode": passcode },
+      });
+      if (res.error || res.data?.error) {
+        toast.error("Wrong passcode");
+      } else {
+        setAuthed(true);
+      }
+    } catch {
       toast.error("Wrong passcode");
     }
   };

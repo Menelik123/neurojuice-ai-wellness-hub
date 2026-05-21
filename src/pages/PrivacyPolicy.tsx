@@ -142,11 +142,11 @@ const PrivacyPolicy = () => {
             <div className="space-y-2 text-foreground">
               <p>
                 Email:{" "}
-                <a 
-                  href="mailto:Menelik@apexdigi.org" 
+                <a
+                  href="mailto:menelikgarrick@gmail.com,jhyaire.hamilton@gmail.com"
                   className="text-primary hover:underline"
                 >
-                  Menelik@apexdigi.org
+                  menelikgarrick@gmail.com
                 </a>
               </p>
               <p>

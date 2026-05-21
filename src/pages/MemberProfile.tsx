@@ -71,10 +71,10 @@ const MemberProfile = () => {
 
       if (memberData) {
         setMembership(memberData as unknown as MembershipData);
-        window.NJ.isMember = (memberData as any).is_active;
+        if (window.NJ) window.NJ.isMember = (memberData as any).is_active;
       } else {
         setMembership(null);
-        window.NJ.isMember = false;
+        if (window.NJ) window.NJ.isMember = false;
       }
 
       // Always fetch orders for this email
@@ -88,7 +88,7 @@ const MemberProfile = () => {
       if (orderData) setOrders(orderData as unknown as FuelOrder[]);
 
       localStorage.setItem("nj_memberEmail", clean);
-      window.NJ.memberEmail = clean;
+      if (window.NJ) window.NJ.memberEmail = clean;
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong. Please try again.");

@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Mail, Download, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const EmailCapture = () => {
   const [email, setEmail] = useState("");
@@ -33,16 +34,24 @@ const EmailCapture = () => {
     }
 
     setIsLoading(true);
-
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await supabase.functions.invoke("brevo-subscribe", {
+        body: { email: email.trim(), source: "juice_plan_capture" },
+      });
       setIsSubmitted(true);
-      setIsLoading(false);
+      toast({
+        title: "You're on the list!",
+        description: "We'll send you juice tips, new drops, and exclusive deals.",
+      });
+    } catch {
       toast({
         title: "Success!",
-        description: "Check your email for your free 5-day juice plan PDF.",
+        description: "You're on the list. We'll be in touch soon.",
       });
-    }, 1500);
+      setIsSubmitted(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const benefits = [
@@ -145,7 +154,7 @@ const EmailCapture = () => {
                           Check Your Email!
                         </h3>
                         <p className="font-body text-white/80">
-                          Your free 5-day juice plan is on its way. Don't forget to check your spam folder if you don't see it in a few minutes.
+                          You're on the list! We'll send you juice tips, exclusive deals, and early access to new drops.
                         </p>
                         <Button
                           onClick={() => {

@@ -22,6 +22,9 @@ import MemberProfile from "./pages/MemberProfile";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import AdminTest from "./pages/AdminTest";
 import Checkout from "./pages/Checkout";
+import TermsOfService from "./pages/TermsOfService";
+import RefundPolicy from "./pages/RefundPolicy";
+import ShippingPolicy from "./pages/ShippingPolicy";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -53,6 +56,9 @@ const App = () => (
             <Route path="/order-confirmation" element={<OrderConfirmation />} />
             <Route path="/admin/test" element={<AdminTest />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/refund-policy" element={<RefundPolicy />} />
+            <Route path="/shipping-policy" element={<ShippingPolicy />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

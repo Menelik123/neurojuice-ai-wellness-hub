@@ -81,7 +81,7 @@ const VitalPaywall = ({ onTrialStart, onDismiss }: VitalPaywallProps) => {
   };
 
   const handleContactSupport = () => {
-    window.location.href = 'mailto:hello@neurojuice.com';
+    window.location.href = 'mailto:menelikgarrick@gmail.com,jhyaire.hamilton@gmail.com';
   };
 
   return (

@@ -53,7 +53,7 @@ const Footer = () => {
                 📍 Atlanta, Georgia
               </p>
               <p className="font-body text-sm text-background/90">
-                ✉️ hello@neurojuice.com
+                ✉️ menelikgarrick@gmail.com · jhyaire.hamilton@gmail.com
               </p>
               <p className="font-body text-sm text-background/90">
                 📞 321-367-2172

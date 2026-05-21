@@ -78,9 +78,12 @@ const FuelOrderForm = () => {
       const bundle = bundles.find((b) => b.id === id);
       if (bundle) total += bundle.price * qty;
     });
-    // Add sea moss shots
-    const seaMoss = selectedProducts["sea-moss-shot"] || 0;
-    total += seaMoss * 1;
+    // Individual bottles at $8.50 each
+    Object.entries(selectedProducts)
+      .filter(([id]) => id !== "sea-moss-shot")
+      .forEach(([, qty]) => { total += 8.5 * qty; });
+    // Sea moss shots
+    total += (selectedProducts["sea-moss-shot"] || 0) * 1;
     return total;
   };
 
@@ -95,15 +98,9 @@ const FuelOrderForm = () => {
     if (!formData.name || !formData.phone) { toast.error("Please fill in your name and phone number"); return; }
     if (!formData.pickupDate || !formData.pickupTime) { toast.error("Please select a date and time"); return; }
     const hasBundles = Object.keys(selectedBundles).length > 0;
+    const hasBottles = Object.entries(selectedProducts).some(([id, qty]) => id !== "sea-moss-shot" && qty > 0);
     const hasSeaMoss = (selectedProducts["sea-moss-shot"] || 0) > 0;
-    if (!hasBundles && !hasSeaMoss) { toast.error("Please select at least one item"); return; }
-    const maxDrinks = getMaxDrinks();
-    const totalDrinks = getTotalDrinksSelected();
-    if (hasBundles && totalDrinks !== maxDrinks) {
-      const diff = maxDrinks - totalDrinks;
-      toast.error(`You selected ${maxDrinks} bottle${maxDrinks !== 1 ? "s" : ""} worth of bundles but only chose ${totalDrinks} drink${totalDrinks !== 1 ? "s" : ""}. Please ${diff > 0 ? `add ${diff} more` : `remove ${Math.abs(diff)}`}.`);
-      return;
-    }
+    if (!hasBundles && !hasBottles && !hasSeaMoss) { toast.error("Please select at least one item"); return; }
     if (formData.orderType === "delivery" && !formData.deliveryAddress.trim()) { toast.error("Please enter a delivery address"); return; }
 
     setIsSubmitting(true);
@@ -128,8 +125,14 @@ const FuelOrderForm = () => {
           notes: formData.notes.trim() || null,
         },
       });
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
+      if (error) {
+        console.error("Function invoke error:", error);
+        throw new Error(error.message || "Order submission failed");
+      }
+      if (data?.error) {
+        console.error("Function returned error:", data.error);
+        throw new Error(data.error);
+      }
 
       // Build human-readable item summary
       const bundleParts = Object.entries(selectedBundles).map(([id, qty]) => {
@@ -162,9 +165,9 @@ const FuelOrderForm = () => {
       }));
 
       navigate("/order-confirmation");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Order submission error:", error);
-      toast.error("Failed to submit order. Please try again.");
+      toast.error(error?.message || "Failed to submit order. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -254,20 +257,25 @@ const FuelOrderForm = () => {
             </div>
           </div>
 
-          {/* Drink Selection */}
+          {/* Bottle Selection */}
           <div className="bg-muted/30 rounded-2xl p-6 border border-border/50">
-            <h3 className="font-semibold text-foreground mb-1">Choose Your Drinks</h3>
+            <h3 className="font-semibold text-foreground mb-1">Choose Your Bottles</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              {getMaxDrinks() > 0 ? `Select your drinks — ${getTotalDrinksSelected()} of ${getMaxDrinks()} chosen` : "Select a bundle above first."}
+              {getMaxDrinks() > 0
+                ? `Bundle slots: ${getTotalDrinksSelected()} of ${getMaxDrinks()} selected — add any extras at $8.50 each`
+                : "$8.50 each · or save with a bundle above"}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {products.filter(p => p.id !== "sea-moss-shot").map((product) => (
                 <div key={product.id} className="flex items-center justify-between bg-background rounded-xl p-3 border border-border/50">
-                  <p className="font-medium text-foreground text-sm">{product.name}</p>
+                  <div>
+                    <p className="font-medium text-foreground text-sm">{product.name}</p>
+                    <p className="text-xs text-muted-foreground">$8.50</p>
+                  </div>
                   <div className="flex items-center gap-2">
                     <Button type="button" variant="outline" size="sm" className="h-8 w-8 p-0" onClick={() => handleProductChange(product.id, (selectedProducts[product.id] || 0) - 1)} disabled={!selectedProducts[product.id]}>-</Button>
                     <span className="w-6 text-center text-sm font-medium">{selectedProducts[product.id] || 0}</span>
-                    <Button type="button" variant="outline" size="sm" className="h-8 w-8 p-0" onClick={() => handleProductChange(product.id, (selectedProducts[product.id] || 0) + 1)} disabled={getMaxDrinks() === 0 || getTotalDrinksSelected() >= getMaxDrinks()}>+</Button>
+                    <Button type="button" variant="outline" size="sm" className="h-8 w-8 p-0" onClick={() => handleProductChange(product.id, (selectedProducts[product.id] || 0) + 1)}>+</Button>
                   </div>
                 </div>
               ))}
