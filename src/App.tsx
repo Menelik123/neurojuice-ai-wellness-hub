@@ -7,7 +7,6 @@ import { CartProvider } from "@/contexts/CartContext";
 import CartDrawer from "@/components/CartDrawer";
 import Index from "./pages/Index";
 import OrderOptions from "./pages/OrderOptions";
-import ExoticMenu from "./pages/ExoticMenu";
 import DrVital from "./pages/DrVital";
 import Menu from "./pages/Menu";
 import OrderPage from "./pages/OrderPage";
@@ -40,7 +39,6 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/order-options" element={<OrderOptions />} />
-            <Route path="/exotic-menu" element={<ExoticMenu />} />
             <Route path="/dr-vital" element={<DrVital />} />
             <Route path="/menu" element={<Menu />} />
             <Route path="/vitalpass" element={<VitalPass />} />

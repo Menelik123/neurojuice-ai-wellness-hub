@@ -1,13 +1,11 @@
-import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MemberBundles from "@/components/MemberBundles";
 import MemberPricing from "@/components/MemberPricing";
-import PasscodeModal from "@/components/PasscodeModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart, Users, Gift, Lock } from "lucide-react";
+import { ShoppingCart, Users, Gift } from "lucide-react";
 import { juices } from "@/data/juices";
 import { Link } from "react-router-dom";
 
@@ -19,7 +17,6 @@ import greenVital from "@/assets/product-green-vital.webp";
 import hibiscusDelight from "@/assets/product-hibiscus-delight.webp";
 
 const Menu = () => {
-  const [showPasscode, setShowPasscode] = useState(false);
   const imageMap: Record<string, string> = {
     "tropical-breeze": tropicalBreeze,
     "beet-flow": beetFlow,
@@ -131,21 +128,6 @@ const Menu = () => {
           </div>
         </section>
 
-        {/* Exotic Menu unlock */}
-        <section className="py-12 bg-gradient-to-br from-purple-950 to-black text-white">
-          <div className="container mx-auto px-4 text-center">
-            <div className="max-w-xl mx-auto space-y-4">
-              <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center mx-auto">
-                <Lock className="w-7 h-7 text-purple-300" />
-              </div>
-              <h2 className="font-heading font-bold text-2xl">Exotic Blends — Members Only</h2>
-              <p className="text-white/70 text-sm">Rare, limited-edition formulas for those in the know. Enter your passcode to unlock.</p>
-              <Button variant="outline" className="border-purple-400 text-purple-200 hover:bg-purple-900/50" onClick={() => setShowPasscode(true)}>
-                Unlock Exotic Menu
-              </Button>
-            </div>
-          </div>
-        </section>
 
         <section className="py-16 bg-gradient-hero text-white">
           <div className="container mx-auto px-4 text-center">
@@ -162,7 +144,6 @@ const Menu = () => {
         </section>
       </main>
       <Footer />
-      <PasscodeModal isOpen={showPasscode} onClose={() => setShowPasscode(false)} />
     </div>
   );
 };

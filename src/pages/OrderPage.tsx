@@ -7,6 +7,21 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Minus, Plus, ArrowLeft } from "lucide-react";
 import { getJuiceBySlug, type Juice } from "@/data/juices";
+import tropicalBreeze from "@/assets/product-tropical-breeze.webp";
+import beetFlow from "@/assets/product-beet-flow.webp";
+import strawberryHorizon from "@/assets/product-strawberry-horizon.webp";
+import mintCondition from "@/assets/product-mint-condition.webp";
+import greenVital from "@/assets/product-green-vital.webp";
+import hibiscusDelight from "@/assets/product-hibiscus-delight.webp";
+
+const imageMap: Record<string, string> = {
+  "tropical-breeze": tropicalBreeze,
+  "beet-flow": beetFlow,
+  "green-vital": greenVital,
+  "mint-condition": mintCondition,
+  "strawberry-horizon": strawberryHorizon,
+  "hibiscus-delight": hibiscusDelight,
+};
 import { formatPrice } from "@/lib/pricing";
 import { useToast } from "@/hooks/use-toast";
 import { useCart } from "@/contexts/CartContext";
@@ -144,7 +159,7 @@ const OrderPage = () => {
                 {/* Product Image */}
                 <div className="aspect-[4/3] overflow-hidden rounded-2xl shadow-lg">
                   <img 
-                    src={juice.img}
+                    src={imageMap[juice.slug] || tropicalBreeze}
                     alt={juice.name}
                     loading="eager"
                     className="w-full h-full object-cover"
