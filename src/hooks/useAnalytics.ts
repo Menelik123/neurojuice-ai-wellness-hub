@@ -1,6 +1,8 @@
 import { useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+const db = supabase as any;
+
 // Get or create anonymous session ID
 function getSessionId(): string {
   let id = sessionStorage.getItem("nj_session_id");
@@ -22,7 +24,7 @@ interface TrackOptions {
 export function useAnalytics() {
   const track = useCallback(async (event: EventName, opts: TrackOptions = {}) => {
     try {
-      await supabase.from("analytics_events").insert({
+      await db.from("analytics_events").insert({
         event_name: event,
         juice_slug: opts.juiceSlug ?? null,
         juice_name: opts.juiceName ?? null,
