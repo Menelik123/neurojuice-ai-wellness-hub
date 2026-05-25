@@ -2,6 +2,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+const db = supabase as any;
+
 export interface Bundle {
   id: string;
   slug: string;
@@ -32,12 +34,12 @@ export const useBundles = () => {
   return useQuery({
     queryKey: ["bundles"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("bundles")
         .select("*")
         .order("sort_order", { ascending: true });
       if (error) throw error;
-      return (data || []) as Bundle[];
+      return (data || []) as unknown as Bundle[];
     },
     staleTime: 1000 * 60 * 2,
   });
