@@ -210,7 +210,7 @@ serve(async (req) => {
       customer_email: fulfillment?.customerEmail || undefined,
       billing_address_collection: "auto",
       phone_number_collection: { enabled: !fulfillment?.customerPhone },
-      success_url: `${origin}/order-confirmation`,
+      success_url: `${origin}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout?canceled=1`,
       metadata,
     });

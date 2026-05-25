@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { CheckCircle, Copy, ShoppingBag, MessageCircle, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
 interface OrderDetails {
   orderId: string;
@@ -26,9 +27,34 @@ const COUPON_CODE = "NJTHANKS";
 
 const OrderConfirmation = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [order, setOrder] = useState<OrderDetails | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const sessionId = searchParams.get("session_id");
+
+    if (sessionId) {
+      supabase.functions.invoke("get-order-by-session", { body: { sessionId } })
+        .then(({ data, error }) => {
+          if (error || !data?.order) {
+            // Fall back to sessionStorage if Stripe lookup fails
+            const raw = sessionStorage.getItem("nj_last_order");
+            if (raw) {
+              try { setOrder(JSON.parse(raw)); return; } catch {}
+            }
+            navigate("/fuel", { replace: true });
+          } else {
+            setOrder(data.order);
+            // Keep sessionStorage in sync so back-nav still works
+            sessionStorage.setItem("nj_last_order", JSON.stringify(data.order));
+          }
+        })
+        .finally(() => setLoading(false));
+      return;
+    }
+
+    // No session_id in URL — try sessionStorage (legacy or same-tab flow)
     const raw = sessionStorage.getItem("nj_last_order");
     if (!raw) {
       navigate("/fuel", { replace: true });
@@ -39,6 +65,7 @@ const OrderConfirmation = () => {
     } catch {
       navigate("/fuel", { replace: true });
     }
+    setLoading(false);
   }, []);
 
   const copyCoupon = () => {
@@ -49,7 +76,7 @@ const OrderConfirmation = () => {
     });
   };
 
-  if (!order) return null;
+  if (loading || !order) return null;
 
   const isDelivery = order.orderType === "delivery";
 
