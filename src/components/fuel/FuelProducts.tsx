@@ -8,9 +8,9 @@ interface FuelProductsProps {
 }
 
 const FALLBACK_BUNDLES = [
-  { name: "Starter Stack", bottles: 3, price: 23, badge: "Most Popular", featured: false },
-  { name: "Performance Pack", bottles: 5, price: 38, badge: "Best Value", featured: true },
-  { name: "Weekly NeuroStack", bottles: 10, price: 70, badge: "", featured: false },
+  { name: "Starter Stack", bottles: 3, price: 23, badge: "Most Popular", featured: false, badgeIcon: Star },
+  { name: "Performance Pack", bottles: 5, price: 38, badge: "Best Value", featured: true, badgeIcon: Flame },
+  { name: "Weekly NeuroStack", bottles: 10, price: 70, badge: "", featured: false, badgeIcon: undefined },
 ];
 
 const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
@@ -23,6 +23,7 @@ const FuelProducts = ({ onAddToOrder }: FuelProductsProps) => {
         price: b.price,
         badge: b.badge,
         featured: b.badge === "Best Value",
+        badgeIcon: b.badge === "Best Value" ? Flame : undefined,
       }))
     : FALLBACK_BUNDLES;
 
