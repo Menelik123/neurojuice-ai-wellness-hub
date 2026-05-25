@@ -34,7 +34,7 @@ export const useBundles = () => {
   return useQuery({
     queryKey: ["bundles"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await db
         .from("bundles")
         .select("*")
         .order("sort_order", { ascending: true });
