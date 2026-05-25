@@ -3,6 +3,9 @@ project_id = "kxohdhxhnsdntxfwmxir"
 [functions.stripe-webhook]
 verify_jwt = false
 
+[functions.get-my-orders]
+verify_jwt = false
+
 [functions.validate-exotic-code]
 verify_jwt = false
 

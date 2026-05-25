@@ -78,12 +78,10 @@ const MemberProfile = () => {
       }
 
       // Always fetch orders for this email
-      const { data: orderData } = await supabase
-        .from("fuel_orders" as any)
-        .select("id, customer_name, customer_email, products, pickup_date, pickup_time, status, created_at")
-        .eq("customer_email", clean)
-        .order("created_at", { ascending: false })
-        .limit(10);
+      const { data: orderResp } = await supabase.functions.invoke("get-my-orders", {
+        body: { email: clean },
+      });
+      const orderData = orderResp?.orders ?? [];
 
       if (orderData) setOrders(orderData as unknown as FuelOrder[]);
 
