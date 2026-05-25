@@ -77,10 +77,13 @@ const Checkout = () => {
         selectedDrinks: item.selectedDrinks,
       }));
 
+      const memberEmail = localStorage.getItem("nj_memberEmail") || window.NJ?.memberEmail || null;
+
       const { data, error } = await supabase.functions.invoke("create-checkout", {
         body: {
           items: checkoutItems,
           origin: window.location.origin,
+          memberEmail: memberEmail || undefined,
           fulfillment: {
             orderType,
             deliveryAddress: orderType === "delivery" ? deliveryAddress.trim() : null,
@@ -88,7 +91,7 @@ const Checkout = () => {
             pickupTime,
             customerName: name.trim(),
             customerPhone: phone.trim(),
-            customerEmail: email.trim() || null,
+            customerEmail: email.trim() || memberEmail || null,
           },
         },
       });
