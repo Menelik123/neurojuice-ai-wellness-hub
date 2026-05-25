@@ -12,6 +12,8 @@ import { Home, RefreshCw, Package, Clock, Phone, Mail, MapPin, Lock, CheckCircle
 import { Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
+const db = supabase as any;
+
 interface FuelOrder {
   id: string;
   customer_name: string;
@@ -167,11 +169,11 @@ const AdminOrders = () => {
   const fetchData = async () => {
     setDataLoading(true);
     const [{ data: prods }, { data: buns }] = await Promise.all([
-      supabase.from("products").select("*").order("sort_order"),
-      supabase.from("bundles").select("*").order("sort_order"),
+      db.from("products").select("*").order("sort_order"),
+      db.from("bundles").select("*").order("sort_order"),
     ]);
-    if (prods) setProducts(prods as Product[]);
-    if (buns) setBundles(buns as Bundle[]);
+    if (prods) setProducts(prods as unknown as Product[]);
+    if (buns) setBundles(buns as unknown as Bundle[]);
     setDataLoading(false);
   };
 
@@ -196,7 +198,7 @@ const AdminOrders = () => {
 
   // Product updates
   const updateProduct = async (id: string, field: string, value: any) => {
-    const { error } = await supabase.from("products").update({ [field]: value }).eq("id", id);
+    const { error } = await db.from("products").update({ [field]: value }).eq("id", id);
     if (error) {
       toast({ title: "Update failed", description: error.message, variant: "destructive" });
     } else {
@@ -211,7 +213,7 @@ const AdminOrders = () => {
 
   // Bundle updates
   const updateBundle = async (id: string, field: string, value: any) => {
-    const { error } = await supabase.from("bundles").update({ [field]: value }).eq("id", id);
+    const { error } = await db.from("bundles").update({ [field]: value }).eq("id", id);
     if (error) {
       toast({ title: "Update failed", description: error.message, variant: "destructive" });
     } else {
