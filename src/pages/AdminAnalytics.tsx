@@ -38,6 +38,7 @@ interface Summary {
   total_checkouts: number;
 }
 
+const ANALYTICS_PASSCODE = "neurojuice2025";
 const PASSCODE = import.meta.env.VITE_ADMIN_PASSCODE;
 
 const AdminAnalytics = () => {
@@ -53,10 +54,11 @@ const AdminAnalytics = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Validate against admin-list-orders function (reuse same passcode)
-    if (code === "RNI2026" || (PASSCODE && code === PASSCODE)) {
+    const normalizedCode = code.trim();
+    if (normalizedCode === ANALYTICS_PASSCODE || (PASSCODE && normalizedCode === PASSCODE.trim())) {
       sessionStorage.setItem("nj_analytics_auth", "true");
       setAuthed(true);
+      setAuthError("");
     } else {
       setAuthError("Invalid code");
     }
