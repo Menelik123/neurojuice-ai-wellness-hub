@@ -102,6 +102,23 @@ const MemberProfile = () => {
     lookup(email.trim());
   };
 
+  const [portalLoading, setPortalLoading] = useState(false);
+
+  const handleManageSubscription = async () => {
+    setPortalLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-billing-portal", {
+        body: { email: email.toLowerCase().trim(), origin: window.location.origin },
+      });
+      if (error || !data?.url) throw new Error(error?.message || "Could not open billing portal");
+      window.location.href = data.url;
+    } catch (err: any) {
+      toast.error(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setPortalLoading(false);
+    }
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("nj_memberEmail");
     window.NJ.memberEmail = null;
@@ -203,7 +220,7 @@ const MemberProfile = () => {
                         </div>
                       )}
                     </div>
-                    <div className="flex gap-2 pt-1">
+                    <div className="flex gap-2 pt-1 flex-wrap">
                       {[
                         "$1 off every bottle",
                         "Free Sea Moss shot / mo",
@@ -214,6 +231,17 @@ const MemberProfile = () => {
                         </span>
                       ))}
                     </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full mt-2"
+                      onClick={handleManageSubscription}
+                      disabled={portalLoading}
+                    >
+                      {portalLoading
+                        ? <><Loader2 className="w-3.5 h-3.5 mr-2 animate-spin" />Opening...</>
+                        : <><CreditCard className="w-3.5 h-3.5 mr-2" />Manage Subscription</>}
+                    </Button>
                   </CardContent>
                 </Card>
               ) : (

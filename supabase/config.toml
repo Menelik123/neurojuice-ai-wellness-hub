@@ -9,6 +9,9 @@ verify_jwt = false
 [functions.get-order-by-session]
 verify_jwt = false
 
+[functions.create-billing-portal]
+verify_jwt = false
+
 [functions.validate-exotic-code]
 verify_jwt = false
 
