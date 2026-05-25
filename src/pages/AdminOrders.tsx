@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Home, RefreshCw, Package, Clock, Phone, Mail, MapPin, Lock, CheckCircle2, XCircle, Pencil, Check, X } from "lucide-react";
+import { Home, RefreshCw, Package, Clock, Phone, Mail, MapPin, Lock, CheckCircle2, XCircle, Pencil, Check, X, Download } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
@@ -287,8 +287,11 @@ const AdminOrders = () => {
       </header>
 
       <main className="max-w-6xl mx-auto p-4">
-        <Tabs defaultValue="orders">
-          <TabsList className="grid w-full grid-cols-4 mb-6">
+        <Tabs defaultValue="all">
+          <TabsList className="grid w-full grid-cols-5 mb-6">
+            <TabsTrigger value="all" className="font-semibold">
+              All <Badge variant="outline" className="ml-1.5 text-xs">{orders.length + stripeOrders.length}</Badge>
+            </TabsTrigger>
             <TabsTrigger value="orders" className="font-semibold">
               Fuel <Badge variant="outline" className="ml-1.5 text-xs">{orders.length}</Badge>
             </TabsTrigger>
@@ -298,6 +301,164 @@ const AdminOrders = () => {
             <TabsTrigger value="products" className="font-semibold">Products</TabsTrigger>
             <TabsTrigger value="bundles" className="font-semibold">Bundles</TabsTrigger>
           </TabsList>
+
+          {/* ── ALL ORDERS TAB ── */}
+          <TabsContent value="all" className="space-y-4">
+            {(() => {
+              // Normalize both order types into a unified list
+              const fuelNorm = orders.map((o) => {
+                const prods = o.products as any;
+                const parts: string[] = [];
+                prods?.bundles?.forEach((b: any) => b.name && parts.push(`${b.quantity > 1 ? b.quantity + "× " : ""}${b.name}`));
+                prods?.bottles?.filter((b: any) => b.quantity > 0).forEach((b: any) => parts.push(`${b.quantity}× ${b.name}`));
+                return {
+                  id: o.id,
+                  source: "fuel" as const,
+                  customer_name: o.customer_name,
+                  customer_email: o.customer_email,
+                  customer_phone: o.customer_phone,
+                  items: parts.join(", ") || "Order",
+                  total: prods?.total != null ? Number(prods.total) : null,
+                  pickup_date: o.pickup_date,
+                  pickup_time: o.pickup_time,
+                  order_type: prods?.orderType || "pickup",
+                  status: o.status,
+                  created_at: o.created_at,
+                };
+              });
+
+              const stripeNorm = stripeOrders.map((o: any) => {
+                const meta = o.metadata || {};
+                const lineItems: any[] = o.line_items || [];
+                const items = lineItems.map((li: any) => `${li.quantity}× ${li.name}`).join(", ") || "Stripe order";
+                return {
+                  id: o.id,
+                  source: "stripe" as const,
+                  customer_name: o.customer_name || meta.customer_name || "Unknown",
+                  customer_email: o.customer_email || null,
+                  customer_phone: meta.customer_phone || null,
+                  items,
+                  total: o.amount_total != null ? Number(o.amount_total) : null,
+                  pickup_date: meta.pickup_date || "",
+                  pickup_time: meta.pickup_time || "",
+                  order_type: meta.order_type || "pickup",
+                  status: "paid",
+                  created_at: o.created_at,
+                };
+              });
+
+              const unified = [...fuelNorm, ...stripeNorm].sort(
+                (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+              );
+
+              const totalRevenue = unified.reduce((sum, o) => sum + (o.total ?? 0), 0);
+              const avgOrder = unified.length ? totalRevenue / unified.length : 0;
+
+              const exportCSV = () => {
+                const header = ["Source", "Date", "Customer", "Email", "Phone", "Items", "Total", "Pickup Date", "Pickup Time", "Order Type", "Status"];
+                const rows = unified.map((o) => [
+                  o.source,
+                  new Date(o.created_at).toLocaleString(),
+                  o.customer_name,
+                  o.customer_email || "",
+                  o.customer_phone || "",
+                  `"${o.items.replace(/"/g, '""')}"`,
+                  o.total != null ? o.total.toFixed(2) : "",
+                  o.pickup_date,
+                  o.pickup_time,
+                  o.order_type,
+                  o.status,
+                ]);
+                const csv = [header, ...rows].map((r) => r.join(",")).join("\n");
+                const blob = new Blob([csv], { type: "text/csv" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `neurojuice-orders-${new Date().toISOString().slice(0, 10)}.csv`;
+                a.click();
+                URL.revokeObjectURL(url);
+              };
+
+              return (
+                <>
+                  {/* Revenue stats */}
+                  <div className="grid grid-cols-3 gap-4">
+                    {[
+                      { label: "Total Revenue", value: `$${totalRevenue.toFixed(2)}` },
+                      { label: "Total Orders", value: unified.length },
+                      { label: "Avg Order", value: `$${avgOrder.toFixed(2)}` },
+                    ].map(({ label, value }) => (
+                      <Card key={label}>
+                        <CardContent className="p-4 text-center">
+                          <p className="text-2xl font-heading font-bold text-primary">{value}</p>
+                          <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+
+                  {/* Export */}
+                  <div className="flex justify-end">
+                    <Button variant="outline" size="sm" onClick={exportCSV} disabled={unified.length === 0}>
+                      <Download className="w-4 h-4 mr-1.5" />Export CSV
+                    </Button>
+                  </div>
+
+                  {/* Unified order list */}
+                  {unified.length === 0 && !loading ? (
+                    <Card>
+                      <CardContent className="py-12 text-center text-muted-foreground">
+                        <Package className="w-10 h-10 mx-auto mb-3 opacity-50" />
+                        <p className="text-lg font-medium">No orders yet</p>
+                      </CardContent>
+                    </Card>
+                  ) : unified.map((order) => (
+                    <Card key={`${order.source}-${order.id}`} className="border border-border">
+                      <CardContent className="p-4 md:p-5">
+                        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                          <div className="space-y-1.5 flex-1">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <h3 className="font-heading font-semibold text-base">{order.customer_name}</h3>
+                              <Badge className={`text-xs ${order.source === "stripe" ? "bg-blue-500/20 text-blue-700 border-blue-300" : getStatusColor(order.status)}`}>
+                                {order.source === "stripe" ? "Stripe · Paid" : order.status}
+                              </Badge>
+                              {order.source === "fuel" && order.status === "pending" && (
+                                <Button size="sm" variant="outline" className="h-6 text-xs px-2 border-blue-300 text-blue-700 hover:bg-blue-50" onClick={() => updateOrderStatus(order.id, "confirmed")}>Confirm</Button>
+                              )}
+                              {order.source === "fuel" && order.status === "confirmed" && (
+                                <Button size="sm" variant="outline" className="h-6 text-xs px-2 border-green-300 text-green-700 hover:bg-green-50" onClick={() => updateOrderStatus(order.id, "ready")}>Mark Ready</Button>
+                              )}
+                              {order.source === "fuel" && order.status === "ready" && (
+                                <Button size="sm" variant="outline" className="h-6 text-xs px-2 border-muted text-muted-foreground hover:bg-muted" onClick={() => updateOrderStatus(order.id, "completed")}>Complete</Button>
+                              )}
+                            </div>
+                            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                              {order.customer_email && <span className="flex items-center gap-1"><Mail className="w-3.5 h-3.5" />{order.customer_email}</span>}
+                              {order.customer_phone && <span className="flex items-center gap-1"><Phone className="w-3.5 h-3.5" />{order.customer_phone}</span>}
+                              <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{formatDate(order.created_at)}</span>
+                            </div>
+                            {(order.pickup_date || order.pickup_time) && (
+                              <div className="text-sm flex items-center gap-2">
+                                <Badge variant="outline" className={order.order_type === "delivery" ? "border-blue-300 text-blue-700 bg-blue-50" : "border-green-300 text-green-700 bg-green-50"}>
+                                  {order.order_type === "delivery" ? "🚗 Delivery" : "📍 Pickup"}
+                                </Badge>
+                                <span className="font-medium text-foreground">{order.pickup_date} — {order.pickup_time}</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="bg-muted/30 rounded-lg p-3 min-w-[200px]">
+                            <p className="text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide">Items</p>
+                            <p className="text-sm text-foreground">{order.items}</p>
+                            {order.total != null && <p className="mt-1.5 font-bold text-primary text-lg">${order.total.toFixed(2)}</p>}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </>
+              );
+            })()}
+          </TabsContent>
 
           {/* ── ORDERS TAB ── */}
           <TabsContent value="orders" className="space-y-4">
