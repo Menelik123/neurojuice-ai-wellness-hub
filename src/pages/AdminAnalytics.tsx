@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Home, RefreshCw, Lock, TrendingUp, ShoppingCart, DollarSign, Eye, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 
+const db = supabase as any;
+
 interface JuiceStat {
   juice_name: string;
   juice_slug: string;
@@ -71,10 +73,10 @@ const AdminAnalytics = () => {
     const sinceIso = since.toISOString();
 
     // 1. Juice engagement stats from analytics_events
-    const { data: events } = await supabase
+    const { data: events } = await db
       .from("analytics_events")
       .select("event_name, juice_slug, juice_name")
-      .gte("created_at", sinceIso);
+      .gte("created_at", sinceIso) as { data: Array<{ event_name: string; juice_slug: string | null; juice_name: string | null }> | null };
 
     if (events) {
       const map: Record<string, JuiceStat> = {};
@@ -94,9 +96,12 @@ const AdminAnalytics = () => {
 
       // 2. Revenue from stripe_orders + fuel_orders (combined)
       const [{ data: stripeOrders }, { data: fuelOrders }] = await Promise.all([
-        supabase.from("stripe_orders").select("amount_total, line_items, created_at").gte("created_at", sinceIso),
+        db.from("stripe_orders").select("amount_total, line_items, created_at").gte("created_at", sinceIso),
         supabase.from("fuel_orders").select("products, created_at").gte("created_at", sinceIso),
-      ]);
+      ]) as [
+        { data: Array<{ amount_total: number | string | null; line_items: Array<{ name: string; quantity: number; amount: string }> | null; created_at: string }> | null },
+        { data: Array<{ products: any; created_at: string }> | null }
+      ];
 
       let totalRevenue = 0;
       let totalOrders = 0;
