@@ -17,9 +17,12 @@ const TIME_SLOTS = [
 
 const DELIVERY_CUTOFF_HOUR = 15; // 3 PM
 
-const getMinDate = () => new Date().toISOString().split("T")[0];
+const getMinDate = () => getTodayString();
 
-const getTodayString = () => new Date().toISOString().split("T")[0];
+const getTodayString = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
 
 const getAvailableTimeSlots = (selectedDate: string): string[] => {
   if (selectedDate !== getTodayString()) return TIME_SLOTS;

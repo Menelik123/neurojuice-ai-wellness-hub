@@ -33,7 +33,10 @@ const pickupTimes = [
 
 const DELIVERY_CUTOFF_HOUR = 15;
 
-const getTodayString = () => new Date().toISOString().split("T")[0];
+const getTodayString = () => {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+};
 
 const getAvailableTimeSlots = (selectedDate: string): string[] => {
   if (selectedDate !== getTodayString()) return pickupTimes;
