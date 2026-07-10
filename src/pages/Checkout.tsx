@@ -15,10 +15,22 @@ const TIME_SLOTS = [
   "4:00 PM", "5:00 PM",
 ];
 
-const getMinDate = () => {
-  const d = new Date();
-  d.setDate(d.getDate() + 1);
-  return d.toISOString().split("T")[0];
+const DELIVERY_CUTOFF_HOUR = 15; // 3 PM
+
+const getMinDate = () => new Date().toISOString().split("T")[0];
+
+const getTodayString = () => new Date().toISOString().split("T")[0];
+
+const getAvailableTimeSlots = (selectedDate: string): string[] => {
+  if (selectedDate !== getTodayString()) return TIME_SLOTS;
+  const currentHour = new Date().getHours();
+  return TIME_SLOTS.filter((slot) => {
+    const [time, period] = slot.split(" ");
+    let hour = parseInt(time.split(":")[0]);
+    if (period === "PM" && hour !== 12) hour += 12;
+    if (period === "AM" && hour === 12) hour = 0;
+    return hour > currentHour;
+  });
 };
 
 const formatDate = (d: string) =>
@@ -36,6 +48,28 @@ const Checkout = () => {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [couponInput, setCouponInput] = useState("");
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponError, setCouponError] = useState("");
+
+  const VALID_COUPON = "NEURO10";
+  const discountAmount = couponApplied ? subtotal * 0.1 : 0;
+  const finalTotal = subtotal - discountAmount;
+
+  const isSameDayDelivery = orderType === "delivery" && pickupDate === getTodayString();
+  const isPastCutoff = new Date().getHours() >= DELIVERY_CUTOFF_HOUR;
+  const sameDayDeliveryBlocked = isSameDayDelivery && isPastCutoff;
+  const availableTimeSlots = getAvailableTimeSlots(pickupDate);
+
+  const applyCoupon = () => {
+    if (couponInput.trim().toUpperCase() === VALID_COUPON) {
+      setCouponApplied(true);
+      setCouponError("");
+    } else {
+      setCouponError("Invalid coupon code. Please try again.");
+      setCouponApplied(false);
+    }
+  };
 
   // Redirect to home if cart is empty
   if (items.length === 0) {
@@ -84,6 +118,7 @@ const Checkout = () => {
           items: checkoutItems,
           origin: window.location.origin,
           memberEmail: memberEmail || undefined,
+          couponCode: couponApplied ? VALID_COUPON : undefined,
           fulfillment: {
             orderType,
             deliveryAddress: orderType === "delivery" ? deliveryAddress.trim() : null,
@@ -112,7 +147,7 @@ const Checkout = () => {
         customerPhone: phone.trim(),
         customerEmail: email.trim() || undefined,
         items: itemsLabel,
-        total: subtotal,
+        total: finalTotal,
         pickupDate,
         pickupTime,
         orderType,
@@ -209,7 +244,11 @@ const Checkout = () => {
                 className="h-12"
                 autoFocus
               />
-              <p className="text-xs text-muted-foreground">Same-day delivery available for orders placed before 3 PM.</p>
+              {sameDayDeliveryBlocked ? (
+                <p className="text-xs text-destructive font-medium">Same-day delivery cutoff is 3 PM. Please select tomorrow or choose pickup.</p>
+              ) : (
+                <p className="text-xs text-muted-foreground">Same-day delivery available for orders placed before 3 PM.</p>
+              )}
             </div>
           )}
 
@@ -245,8 +284,11 @@ const Checkout = () => {
 
           <div className="space-y-2">
             <Label className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Select a time</Label>
+            {availableTimeSlots.length === 0 && pickupDate === getTodayString() && (
+              <p className="text-xs text-destructive font-medium">No more time slots available today. Please select tomorrow.</p>
+            )}
             <div className="grid grid-cols-4 gap-2">
-              {TIME_SLOTS.map((slot) => (
+              {availableTimeSlots.map((slot) => (
                 <button
                   key={slot}
                   type="button"
@@ -313,9 +355,48 @@ const Checkout = () => {
               </div>
             ))}
           </div>
-          <div className="px-5 py-4 border-t border-border flex justify-between items-center">
-            <span className="font-heading font-bold text-foreground">Total</span>
-            <span className="font-heading font-bold text-xl text-foreground">${subtotal.toFixed(2)}</span>
+          {/* Coupon Code */}
+          <div className="px-5 py-4 border-t border-border space-y-2">
+            <Label htmlFor="coupon">Coupon Code</Label>
+            <div className="flex gap-2">
+              <Input
+                id="coupon"
+                type="text"
+                placeholder="Enter code"
+                value={couponInput}
+                onChange={(e) => { setCouponInput(e.target.value); setCouponError(""); setCouponApplied(false); }}
+                className="h-10 uppercase"
+                disabled={couponApplied}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                className="h-10 px-4 shrink-0"
+                onClick={applyCoupon}
+                disabled={couponApplied || !couponInput.trim()}
+              >
+                {couponApplied ? "Applied" : "Apply"}
+              </Button>
+            </div>
+            {couponError && <p className="text-xs text-destructive">{couponError}</p>}
+            {couponApplied && <p className="text-xs text-primary font-medium">10% off applied!</p>}
+          </div>
+
+          <div className="px-5 py-4 border-t border-border space-y-2">
+            <div className="flex justify-between items-center text-sm text-muted-foreground">
+              <span>Subtotal</span>
+              <span>${subtotal.toFixed(2)}</span>
+            </div>
+            {couponApplied && (
+              <div className="flex justify-between items-center text-sm text-primary font-medium">
+                <span>Discount (NEURO10 - 10% off)</span>
+                <span>-${discountAmount.toFixed(2)}</span>
+              </div>
+            )}
+            <div className="flex justify-between items-center border-t border-border pt-2">
+              <span className="font-heading font-bold text-foreground">Total</span>
+              <span className="font-heading font-bold text-xl text-foreground">${finalTotal.toFixed(2)}</span>
+            </div>
           </div>
           {orderType && pickupDate && pickupTime && (
             <div className="px-5 pb-4 text-xs text-muted-foreground space-y-0.5">
@@ -330,12 +411,12 @@ const Checkout = () => {
           type="submit"
           size="lg"
           className="w-full h-16 text-base font-bold"
-          disabled={loading || !orderType || !pickupDate || !pickupTime || !name || !phone}
+          disabled={loading || !orderType || !pickupDate || !pickupTime || !name || !phone || sameDayDeliveryBlocked}
         >
           {loading ? (
             <><Loader2 className="w-5 h-5 mr-2 animate-spin" />Opening Checkout...</>
           ) : (
-            <><Lock className="w-4 h-4 mr-2" />Secure Checkout — ${subtotal.toFixed(2)}</>
+            <><Lock className="w-4 h-4 mr-2" />Secure Checkout — ${finalTotal.toFixed(2)}</>
           )}
         </Button>
         <p className="text-center text-xs text-muted-foreground -mt-4">

@@ -31,6 +31,22 @@ const pickupTimes = [
   "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM",
 ];
 
+const DELIVERY_CUTOFF_HOUR = 15;
+
+const getTodayString = () => new Date().toISOString().split("T")[0];
+
+const getAvailableTimeSlots = (selectedDate: string): string[] => {
+  if (selectedDate !== getTodayString()) return pickupTimes;
+  const currentHour = new Date().getHours();
+  return pickupTimes.filter((slot) => {
+    const [time, period] = slot.split(" ");
+    let hour = parseInt(time.split(":")[0]);
+    if (period === "PM" && hour !== 12) hour += 12;
+    if (period === "AM" && hour === 12) hour = 0;
+    return hour > currentHour;
+  });
+};
+
 const FuelOrderForm = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -87,11 +103,12 @@ const FuelOrderForm = () => {
     return total;
   };
 
-  const getMinDate = () => {
-    const today = new Date();
-    today.setDate(today.getDate() + 1);
-    return today.toISOString().split("T")[0];
-  };
+  const getMinDate = () => getTodayString();
+
+  const isSameDayDelivery = formData.orderType === "delivery" && formData.pickupDate === getTodayString();
+  const isPastCutoff = new Date().getHours() >= DELIVERY_CUTOFF_HOUR;
+  const sameDayDeliveryBlocked = isSameDayDelivery && isPastCutoff;
+  const availableTimeSlots = getAvailableTimeSlots(formData.pickupDate);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -231,7 +248,11 @@ const FuelOrderForm = () => {
             <div className="space-y-2">
               <Label htmlFor="deliveryAddress">Delivery Address *</Label>
               <Input id="deliveryAddress" type="text" placeholder="123 Main St, Atlanta, GA 30301" value={formData.deliveryAddress} onChange={(e) => setFormData((prev) => ({ ...prev, deliveryAddress: e.target.value }))} className="h-12" />
-              <p className="text-xs text-muted-foreground">Same-day delivery for local orders placed by 3 PM.</p>
+              {sameDayDeliveryBlocked ? (
+                <p className="text-xs text-destructive font-medium">Same-day delivery cutoff is 3 PM. Please select tomorrow or choose pickup.</p>
+              ) : (
+                <p className="text-xs text-muted-foreground">Same-day delivery for local orders placed by 3 PM.</p>
+              )}
             </div>
           )}
         </div>
@@ -334,8 +355,11 @@ const FuelOrderForm = () => {
               </div>
               <div className="space-y-2">
                 <Label>Select a Time *</Label>
+                {availableTimeSlots.length === 0 && formData.pickupDate === getTodayString() && (
+                  <p className="text-xs text-destructive font-medium">No more time slots available today. Please select tomorrow.</p>
+                )}
                 <div className="grid grid-cols-4 gap-2">
-                  {pickupTimes.map((slot) => (
+                  {availableTimeSlots.map((slot) => (
                     <button
                       key={slot}
                       type="button"
@@ -359,7 +383,7 @@ const FuelOrderForm = () => {
             </div>
           </div>
 
-          <Button type="submit" size="lg" className="w-full h-16 text-lg font-bold" disabled={isSubmitting || calculateTotal() === 0}>
+          <Button type="submit" size="lg" className="w-full h-16 text-lg font-bold" disabled={isSubmitting || calculateTotal() === 0 || sameDayDeliveryBlocked}>
             {isSubmitting ? (<><Loader2 className="w-5 h-5 mr-2 animate-spin" />Submitting...</>) : (<><ShoppingBag className="w-5 h-5 mr-2" />Place Order — ${calculateTotal().toFixed(2)}</>)}
           </Button>
         </form>

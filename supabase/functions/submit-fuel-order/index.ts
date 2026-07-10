@@ -88,6 +88,18 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: "Pickup date must be in the future" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
+    // Same-day delivery cutoff: reject delivery orders placed after 3 PM for today
+    if (data.products.orderType === "delivery") {
+      const now = new Date();
+      const todayStr = now.toISOString().split("T")[0];
+      if (data.pickup_date === todayStr && now.getHours() >= 15) {
+        return new Response(
+          JSON.stringify({ error: "Same-day delivery cutoff is 3 PM. Please select a future date or choose pickup." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
+
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
@@ -103,6 +115,7 @@ serve(async (req) => {
         pickup_time: data.pickup_time,
         notes: data.notes?.trim().substring(0, 1000) || null,
         status: "pending",
+        amount_cents: Math.round((data.products.total || 0) * 100),
       })
       .select("id")
       .single();

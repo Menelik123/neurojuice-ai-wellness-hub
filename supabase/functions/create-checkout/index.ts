@@ -61,10 +61,11 @@ serve(async (req) => {
   }
 
   try {
-    const { items, origin, fulfillment, memberEmail } = await req.json() as {
+    const { items, origin, fulfillment, memberEmail, couponCode } = await req.json() as {
       items: CartLineItem[];
       origin: string;
       memberEmail?: string;
+      couponCode?: string;
       fulfillment?: {
         orderType: "pickup" | "delivery";
         deliveryAddress?: string | null;
@@ -75,6 +76,21 @@ serve(async (req) => {
         customerEmail?: string | null;
       };
     };
+
+    const VALID_COUPON = "NEURO10";
+    const couponValid = couponCode?.trim().toUpperCase() === VALID_COUPON;
+
+    // Same-day delivery cutoff: reject delivery orders placed after 3 PM for today
+    if (fulfillment?.orderType === "delivery" && fulfillment?.pickupDate) {
+      const now = new Date();
+      const todayStr = now.toISOString().split("T")[0];
+      if (fulfillment.pickupDate === todayStr && now.getHours() >= 15) {
+        return new Response(
+          JSON.stringify({ error: "Same-day delivery cutoff is 3 PM. Please select a future date or choose pickup." }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    }
 
     if (!items || items.length === 0) {
       return new Response(JSON.stringify({ error: "Cart is empty" }), {
@@ -203,6 +219,25 @@ serve(async (req) => {
       if (fulfillment.deliveryAddress) metadata.delivery_address = fulfillment.deliveryAddress;
     }
     if (isMember) metadata.vital_pass_member = "true";
+    if (couponValid) metadata.coupon_code = VALID_COUPON;
+
+    // Create or retrieve the NEURO10 Stripe coupon
+    let stripeCouponId: string | undefined;
+    if (couponValid) {
+      const STRIPE_COUPON_ID = "NEURO10_10PCT";
+      try {
+        const existing = await stripe.coupons.retrieve(STRIPE_COUPON_ID);
+        stripeCouponId = existing.id;
+      } catch {
+        const created = await stripe.coupons.create({
+          id: STRIPE_COUPON_ID,
+          percent_off: 10,
+          duration: "once",
+          name: "10% Off - NEURO10",
+        });
+        stripeCouponId = created.id;
+      }
+    }
 
     const session = await stripe.checkout.sessions.create({
       line_items: lineItems,
@@ -213,6 +248,7 @@ serve(async (req) => {
       success_url: `${origin}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/checkout?canceled=1`,
       metadata,
+      ...(stripeCouponId ? { discounts: [{ coupon: stripeCouponId }] } : {}),
     });
 
     return new Response(JSON.stringify({ url: session.url, isMember }), {
